@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "82235768702",
+    "firebase_url": "https://godutch-c22a5.firebaseio.com",
+    "project_id": "godutch-c22a5",
+    "storage_bucket": "godutch-c22a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82235768702:android:44dbfe940b3d1ce9",
+        "android_client_info": {
+          "package_name": "com.mutant.godutch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "82235768702-466ikvm4evr7snk63gvmjr9ovie6eq0n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mutant.godutch",
+            "certificate_hash": "4e0827efbb353ff3bb0eec6dbfaea98b5ef559e9"
+          }
+        },
+        {
+          "client_id": "82235768702-4brc2a9obmrp38ooi20eejcv50gk5321.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1XDsqQaSErYWEJEge0FU2veGJxA4CFJM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "82235768702-4brc2a9obmrp38ooi20eejcv50gk5321.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
