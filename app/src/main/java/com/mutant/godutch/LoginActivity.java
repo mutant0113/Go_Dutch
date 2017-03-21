@@ -1,10 +1,11 @@
 package com.mutant.godutch;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,12 +20,16 @@ public class LoginActivity extends AppCompatActivity {
 
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mFirebaseAuthStateListener;
-    String mFirebaseUserUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        initFireBase();
+        autoLoginIfGotAuth();
+    }
+
+    private void initFireBase() {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -32,12 +37,26 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Toast.makeText(LoginActivity.this, "user logged in", Toast.LENGTH_SHORT).show();
-                    mFirebaseUserUid = user.getUid();
+                    intentToMainActivity();
                 } else {
                     Toast.makeText(LoginActivity.this, "user logged out", Toast.LENGTH_SHORT).show();
                 }
             }
         };
+    }
+
+    private void autoLoginIfGotAuth() {
+        if (mFirebaseAuth != null) {
+            if (mFirebaseAuth.getCurrentUser() != null) {
+                intentToMainActivity();
+            }
+        }
+    }
+
+    private void intentToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     protected void login(View view) {
