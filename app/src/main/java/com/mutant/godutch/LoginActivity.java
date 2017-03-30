@@ -11,12 +11,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
+
+    public static final String TAG = LoginActivity.class.getSimpleName();
 
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mFirebaseAuthStateListener;
@@ -59,13 +62,22 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    protected void login(View view) {
+    public void login(View view) {
+        // TODO check empty case
         final String email = ((EditText) findViewById(R.id.editText_email)).getText().toString();
         final String password = ((EditText) findViewById(R.id.editText_password)).getText().toString();
-        mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "user login succeed", Toast.LENGTH_SHORT).show();
+                    intentToMainActivity();
+                } else {
                     register(email, password);
                 }
             }
