@@ -6,13 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.mutant.godutch.Fragment.GroupsFragment;
 import com.mutant.godutch.Fragment.SettingsFragment;
 
@@ -23,10 +17,6 @@ import com.mutant.godutch.Fragment.SettingsFragment;
 // TODO 輸出清單以及分帳總結
 public class MainActivity extends AppCompatActivity {
 
-    public static final String FIREBASE_URL = "https://godutch-c22a5.firebaseio.com/group";
-
-    ListView mListViewGroup;
-    ArrayAdapter<String> mAdapter;
     ViewPager mViewPager;
     BottomNavigationView mBottomNavigationView;
 
@@ -34,11 +24,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mListViewGroup = (ListView) findViewById(R.id.listView_group);
-        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
-        mListViewGroup.setAdapter(mAdapter);
-        Firebase.setAndroidContext(this);
-        setupFirebase();
         setupViewPager();
         setupBottomNavigationView();
     }
@@ -72,34 +57,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupFirebase() {
-        new Firebase(FIREBASE_URL).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                mAdapter.add((String) dataSnapshot.child("name").getValue());
-                mAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                mAdapter.remove((String) dataSnapshot.child("name").getValue());
-                mAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
 }

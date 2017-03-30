@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.mutant.godutch.MainActivity">
 
-    <android.support.v7.widget.ListViewCompat
-        android:id="@+id/listView_group"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"></android.support.v7.widget.ListViewCompat>
-
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
