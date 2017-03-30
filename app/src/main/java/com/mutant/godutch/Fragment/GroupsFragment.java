@@ -3,17 +3,22 @@ package com.mutant.godutch.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.mutant.godutch.GroupModel;
 import com.mutant.godutch.R;
+import com.mutant.godutch.RecycleViewAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by evanfang102 on 2017/3/30.
@@ -21,8 +26,8 @@ import com.mutant.godutch.R;
 
 public class GroupsFragment extends Fragment {
 
-    ListView mListViewGroup;
-    ArrayAdapter<String> mAdapter;
+    RecyclerView mRecycleViewGroup;
+    RecycleViewAdapter mRecycleViewAdapter;
 
     public GroupsFragment() {
     }
@@ -30,16 +35,28 @@ public class GroupsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_groups, container, false);
+        return inflater.inflate(R.layout.fragment_groups, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setupGroups(view);
-        return view;
+        setupFirebase();
     }
 
     private void setupGroups(View view) {
-        mListViewGroup = (ListView) view.findViewById(R.id.listView_group);
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1);
-        mListViewGroup.setAdapter(mAdapter);
-        setupFirebase();
+        mRecycleViewGroup = (RecyclerView) view.findViewById(R.id.recycler_view_group);
+        // TODO fetch info from web;
+        List<GroupModel> groupModels = new ArrayList<>();
+        groupModels.add(new GroupModel("test1", "this is test", 200, new String[] {"123", "123", "123"}));
+        groupModels.add(new GroupModel("test2", "this is test", 200, new String[] {"123", "123", "123"}));
+        groupModels.add(new GroupModel("test3", "this is test", 200, new String[] {"123", "123", "123"}));
+        mRecycleViewAdapter = new RecycleViewAdapter(groupModels);
+        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
+        MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecycleViewGroup.setAdapter(mRecycleViewAdapter);
+        mRecycleViewGroup.setLayoutManager(MyLayoutManager);
     }
 
     public static final String FIREBASE_URL = "https://godutch-c22a5.firebaseio.com/group";
@@ -49,8 +66,8 @@ public class GroupsFragment extends Fragment {
         new Firebase(FIREBASE_URL).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                mAdapter.add((String) dataSnapshot.child("name").getValue());
-                mAdapter.notifyDataSetChanged();
+//                mAdapter.add((String) dataSnapshot.child("name").getValue());
+//                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -60,8 +77,8 @@ public class GroupsFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                mAdapter.remove((String) dataSnapshot.child("name").getValue());
-                mAdapter.notifyDataSetChanged();
+//                mAdapter.remove((String) dataSnapshot.child("name").getValue());
+//                mAdapter.notifyDataSetChanged();
             }
 
             @Override
