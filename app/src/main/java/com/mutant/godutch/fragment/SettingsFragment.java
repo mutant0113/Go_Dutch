@@ -1,4 +1,4 @@
-package com.mutant.godutch.Fragment;
+package com.mutant.godutch.fragment;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

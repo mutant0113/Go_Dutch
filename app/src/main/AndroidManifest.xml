@@ -26,6 +26,12 @@
         </activity>
         <activity android:name=".NewEventActivity" />
         <activity android:name=".NewGroupActivity"></activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="89f26ac9b1ab3631eb7f6e704a30a7d54b679f37" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

@@ -21,7 +21,7 @@
         android:text="Email"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
+    <com.mutant.godutch.widget.EmailEditText
         android:id="@+id/editText_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:text="Password"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
+    <com.mutant.godutch.widget.PasswordEditText
         android:id="@+id/editText_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

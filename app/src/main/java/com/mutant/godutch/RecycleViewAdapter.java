@@ -31,7 +31,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewViewHold
         GroupModel groupModel = groupModels.get(position);
         holder.mTextViewTitle.setText(groupModel.getTitle());
         holder.mTextViewDescription.setText(groupModel.getDescription());
-        holder.mTextViewTotalPay.setText(groupModel.getTotalPay());
+        holder.mTextViewTotalPay.setText(String.valueOf(groupModel.getTotalPay()));
         // TODO add friends' photo
 //        holder.mLinearLayoutFriends.addView(new View());
     }

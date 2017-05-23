@@ -7,8 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.mutant.godutch.Fragment.GroupsFragment;
-import com.mutant.godutch.Fragment.SettingsFragment;
+import com.mutant.godutch.fragment.GroupsFragment;
+import com.mutant.godutch.fragment.SettingsFragment;
 
 // TODO 登入系統
 // TODO 建立個人Group
