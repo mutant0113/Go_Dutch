@@ -4,14 +4,14 @@ package com.mutant.godutch.model;
  * Created by evanfang102 on 2017/3/30.
  */
 
-public class GroupModel {
+public class Group {
 
     private String title;
     private String description;
     private int totalPay;
     private String[] friendsId;
 
-    public GroupModel(String title, String description, int totalPay, String[] friendsId) {
+    public Group(String title, String description, int totalPay, String[] friendsId) {
         this.title = title;
         this.description = description;
         this.totalPay = totalPay;

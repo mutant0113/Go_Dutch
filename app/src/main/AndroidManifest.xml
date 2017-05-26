@@ -26,6 +26,7 @@
         </activity>
         <activity android:name=".NewEventActivity" />
         <activity android:name=".NewGroupActivity"></activity>
+        <activity android:name=".EventsActivity"></activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"

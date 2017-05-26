@@ -1,5 +1,7 @@
 package com.mutant.godutch;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -19,6 +21,11 @@ import java.util.List;
 public class NewEventActivity extends AppCompatActivity {
 
     RecyclerView mRecycleViewFriends;
+
+    public static Intent getIntent(Activity activity) {
+        Intent intent = new Intent(activity, NewEventActivity.class);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
