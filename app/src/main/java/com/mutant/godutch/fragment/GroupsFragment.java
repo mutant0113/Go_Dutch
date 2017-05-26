@@ -13,7 +13,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.mutant.godutch.GroupModel;
+import com.mutant.godutch.model.GroupModel;
 import com.mutant.godutch.R;
 import com.mutant.godutch.RecycleViewAdapter;
 
@@ -49,10 +49,10 @@ public class GroupsFragment extends Fragment {
         mRecycleViewGroup = (RecyclerView) view.findViewById(R.id.recycler_view_group);
         // TODO fetch from web;
         List<GroupModel> groupModels = new ArrayList<>();
-        groupModels.add(new GroupModel("test1", "this is test", 200, new String[] {"123", "123", "123"}));
-        groupModels.add(new GroupModel("test2", "this is test this is test this is test this is test", 200, new String[] {"123", "123", "123"}));
-        groupModels.add(new GroupModel("test3", "this is test this is test this is test ", 200, new String[] {"123", "123", "123"}));
-        groupModels.add(new GroupModel("test3", "this is test this is test this is test this is test this is test this is test this is test", 200, new String[] {"123", "123", "123"}));
+        groupModels.add(new GroupModel("日本大阪七天六夜", "詳細描述", 34581, new String[] {"123", "123", "123"}));
+        groupModels.add(new GroupModel("XXX生日 火鍋聚餐", "詳細描述 詳細描述 詳細描述 詳細描述 詳細描述", 1102, new String[] {"123", "123", "123"}));
+        groupModels.add(new GroupModel("長灘島三天兩夜", "詳細描述 詳細描述 詳細描述 詳細描述 詳細描述 詳細描述 詳細描述 詳細描述 詳細描述", 12357, new String[] {"123", "123", "123"}));
+        groupModels.add(new GroupModel("香港一天來回", "詳細描述 詳細描述 詳細描述", 5000, new String[] {"123", "123", "123"}));
         mRecycleViewAdapter = new RecycleViewAdapter(groupModels);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

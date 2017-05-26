@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mutant.godutch.model.GroupModel;
+
 import java.util.List;
 
 /**
@@ -31,7 +33,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewViewHold
         GroupModel groupModel = groupModels.get(position);
         holder.mTextViewTitle.setText(groupModel.getTitle());
         holder.mTextViewDescription.setText(groupModel.getDescription());
-        holder.mTextViewTotalPay.setText(String.valueOf(groupModel.getTotalPay()));
+        holder.mTextViewTotalPay.setText("$" + String.valueOf(groupModel.getTotalPay()));
         // TODO add friends' photo
 //        holder.mLinearLayoutFriends.addView(new View());
     }

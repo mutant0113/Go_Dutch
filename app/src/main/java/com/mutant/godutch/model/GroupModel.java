@@ -1,4 +1,4 @@
-package com.mutant.godutch;
+package com.mutant.godutch.model;
 
 /**
  * Created by evanfang102 on 2017/3/30.
