@@ -12,13 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/editText_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="主題">
 
-        </EditText>
+        </android.support.v7.widget.AppCompatEditText>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -26,13 +26,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/editText_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="詳細敘述">
 
-        </EditText>
+        </android.support.v7.widget.AppCompatEditText>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editText_total_paid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="總花費">
+
+        </android.support.v7.widget.AppCompatEditText>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -42,5 +57,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:scrollbars="vertical" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:onClick="onClickCreateNewEvent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="新增項目"/>
 
 </LinearLayout>

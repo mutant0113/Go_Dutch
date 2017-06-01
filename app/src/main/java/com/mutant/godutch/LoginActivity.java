@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mutant.godutch.widget.EmailEditText;
 import com.mutant.godutch.widget.PasswordEditText;
 
@@ -25,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = LoginActivity.class.getSimpleName();
 
+    DatabaseReference mDatabase;
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mFirebaseAuthStateListener;
 
@@ -32,12 +35,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        initFireBase();
+        setupFireBase();
         autoLoginIfGotAuth();
-        Fabric.with(this.getApplicationContext(), new Crashlytics());
+        if(DebugHelper.bUseCrashlytics) {
+            Fabric.with(this.getApplicationContext(), new Crashlytics());
+        }
     }
 
-    private void initFireBase() {
+    private void setupFireBase() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -45,6 +51,9 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Toast.makeText(LoginActivity.this, "user logged in", Toast.LENGTH_SHORT).show();
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    DatabaseReference databaseReference = mDatabase.child("users");
+                    databaseReference.setValue(user);
                     intentToMainActivity();
                 } else {
                     Toast.makeText(LoginActivity.this, "user logged out", Toast.LENGTH_SHORT).show();

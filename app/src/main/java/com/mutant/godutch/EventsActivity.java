@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mutant.godutch.model.Event;
-import com.mutant.godutch.model.FriendWithPay;
+import com.mutant.godutch.model.Friend;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +51,11 @@ public class EventsActivity extends AppCompatActivity {
         mRecycleViewEvent = (RecyclerView) findViewById(R.id.recycler_view_event);
         // TODO fetch from web;
         List<Event> events = new ArrayList<>();
-        List<FriendWithPay> friendWithPays = new ArrayList<>();
-        friendWithPays.add(new FriendWithPay("小美", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg", 500, 1000));
-        friendWithPays.add(new FriendWithPay("小明", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg", 250, 1000));
-        friendWithPays.add(new FriendWithPay("小剛", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg", 0, 1000));
-        friendWithPays.add(new FriendWithPay("小智", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg", 0, 1000));
+        List<Friend> friendWithPays = new ArrayList<>();
+        friendWithPays.add(new Friend(123, "小美", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
+        friendWithPays.add(new Friend(123, "小明", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
+        friendWithPays.add(new Friend(123, "小剛", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
+        friendWithPays.add(new Friend(123, "小智", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
         events.add(new Event("住宿", "六天住宿錢", friendWithPays));
         events.add(new Event("早餐", "好吃的懷石料理", friendWithPays));
         events.add(new Event("門票錢", "直接登上東京鐵塔!!", friendWithPays));
@@ -90,7 +90,7 @@ public class EventsActivity extends AppCompatActivity {
             holder.mTextViewTitle.setText(event.getTitle());
             holder.mTextViewDescription.setText(event.getDescription());
 
-            RecycleViewAdapterFriendsWithPay adapterFriendsWithPay = new RecycleViewAdapterFriendsWithPay(event.getFriendWithPays());
+            RecycleViewAdapterFriendsWithPay adapterFriendsWithPay = new RecycleViewAdapterFriendsWithPay(event.getFriends());
             holder.mRecycleViewFriendsWithPay.setAdapter(adapterFriendsWithPay);
             holder.mRecycleViewFriendsWithPay.setLayoutManager(new GridLayoutManager(EventsActivity.this, 2));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +110,9 @@ public class EventsActivity extends AppCompatActivity {
 
     class RecycleViewAdapterFriendsWithPay extends RecyclerView.Adapter<ViewHolderFriend> {
 
-        List<FriendWithPay> friendWithPays;
+        List<Friend> friendWithPays;
 
-        public RecycleViewAdapterFriendsWithPay(List<FriendWithPay> friendWithPays) {
+        public RecycleViewAdapterFriendsWithPay(List<Friend> friendWithPays) {
             this.friendWithPays = friendWithPays;
         }
 
@@ -125,7 +125,7 @@ public class EventsActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolderFriend holder, int position) {
-            FriendWithPay friendWithPay = friendWithPays.get(position);
+            Friend friendWithPay = friendWithPays.get(position);
             holder.mTextViewName.setText(friendWithPay.getName());
             // TODO
 //            holder.mImageViewProPic.setImageURI();

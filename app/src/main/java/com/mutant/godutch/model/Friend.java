@@ -6,10 +6,15 @@ package com.mutant.godutch.model;
 
 public class Friend {
 
+    // TODO use unique_uid
+    int uid;
     String name;
     String proPicUrl;
+    int paid;
+    int total;
 
-    public Friend(String name, String proPicUrl) {
+    public Friend(int uid, String name, String proPicUrl) {
+        this.uid = uid;
         this.name = name;
         this.proPicUrl = proPicUrl;
     }
@@ -28,5 +33,29 @@ public class Friend {
 
     public void setProPicUrl(String proPicUrl) {
         this.proPicUrl = proPicUrl;
+    }
+
+    public int getPaid() {
+        return paid;
+    }
+
+    public void setPaid(int paid) {
+        this.paid = paid;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 }
