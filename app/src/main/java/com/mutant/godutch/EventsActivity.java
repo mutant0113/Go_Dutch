@@ -35,6 +35,16 @@ public class EventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
         setupEvents();
+        setupFabNewEvent();
+    }
+
+    private void setupFabNewEvent() {
+        findViewById(R.id.fab_new_event).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(NewEventActivity.getIntent(EventsActivity.this));
+            }
+        });
     }
 
     private void setupEvents() {

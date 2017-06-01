@@ -1,7 +1,9 @@
 package com.mutant.godutch;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -58,6 +60,8 @@ public class NewEventActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_item_friend, parent, false);
+            // TODO judge isclicked
+            view.setTag(0);
             ViewHolder holder = new ViewHolder(view);
             return holder;
         }
@@ -68,11 +72,21 @@ public class NewEventActivity extends AppCompatActivity {
             // TODO set image
 //            holder.mImageViewProPic.setImageURI();
             holder.mTextViewName.setText(friend.getName());
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            final View itemView = holder.itemView;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View v) {
-                    // TODO setbackground
-//                    holder.mLinearLayoutCompat.setBackground();
+                    int tag = (int) itemView.getTag();
+                    if(tag == 0) {
+                        // TODO setbackground
+                        itemView.setBackgroundColor(getColor(android.R.color.holo_orange_light));
+                        itemView.setTag(1);
+                    } else {
+                        // TODO setbackground
+                        itemView.setBackgroundColor(getColor(android.R.color.white));
+                        itemView.setTag(0);
+                    }
                 }
             });
         }
