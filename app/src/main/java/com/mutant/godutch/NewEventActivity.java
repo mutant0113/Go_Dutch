@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -39,16 +38,6 @@ public class NewEventActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setupFireBase();
-    }
-
-    private void setupFireBase() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-    }
-
-    @Override
     public int getLayoutId() {
         return R.layout.activity_new_event;
     }
@@ -61,8 +50,13 @@ public class NewEventActivity extends BaseActivity {
     }
 
     @Override
-    public void setupViews() {
+    public void setup() {
+        setupFireBase();
         setupFriends();
+    }
+
+    private void setupFireBase() {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     public void onClickCreateNewEvent(View view) {

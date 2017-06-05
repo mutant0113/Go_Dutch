@@ -13,7 +13,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract void findViews();
 
-    public abstract void setupViews();
+    public abstract void setup();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutId());
         overridePendingTransition(0, 0);
         findViews();
-        setupViews();
+        setup();
         setOrientationLand();
     }
 

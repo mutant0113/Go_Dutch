@@ -1,21 +1,32 @@
 package com.mutant.godutch.model;
 
+import java.util.List;
+
 /**
  * Created by evanfang102 on 2017/3/30.
  */
 
 public class Group {
 
+    private String id;
     private String title;
     private String description;
-    private int totalPay;
-    private String[] friendsId;
+    private int totalPaid;
+    private List<Friend> friendsUid;
 
-    public Group(String title, String description, int totalPay, String[] friendsId) {
+    public Group() {
+    }
+
+    public Group(String id, String title, String description, int totalPaid, List<Friend> friendsUid) {
+        this.id = id;
         this.title = title;
         this.description = description;
-        this.totalPay = totalPay;
-        this.friendsId = friendsId;
+        this.totalPaid = totalPaid;
+        this.friendsUid = friendsUid;
+    }
+
+    public Group(String title, String description, int totalPay, List<Friend> friendsUid) {
+        this(null, title, description, totalPay, friendsUid);
     }
 
     public String getTitle() {
@@ -26,11 +37,19 @@ public class Group {
         return description;
     }
 
-    public int getTotalPay() {
-        return totalPay;
+    public int getTotalPaid() {
+        return totalPaid;
     }
 
-    public String[] getFriendsId() {
-        return friendsId;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<Friend> getFriendsUid() {
+        return friendsUid;
     }
 }

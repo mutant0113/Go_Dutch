@@ -9,16 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.mutant.godutch.model.Group;
-import com.mutant.godutch.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mutant.godutch.AdapterGroup;
+import com.mutant.godutch.NewGroupActivity;
+import com.mutant.godutch.R;
+import com.mutant.godutch.model.Group;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by evanfang102 on 2017/3/30.
@@ -27,7 +30,8 @@ import java.util.List;
 public class GroupsFragment extends Fragment {
 
     RecyclerView mRecycleViewGroup;
-    AdapterGroup mRecycleViewAdapter;
+    AdapterGroup mAdapterGroup;
+    private DatabaseReference mDatabaseGroup;
 
     public GroupsFragment() {
     }
@@ -41,56 +45,75 @@ public class GroupsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupGroups(view);
         setupFirebase();
+        setupGroups(view);
+        setupFabNewGroup(view);
+    }
+
+    private void setupFabNewGroup(View view) {
+        view.findViewById(R.id.fab_new_group).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(NewGroupActivity.getIntent(getActivity()));
+            }
+        });
     }
 
     private void setupGroups(View view) {
         mRecycleViewGroup = (RecyclerView) view.findViewById(R.id.recycler_view_group);
-        // TODO fetch from web;
-        List<Group> groupModels = new ArrayList<>();
-        groupModels.add(new Group("日本大阪七天六夜", "詳細描述", 34581, new String[] {"123", "123", "123"}));
-        groupModels.add(new Group("XXX生日 火鍋聚餐", "詳細描述 詳細描述 詳細描述 詳細描述 詳細描述", 1102, new String[] {"123", "123", "123"}));
-        groupModels.add(new Group("長灘島三天兩夜", "詳細描述 詳細描述 詳細描述 詳細描述 詳細描述 詳細描述 詳細描述 詳細描述 詳細描述", 12357, new String[] {"123", "123", "123"}));
-        groupModels.add(new Group("香港一天來回", "詳細描述 詳細描述 詳細描述", 5000, new String[] {"123", "123", "123"}));
-        mRecycleViewAdapter = new AdapterGroup(getActivity(), groupModels);
+        mAdapterGroup = new AdapterGroup(getActivity(), new ArrayList<Group>());
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecycleViewGroup.setAdapter(mRecycleViewAdapter);
+        mRecycleViewGroup.setAdapter(mAdapterGroup);
         mRecycleViewGroup.setLayoutManager(MyLayoutManager);
     }
 
-    public static final String FIREBASE_URL = "https://godutch-c22a5.firebaseio.com/group";
-
     private void setupFirebase() {
-        Firebase.setAndroidContext(getContext());
-        new Firebase(FIREBASE_URL).addChildEventListener(new ChildEventListener() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabaseGroup = FirebaseDatabase.getInstance().getReference().child("group").child(firebaseUser.getUid());
+        mDatabaseGroup.orderByKey().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                mAdapter.add((String) dataSnapshot.child("name").getValue());
-//                mAdapter.notifyDataSetChanged();
+                mAdapterGroup.addItem(dataSnapshot.getValue(Group.class));
+                mRecycleViewGroup.scrollToPosition(0);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                // TODO
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                mAdapter.remove((String) dataSnapshot.child("name").getValue());
-//                mAdapter.notifyDataSetChanged();
+            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                // TODO
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                // TODO
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+
+//        mDatabaseGroup.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+//                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//                if (firebaseUser != null) {
+//                    for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
+//                        mGroups.add(groupSnapshot.getValue(Group.class));
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 }

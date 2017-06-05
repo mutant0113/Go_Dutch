@@ -36,7 +36,7 @@ public class AdapterGroup extends RecyclerView.Adapter<ViewHolderGroup> {
         Group groupModel = groups.get(position);
         holder.mTextViewTitle.setText(groupModel.getTitle());
         holder.mTextViewDescription.setText(groupModel.getDescription());
-        holder.mTextViewTotalPay.setText("$" + String.valueOf(groupModel.getTotalPay()));
+        holder.mTextViewTotalPay.setText("$" + String.valueOf(groupModel.getTotalPaid()));
         // TODO add friends' photo
 //        holder.mLinearLayoutFriends.addView(new View());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -50,5 +50,10 @@ public class AdapterGroup extends RecyclerView.Adapter<ViewHolderGroup> {
     @Override
     public int getItemCount() {
         return groups.size();
+    }
+
+    public void addItem(Group group) {
+        groups.add(0, group);
+        notifyItemInserted(0);
     }
 }

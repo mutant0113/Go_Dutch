@@ -2,8 +2,6 @@ package com.mutant.godutch;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,7 +17,7 @@ import com.mutant.godutch.model.Friend;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventsActivity extends AppCompatActivity {
+public class EventsActivity extends BaseActivity {
 
     RecyclerView mRecycleViewEvent;
     RecycleViewAdapterEvent mRecycleViewAdapter;
@@ -31,9 +29,17 @@ public class EventsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_events);
+    public int getLayoutId() {
+        return R.layout.activity_events;
+    }
+
+    @Override
+    public void findViews() {
+
+    }
+
+    @Override
+    public void setup() {
         setupEvents();
         setupFabNewEvent();
     }

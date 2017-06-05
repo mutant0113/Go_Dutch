@@ -13,6 +13,9 @@ public class Friend {
     int paid;
     int total;
 
+    public Friend() {
+    }
+
     public Friend(int uid, String name, String proPicUrl) {
         this.uid = uid;
         this.name = name;

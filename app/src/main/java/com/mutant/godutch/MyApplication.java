@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.firebase.client.Firebase;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
@@ -15,6 +16,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Firebase.setAndroidContext(this.getApplicationContext());
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
