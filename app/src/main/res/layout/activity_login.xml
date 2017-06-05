@@ -15,30 +15,31 @@
         android:padding="@dimen/activity_horizontal_margin"
         android:text="請輸入帳號、密碼登入，若無會員將會自動註冊" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <com.mutant.godutch.widget.EmailEditText
-        android:id="@+id/editText_email"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:text="evanfang102@gmail.com"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <com.mutant.godutch.widget.EmailEditText
+            android:id="@+id/editText_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:text="evanfang102@gmail.com" />
+    </android.support.design.widget.TextInputLayout>
 
-    <com.mutant.godutch.widget.PasswordEditText
-        android:id="@+id/editText_password"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword" />
+        android:layout_height="wrap_content">
+
+        <com.mutant.godutch.widget.PasswordEditText
+            android:id="@+id/editText_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Password" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/button_login"

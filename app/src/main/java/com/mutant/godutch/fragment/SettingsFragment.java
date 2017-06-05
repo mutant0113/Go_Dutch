@@ -1,6 +1,8 @@
 package com.mutant.godutch.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.mutant.godutch.LoginActivity;
 import com.mutant.godutch.R;
 
 /**
@@ -37,7 +40,17 @@ public class SettingsFragment extends Fragment {
         mButtonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+                    @Override
+                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                        if (firebaseAuth.getCurrentUser() == null) {
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                            getActivity().finish();
+                        }
+                    }
+                });
+                auth.signOut();
             }
         });
     }

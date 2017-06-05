@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setupFireBase() {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -51,15 +50,21 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Toast.makeText(LoginActivity.this, "user logged in", Toast.LENGTH_SHORT).show();
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
-                    DatabaseReference databaseReference = mDatabase.child("users");
-                    databaseReference.setValue(user);
+                    saveUserDataToDatabase(user);
                     intentToMainActivity();
                 } else {
                     Toast.makeText(LoginActivity.this, "user logged out", Toast.LENGTH_SHORT).show();
                 }
             }
         };
+    }
+
+    private void saveUserDataToDatabase(FirebaseUser user) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("users");
+        database.child(user.getUid()).child("uid").setValue(user.getUid());
+        database.child(user.getUid()).child("name").setValue(user.getDisplayName());
+        database.child(user.getUid()).child("email").setValue(user.getEmail());
+        database.child(user.getUid()).child("photo_url").setValue(user.getPhotoUrl());
     }
 
     private void autoLoginIfGotAuth() {
