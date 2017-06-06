@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mutant.godutch.model.Event;
@@ -26,14 +27,18 @@ import java.util.List;
 
 public class NewEventActivity extends BaseActivity {
 
+    public static final String BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID";
+    String mGroupId;
+
     AppCompatEditText mEditTextTitle;
     AppCompatEditText mEditTextDescription;
     AppCompatEditText mEditTextTotalPaid;
     RecyclerView mRecycleViewFriends;
-    DatabaseReference mDatabase;
+    DatabaseReference mDatabaseEvents;
 
-    public static Intent getIntent(Activity activity) {
+    public static Intent getIntent(Activity activity, String groupId) {
         Intent intent = new Intent(activity, NewEventActivity.class);
+        intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId);
         return intent;
     }
 
@@ -51,12 +56,13 @@ public class NewEventActivity extends BaseActivity {
 
     @Override
     public void setup() {
+        mGroupId = getIntent().getStringExtra(BUNDLE_KEY_GROUP_ID);
         setupFireBase();
         setupFriends();
     }
 
     private void setupFireBase() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabaseEvents = FirebaseDatabase.getInstance().getReference().child("events").child(mGroupId);
     }
 
     public void onClickCreateNewEvent(View view) {
@@ -71,8 +77,12 @@ public class NewEventActivity extends BaseActivity {
         List<Friend> friendsFilterBySelected = ((RecycleViewAdapterFriends) mRecycleViewFriends.getAdapter()).getFriendsFilterBySelected();
         Event event = new Event(title, description, friendsFilterBySelected);
         event.setTotalPaid(totalPaid);
-        DatabaseReference databaseReference = mDatabase.child("event").push();
-        databaseReference.setValue(event);
+        mDatabaseEvents.push().setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                finish();
+            }
+        });
     }
 
     private void setupFriends() {

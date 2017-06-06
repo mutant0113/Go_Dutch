@@ -33,16 +33,16 @@ public class AdapterGroup extends RecyclerView.Adapter<ViewHolderGroup> {
 
     @Override
     public void onBindViewHolder(ViewHolderGroup holder, int position) {
-        Group groupModel = groups.get(position);
-        holder.mTextViewTitle.setText(groupModel.getTitle());
-        holder.mTextViewDescription.setText(groupModel.getDescription());
-        holder.mTextViewTotalPay.setText("$" + String.valueOf(groupModel.getTotalPaid()));
+        final Group group = groups.get(position);
+        holder.mTextViewTitle.setText(group.getTitle());
+        holder.mTextViewDescription.setText(group.getDescription());
+        holder.mTextViewTotalPay.setText("$" + String.valueOf(group.getTotalPaid()));
         // TODO add friends' photo
 //        holder.mLinearLayoutFriends.addView(new View());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.startActivity(EventsActivity.getIntent(activity));
+                activity.startActivity(EventsActivity.getIntent(activity, group.getId()));
             }
         });
     }

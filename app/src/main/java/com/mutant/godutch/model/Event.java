@@ -19,6 +19,9 @@ public class Event {
     int totalPaid;
     Map<String, String> timestamp;
 
+    public Event() {
+    }
+
     public Event(String title, String description, List<Friend> friendWithPays) {
         this.title = title;
         this.description = description;

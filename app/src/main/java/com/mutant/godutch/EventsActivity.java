@@ -11,6 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mutant.godutch.model.Event;
 import com.mutant.godutch.model.Friend;
 
@@ -19,12 +24,16 @@ import java.util.List;
 
 public class EventsActivity extends BaseActivity {
 
-    RecyclerView mRecycleViewEvent;
-    RecycleViewAdapterEvent mRecycleViewAdapter;
+    public static final String BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID";
+    String mGroupId;
 
-    public static Intent getIntent(Activity activity) {
-        // TODO input group_id
+    RecyclerView mRecycleViewEvent;
+    RecycleViewAdapterEvent mAdapterEvent;
+    DatabaseReference mDatabaseEvents;
+
+    public static Intent getIntent(Activity activity, String groupId) {
         Intent intent = new Intent(activity, EventsActivity.class);
+        intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId);
         return intent;
     }
 
@@ -40,15 +49,48 @@ public class EventsActivity extends BaseActivity {
 
     @Override
     public void setup() {
+        mGroupId = getIntent().getStringExtra(BUNDLE_KEY_GROUP_ID);
+        setupFireBase();
         setupEvents();
         setupFabNewEvent();
+    }
+
+    private void setupFireBase() {
+        mDatabaseEvents = FirebaseDatabase.getInstance().getReference().child("events").child(mGroupId);
+        mDatabaseEvents.orderByKey().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                mAdapterEvent.addItem(dataSnapshot.getValue(Event.class));
+                mRecycleViewEvent.scrollToPosition(0);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // TODO
+            }
+
+            @Override
+            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                // TODO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                // TODO
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setupFabNewEvent() {
         findViewById(R.id.fab_new_event).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(NewEventActivity.getIntent(EventsActivity.this));
+                startActivity(NewEventActivity.getIntent(EventsActivity.this, mGroupId));
             }
         });
     }
@@ -56,20 +98,14 @@ public class EventsActivity extends BaseActivity {
     private void setupEvents() {
         mRecycleViewEvent = (RecyclerView) findViewById(R.id.recycler_view_event);
         // TODO fetch from web;
-        List<Event> events = new ArrayList<>();
-        List<Friend> friendWithPays = new ArrayList<>();
-        friendWithPays.add(new Friend(123, "小美", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friendWithPays.add(new Friend(123, "小明", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friendWithPays.add(new Friend(123, "小剛", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friendWithPays.add(new Friend(123, "小智", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        events.add(new Event("住宿", "六天住宿錢", friendWithPays));
-        events.add(new Event("早餐", "好吃的懷石料理", friendWithPays));
-        events.add(new Event("門票錢", "直接登上東京鐵塔!!", friendWithPays));
-        events.add(new Event("喔米阿給", "三大待喔米阿給YA~~", friendWithPays));
-        mRecycleViewAdapter = new RecycleViewAdapterEvent(this, events);
+//        events.add(new Event("住宿", "六天住宿錢", friendWithPays));
+//        events.add(new Event("早餐", "好吃的懷石料理", friendWithPays));
+//        events.add(new Event("門票錢", "直接登上東京鐵塔!!", friendWithPays));
+//        events.add(new Event("喔米阿給", "三大待喔米阿給YA~~", friendWithPays));
+        mAdapterEvent = new RecycleViewAdapterEvent(this, new ArrayList<Event>());
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this);
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecycleViewEvent.setAdapter(mRecycleViewAdapter);
+        mRecycleViewEvent.setAdapter(mAdapterEvent);
         mRecycleViewEvent.setLayoutManager(MyLayoutManager);
     }
 
@@ -102,7 +138,7 @@ public class EventsActivity extends BaseActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.startActivity(NewEventActivity.getIntent(activity));
+                    activity.startActivity(NewEventActivity.getIntent(activity, mGroupId));
                 }
             });
         }
@@ -112,6 +148,10 @@ public class EventsActivity extends BaseActivity {
             return events.size();
         }
 
+        public void addItem(Event event) {
+            events.add(0, event);
+            notifyItemInserted(0);
+        }
     }
 
     class RecycleViewAdapterFriendsWithPay extends RecyclerView.Adapter<ViewHolderFriend> {
