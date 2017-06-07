@@ -133,9 +133,9 @@ public class EventsActivity extends BaseActivity {
             holder.mTextViewTitle.setText(event.getTitle());
             holder.mTextViewDate.setText(Utility.getRelativeTimeSpanDate(event.getTimestampCreated()));
             holder.mTextViewDescription.setText(event.getDescription());
-            RecycleViewAdapterFriendsWithPay adapterFriendsWithPay = new RecycleViewAdapterFriendsWithPay(event.getFriends());
-            holder.mRecycleViewFriendsWithPay.setAdapter(adapterFriendsWithPay);
-            holder.mRecycleViewFriendsWithPay.setLayoutManager(new GridLayoutManager(EventsActivity.this, 2));
+            RecycleViewAdapterFriendsWhoPaid adapterFriendsWhoPaid = new RecycleViewAdapterFriendsWhoPaid(event.getFriends());
+            holder.mRecycleViewFriendsWhoPaid.setAdapter(adapterFriendsWhoPaid);
+            holder.mRecycleViewFriendsWhoPaid.setLayoutManager(new GridLayoutManager(EventsActivity.this, 2));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -155,11 +155,11 @@ public class EventsActivity extends BaseActivity {
         }
     }
 
-    class RecycleViewAdapterFriendsWithPay extends RecyclerView.Adapter<ViewHolderFriend> {
+    class RecycleViewAdapterFriendsWhoPaid extends RecyclerView.Adapter<ViewHolderFriend> {
 
         List<Friend> friendWithPays;
 
-        public RecycleViewAdapterFriendsWithPay(List<Friend> friendWithPays) {
+        public RecycleViewAdapterFriendsWhoPaid(List<Friend> friendWithPays) {
             this.friendWithPays = friendWithPays;
         }
 
@@ -190,7 +190,7 @@ public class EventsActivity extends BaseActivity {
         public AppCompatTextView mTextViewTitle;
         public AppCompatTextView mTextViewDate;
         public AppCompatTextView mTextViewDescription;
-        public RecyclerView mRecycleViewFriendsWithPay;
+        public RecyclerView mRecycleViewFriendsWhoPaid;
 
         public ViewHolderEvent(View itemView) {
             super(itemView);
@@ -201,7 +201,7 @@ public class EventsActivity extends BaseActivity {
             mTextViewTitle = (AppCompatTextView) itemView.findViewById(R.id.textView_title);
             mTextViewDate = (AppCompatTextView) itemView.findViewById(R.id.textView_date);
             mTextViewDescription = (AppCompatTextView) itemView.findViewById(R.id.textView_description);
-            mRecycleViewFriendsWithPay = (RecyclerView) itemView.findViewById(R.id.recycler_view_friends_with_pay);
+            mRecycleViewFriendsWhoPaid = (RecyclerView) itemView.findViewById(R.id.recycler_view_friends_with_pay);
         }
     }
 
