@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     // TODO com.google.firebase.FirebaseNetworkException
+                    // TODO password failed
                     if (task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, "user login succeed", Toast.LENGTH_SHORT).show();
                         intentToMainActivity();

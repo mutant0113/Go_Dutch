@@ -11,22 +11,24 @@ public class Group {
     private String id;
     private String title;
     private String description;
+    private String photoUrl;
     private int totalPaid;
     private List<Friend> friendsUid;
 
     public Group() {
     }
 
-    public Group(String id, String title, String description, int totalPaid, List<Friend> friendsUid) {
+    public Group(String id, String title, String description, String photoUrl, int totalPaid, List<Friend> friendsUid) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.photoUrl = photoUrl;
         this.totalPaid = totalPaid;
         this.friendsUid = friendsUid;
     }
 
-    public Group(String title, String description, int totalPay, List<Friend> friendsUid) {
-        this(null, title, description, totalPay, friendsUid);
+    public Group(String title, String description, String photoUrl, int totalPaid, List<Friend> friendsUid) {
+        this(null, title, description, photoUrl, totalPaid, friendsUid);
     }
 
     public String getTitle() {
@@ -51,5 +53,13 @@ public class Group {
 
     public List<Friend> getFriendsUid() {
         return friendsUid;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
