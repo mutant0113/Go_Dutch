@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Event {
 
+    String id;
     String title;
     String description;
     List<Friend> friends;
@@ -20,6 +21,15 @@ public class Event {
     HashMap<String, Object> timestamp;
 
     public Event() {
+    }
+
+    public Event(String id, String title, String description, List<Friend> friendsWhoPaid) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.friends = friendsWhoPaid;
+        this.timestamp = new HashMap<>();
+        this.timestamp.put("timestamp", ServerValue.TIMESTAMP);
     }
 
     public Event(String title, String description, List<Friend> friendsWhoPaid) {
@@ -79,4 +89,11 @@ public class Event {
         return (long) timestamp.get("timestamp");
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

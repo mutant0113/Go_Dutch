@@ -81,7 +81,9 @@ public class NewEventActivity extends BaseActivity {
         List<Friend> friendswhoPaid = ((RecycleViewAdapterFriends) mRecycleViewFriends.getAdapter()).getFriendsFilterBySelected();
         Event event = new Event(title, description, friendswhoPaid);
         event.setTotalPaid(totalPaid);
-        mDatabaseEvents.push().setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+        DatabaseReference databaseReference = mDatabaseEvents.push();
+        event.setId(databaseReference.getKey());
+        databaseReference.setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 finish();

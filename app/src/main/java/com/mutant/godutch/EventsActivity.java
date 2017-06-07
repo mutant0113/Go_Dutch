@@ -1,7 +1,9 @@
 package com.mutant.godutch;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
@@ -129,7 +131,7 @@ public class EventsActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ViewHolderEvent holder, int position) {
-            Event event = events.get(position);
+            final Event event = events.get(position);
             holder.mTextViewTitle.setText(event.getTitle());
             holder.mTextViewDate.setText(Utility.getRelativeTimeSpanDate(event.getTimestampCreated()));
             holder.mTextViewDescription.setText(event.getDescription());
@@ -143,6 +145,24 @@ public class EventsActivity extends BaseActivity {
                     activity.startActivity(NewEventActivity.getIntent(activity, mGroupId));
                 }
             });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    removeEvent(event);
+                    return false;
+                }
+            });
+        }
+
+        private void removeEvent(final Event event) {
+            new AlertDialog.Builder(activity).setTitle("系統提示").setMessage("確定要刪除此筆？")
+                    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mDatabaseEvents.child(event.getId()).removeValue();
+                        }
+                    }).setNeutralButton("取消", null).show();
         }
 
         @Override
