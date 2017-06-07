@@ -3,8 +3,8 @@ package com.mutant.godutch.model;
 import com.firebase.client.ServerValue;
 import com.google.firebase.database.Exclude;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by evanfang102 on 2017/5/26.
@@ -17,16 +17,17 @@ public class Event {
     List<Friend> friends;
     String photo;
     int totalPaid;
-    Map<String, String> timestamp;
+    HashMap<String, Object> timestamp;
 
     public Event() {
     }
 
-    public Event(String title, String description, List<Friend> friendWithPays) {
+    public Event(String title, String description, List<Friend> friendsWhoPaid) {
         this.title = title;
         this.description = description;
-        this.friends = friendWithPays;
-        this.timestamp = ServerValue.TIMESTAMP;
+        this.friends = friendsWhoPaid;
+        this.timestamp = new HashMap<>();
+        this.timestamp.put("timestamp", ServerValue.TIMESTAMP);
     }
 
     public String getTitle() {
@@ -53,11 +54,6 @@ public class Event {
         this.friends = friends;
     }
 
-    @Exclude
-    public Map<String, String> getTimestamp() {
-        return timestamp;
-    }
-
     public String getPhoto() {
         return photo;
     }
@@ -72,6 +68,15 @@ public class Event {
 
     public void setTotalPaid(int totalPaid) {
         this.totalPaid = totalPaid;
+    }
+
+    public HashMap<String, Object> getTimestamp() {
+        return timestamp;
+    }
+
+    @Exclude
+    public long getTimestampCreated() {
+        return (long) timestamp.get("timestamp");
     }
 
 }

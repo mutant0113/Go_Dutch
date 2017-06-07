@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mutant.godutch.model.Event;
 import com.mutant.godutch.model.Friend;
+import com.mutant.godutch.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,8 +131,8 @@ public class EventsActivity extends BaseActivity {
         public void onBindViewHolder(ViewHolderEvent holder, int position) {
             Event event = events.get(position);
             holder.mTextViewTitle.setText(event.getTitle());
+            holder.mTextViewDate.setText(Utility.getRelativeTimeSpanDate(event.getTimestampCreated()));
             holder.mTextViewDescription.setText(event.getDescription());
-
             RecycleViewAdapterFriendsWithPay adapterFriendsWithPay = new RecycleViewAdapterFriendsWithPay(event.getFriends());
             holder.mRecycleViewFriendsWithPay.setAdapter(adapterFriendsWithPay);
             holder.mRecycleViewFriendsWithPay.setLayoutManager(new GridLayoutManager(EventsActivity.this, 2));
@@ -187,6 +188,7 @@ public class EventsActivity extends BaseActivity {
     class ViewHolderEvent extends RecyclerView.ViewHolder {
 
         public AppCompatTextView mTextViewTitle;
+        public AppCompatTextView mTextViewDate;
         public AppCompatTextView mTextViewDescription;
         public RecyclerView mRecycleViewFriendsWithPay;
 
@@ -197,6 +199,7 @@ public class EventsActivity extends BaseActivity {
 
         private void findViews(View itemView) {
             mTextViewTitle = (AppCompatTextView) itemView.findViewById(R.id.textView_title);
+            mTextViewDate = (AppCompatTextView) itemView.findViewById(R.id.textView_date);
             mTextViewDescription = (AppCompatTextView) itemView.findViewById(R.id.textView_description);
             mRecycleViewFriendsWithPay = (RecyclerView) itemView.findViewById(R.id.recycler_view_friends_with_pay);
         }

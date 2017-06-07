@@ -72,10 +72,14 @@ public class NewEventActivity extends BaseActivity {
         try {
             totalPaid = Integer.parseInt(mEditTextTotalPaid.getText().toString());
         } catch (NumberFormatException e) {
-            Crashlytics.logException(e);
+            try {
+                Crashlytics.logException(e);
+            } catch (IllegalThreadStateException ie) {
+                ie.printStackTrace();
+            }
         }
-        List<Friend> friendsFilterBySelected = ((RecycleViewAdapterFriends) mRecycleViewFriends.getAdapter()).getFriendsFilterBySelected();
-        Event event = new Event(title, description, friendsFilterBySelected);
+        List<Friend> friendswhoPaid = ((RecycleViewAdapterFriends) mRecycleViewFriends.getAdapter()).getFriendsFilterBySelected();
+        Event event = new Event(title, description, friendswhoPaid);
         event.setTotalPaid(totalPaid);
         mDatabaseEvents.push().setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
