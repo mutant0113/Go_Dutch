@@ -31,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(new GroupsFragment());
+        viewPagerAdapter.addFragment(new FriendsFragment());
         viewPagerAdapter.addFragment(new SettingsFragment());
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(viewPagerAdapter);
     }
 
     public static final int VIEW_PAGER_GROUPS = 0;
-    public static final int VIEW_PAGER_SETTINGS = VIEW_PAGER_GROUPS + 1;
+    public static final int VIEW_PAGER_FRIENDS = VIEW_PAGER_GROUPS + 1;
+    public static final int VIEW_PAGER_SETTINGS = VIEW_PAGER_FRIENDS + 1;
 
     private void setupBottomNavigationView() {
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_groups:
                         mViewPager.setCurrentItem(VIEW_PAGER_GROUPS);
+                        return true;
+                    case R.id.action_friends:
+                        mViewPager.setCurrentItem(VIEW_PAGER_FRIENDS);
                         return true;
                     case R.id.action_settings:
                         mViewPager.setCurrentItem(VIEW_PAGER_SETTINGS);

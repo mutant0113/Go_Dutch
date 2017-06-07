@@ -136,7 +136,7 @@ public class NewGroupActivity extends BaseActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userUid = firebaseUser.getUid();
-            DatabaseReference databaseReference = mDatabase.child("group").child(userUid).push();
+            DatabaseReference databaseReference = mDatabase.child("groups").child(userUid).push();
             group.setId(databaseReference.getKey());
             databaseReference.setValue(group).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -157,10 +157,10 @@ public class NewGroupActivity extends BaseActivity {
         mRecycleViewFriends = (RecyclerView) findViewById(R.id.recycler_view_friends);
         // TODO fetch from web;
         List<Friend> friends = new ArrayList<>();
-        friends.add(new Friend(123, "小美", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend(123, "小明", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend(123, "小剛", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend(123, "小智", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
+        friends.add(new Friend("123", "小美", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
+        friends.add(new Friend("123", "小明", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
+        friends.add(new Friend("123", "小剛", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
+        friends.add(new Friend("123", "小智", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
         RecycleViewAdapterFriends adapter = new RecycleViewAdapterFriends(friends);
         mRecycleViewFriends.setAdapter(adapter);
         mRecycleViewFriends.setLayoutManager(new GridLayoutManager(this, 2));
@@ -178,7 +178,7 @@ public class NewGroupActivity extends BaseActivity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_item_friend, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_item_friend, parent, false);
             // TODO judge isclicked
             ViewHolder holder = new ViewHolder(view);
             return holder;
@@ -236,9 +236,9 @@ public class NewGroupActivity extends BaseActivity {
         }
 
         private void findViews(View itemView) {
-            mLinearLayoutCompat = (LinearLayoutCompat) itemView.findViewById(R.id.linearLayoutCompat_friend);
-            mImageViewProPic = (AppCompatImageView) itemView.findViewById(R.id.appCompat_imageView_pro_pic);
-            mTextViewName = (AppCompatTextView) itemView.findViewById(R.id.appCompat_textView_name);
+            mLinearLayoutCompat = (LinearLayoutCompat) itemView.findViewById(R.id.linearLayout_friend);
+            mImageViewProPic = (AppCompatImageView) itemView.findViewById(R.id.imageView_pro_pic);
+            mTextViewName = (AppCompatTextView) itemView.findViewById(R.id.textView_name);
         }
     }
 }

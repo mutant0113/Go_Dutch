@@ -22,14 +22,14 @@
                 android:id="@+id/textView_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="title" />
+                android:text="title" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/textView_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:hint="date" />
+                android:text="date" />
 
         </android.support.v7.widget.ContentFrameLayout>
 
@@ -38,13 +38,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/linearLayoutCompat_title"
-            android:hint="description" />
+            android:text="description" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textView_total_paid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_description"
+            android:text="total_paid" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_friends_with_pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView_description">
+            android:layout_below="@+id/textView_total_paid">
 
         </android.support.v7.widget.RecyclerView>
 

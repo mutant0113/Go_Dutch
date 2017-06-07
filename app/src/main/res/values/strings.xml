@@ -16,7 +16,8 @@
         completions."
     </string>
 
-    <string name="bottom_navi_group">群組</string>
+    <string name="bottom_navi_groups">行程</string>
+    <string name="bottom_navi_friends">朋友</string>
     <string name="bottom_navi_settings">設定</string>
 
     <string name="upload_image_successfully">上傳圖片成功</string>

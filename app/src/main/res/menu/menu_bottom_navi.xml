@@ -4,8 +4,15 @@
     <item
         android:id="@+id/action_groups"
         android:enabled="true"
-        android:icon="@drawable/ic_group_black_24dp"
-        android:title="@string/bottom_navi_group"
+        android:icon="@drawable/ic_groups_black_24dp"
+        android:title="@string/bottom_navi_groups"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_friends"
+        android:enabled="true"
+        android:icon="@drawable/ic_friends_black_24dp"
+        android:title="@string/bottom_navi_friends"
         app:showAsAction="ifRoom" />
 
     <item

@@ -8,13 +8,13 @@
     app:ignore="NamespaceTypo">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_groups"
+        android:id="@+id/recycler_view_friends"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_new_group"
+        android:id="@+id/fab_new_friend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

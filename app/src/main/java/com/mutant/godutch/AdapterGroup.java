@@ -27,7 +27,7 @@ public class AdapterGroup extends RecyclerView.Adapter<ViewHolderGroup> {
 
     @Override
     public ViewHolderGroup onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_item_group, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_item_group, parent, false);
         ViewHolderGroup holder = new ViewHolderGroup(view);
         return holder;
     }

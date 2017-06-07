@@ -20,7 +20,7 @@
                 android:id="@+id/imageView_photo"
                 android:layout_width="350px"
                 android:layout_height="350px"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/take_a_photo" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                     android:text="description" />
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/textView_total_pay"
+                    android:id="@+id/textView_total_paid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView_description"
@@ -54,17 +54,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/linearLayout_info"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/ic_account_circle_black_48dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/ic_account_circle_black_48dp" />
 
         </LinearLayout>
 

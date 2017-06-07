@@ -1,4 +1,4 @@
-package com.mutant.godutch.fragment;
+package com.mutant.godutch;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,42 +16,36 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mutant.godutch.AdapterGroup;
-import com.mutant.godutch.NewGroupActivity;
-import com.mutant.godutch.R;
-import com.mutant.godutch.model.Group;
+import com.mutant.godutch.model.Friend;
 
 import java.util.ArrayList;
 
 /**
- * Created by evanfang102 on 2017/3/30.
+ * Created by evanfang102 on 2017/6/7.
  */
 
-public class GroupsFragment extends Fragment {
+public class FriendsFragment extends Fragment {
 
-    RecyclerView mRecycleViewGroup;
-    AdapterGroup mAdapterGroup;
-    private DatabaseReference mDatabaseGroup;
-
-    public GroupsFragment() {
-    }
+    RecyclerView mRecycleViewFriends;
+    AdapterFriend mAdapterFriend;
+    private DatabaseReference mDatabaseFriend;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_groups, container, false);
+        return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupFirebase();
-        setupGroups(view);
+        setupFriends(view);
         setupFabNewGroup(view);
     }
 
     private void setupFabNewGroup(View view) {
-        view.findViewById(R.id.fab_new_group).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fab_new_friend).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(NewGroupActivity.getIntent(getActivity()));
@@ -59,23 +53,23 @@ public class GroupsFragment extends Fragment {
         });
     }
 
-    private void setupGroups(View view) {
-        mRecycleViewGroup = (RecyclerView) view.findViewById(R.id.recycler_view_groups);
-        mAdapterGroup = new AdapterGroup(getActivity(), new ArrayList<Group>());
+    private void setupFriends(View view) {
+        mRecycleViewFriends = (RecyclerView) view.findViewById(R.id.recycler_view_friends);
+        mAdapterFriend = new AdapterFriend(getActivity(), new ArrayList<Friend>());
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecycleViewGroup.setAdapter(mAdapterGroup);
-        mRecycleViewGroup.setLayoutManager(MyLayoutManager);
+        mRecycleViewFriends.setAdapter(mAdapterFriend);
+        mRecycleViewFriends.setLayoutManager(MyLayoutManager);
     }
 
     private void setupFirebase() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabaseGroup = FirebaseDatabase.getInstance().getReference().child("groups").child(firebaseUser.getUid());
-        mDatabaseGroup.orderByKey().addChildEventListener(new ChildEventListener() {
+        mDatabaseFriend = FirebaseDatabase.getInstance().getReference().child("friends").child(firebaseUser.getUid());
+        mDatabaseFriend.orderByKey().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                mAdapterGroup.addItem(dataSnapshot.getValue(Group.class));
-                mRecycleViewGroup.scrollToPosition(0);
+                mAdapterFriend.addItem(dataSnapshot.getValue(Friend.class));
+                mRecycleViewFriends.scrollToPosition(0);
             }
 
             @Override
