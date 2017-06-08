@@ -40,6 +40,24 @@
             android:name=".EventsActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".NewFriendActivity"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".MyInstanceIDListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".MyFcmListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="89f26ac9b1ab3631eb7f6e704a30a7d54b679f37" />

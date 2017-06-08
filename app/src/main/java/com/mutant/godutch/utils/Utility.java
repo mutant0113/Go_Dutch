@@ -1,5 +1,8 @@
 package com.mutant.godutch.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.InputFilter;
 import android.text.format.DateUtils;
 import android.widget.EditText;
@@ -23,5 +26,10 @@ public class Utility {
     public static CharSequence getRelativeTimeSpanDate(long timestamp) {
         return android.text.format.DateUtils.getRelativeTimeSpanString(timestamp, System.currentTimeMillis(),
                 DateUtils.SECOND_IN_MILLIS);
+    }
+
+    public static void intentToGoogleMarketToDowloadApp(Context context, String appMarketId) {
+        Intent marketIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appMarketId));
+        context.startActivity(marketIntent);
     }
 }

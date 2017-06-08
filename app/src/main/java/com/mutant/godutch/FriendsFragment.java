@@ -48,7 +48,7 @@ public class FriendsFragment extends Fragment {
         view.findViewById(R.id.fab_new_friend).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(NewGroupActivity.getIntent(getActivity()));
+                startActivity(NewFriendActivity.getIntent(getActivity()));
             }
         });
     }

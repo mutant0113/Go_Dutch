@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mutant.godutch.widget.EmailEditText;
 import com.mutant.godutch.widget.PasswordEditText;
 
@@ -107,6 +108,8 @@ public class LoginActivity extends AppCompatActivity {
                     // TODO password failed
                     if (task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, "user login succeed", Toast.LENGTH_SHORT).show();
+                        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                        MyInstanceIDListenerService.sendRegistrationToServer(refreshedToken);
                         intentToMainActivity();
                     } else {
                         register(email, password);

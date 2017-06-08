@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mutant.godutch.NewFriendActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/imageView_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:onClick="onClickZxingScan"
+            android:text="掃描Qrcode">
+
+        </android.support.v7.widget.AppCompatButton>
+
+    </FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>
