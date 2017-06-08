@@ -13,6 +13,7 @@ public class ViewHolderFriend extends RecyclerView.ViewHolder {
 
     public AppCompatImageView mImageViewPhoto;
     public AppCompatTextView mTextViewName;
+    public AppCompatTextView mTextViewInvitationState;
 
     public ViewHolderFriend(View itemView) {
         super(itemView);
@@ -22,6 +23,7 @@ public class ViewHolderFriend extends RecyclerView.ViewHolder {
     private void findViews(View itemView) {
         mImageViewPhoto = (AppCompatImageView) itemView.findViewById(R.id.imageView_pro_pic);
         mTextViewName = (AppCompatTextView) itemView.findViewById(R.id.textView_name);
+        mTextViewInvitationState = (AppCompatTextView) itemView.findViewById(R.id.textView_invitation_state);
     }
 
 }

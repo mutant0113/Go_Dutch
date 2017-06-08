@@ -13,10 +13,16 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.mutant.godutch.model.Friend;
 import com.mutant.godutch.utils.Utility;
 
 /**
@@ -26,6 +32,7 @@ import com.mutant.godutch.utils.Utility;
 public class NewFriendActivity extends BaseActivity {
 
     CoordinatorLayout mCoordinatorLayoutParent;
+    FirebaseUser mFirebaseUser;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, NewFriendActivity.class);
@@ -43,7 +50,12 @@ public class NewFriendActivity extends BaseActivity {
 
     @Override
     public void setup() {
+        setupFirebase();
         setupZxingGenerateQrcode();
+    }
+
+    private void setupFirebase() {
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void setupZxingGenerateQrcode() {
@@ -52,9 +64,10 @@ public class NewFriendActivity extends BaseActivity {
             @Override
             public void run() {
                 try {
-                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    Bitmap bitmap = encodeAsBitmap(firebaseUser.getUid(), imageViewQrcode.getWidth(), imageViewQrcode.getHeight());
-                    imageViewQrcode.setImageBitmap(bitmap);
+                    if (mFirebaseUser != null) {
+                        Bitmap bitmap = encodeAsBitmap(mFirebaseUser.getUid(), imageViewQrcode.getWidth(), imageViewQrcode.getHeight());
+                        imageViewQrcode.setImageBitmap(bitmap);
+                    }
                 } catch (WriterException e) {
                     e.printStackTrace();
                 }
@@ -104,14 +117,49 @@ public class NewFriendActivity extends BaseActivity {
     }
 
     // 接收 ZXing 掃描後回傳來的結果
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 // ZXing回傳的內容
-                String contents = intent.getStringExtra("SCAN_RESULT");
+                String newFriendUid = intent.getStringExtra("SCAN_RESULT");
+                sendInvitationToNewFriend(newFriendUid);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "取消掃描", Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    // TODO check is user exist
+    private void sendInvitationToNewFriend(final String newFriendUid) {
+        if (mFirebaseUser != null) {
+            FirebaseDatabase.getInstance().getReference().child("users").child(newFriendUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()) {
+                        Friend newFriend = dataSnapshot.getValue(Friend.class);
+                        newFriend.setState(Friend.STATE_NOT_BE_ACCEPTED);
+                        DatabaseReference databaseFriends = FirebaseDatabase.getInstance().getReference().child("friends");
+                        databaseFriends.child(mFirebaseUser.getUid()).child(newFriendUid).setValue(newFriend);
+
+                        // TODO fix me
+//                        Friend me = new Friend(mFirebaseUser.getUid(), mFirebaseUser.getDisplayName(), mFirebaseUser.getPhotoUrl().toString());
+                        Friend me = new Friend(mFirebaseUser.getUid(), "Evan", "");
+                        me.setState(Friend.STATE_BE_INVITED);
+                        databaseFriends.child(newFriendUid).child(me.getUid()).setValue(me);
+                        finish();
+                    } else {
+                        Snackbar.make(mCoordinatorLayoutParent, "此ID不存在", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            Snackbar.make(mCoordinatorLayoutParent, "FireBaseUser == null", Toast.LENGTH_LONG).show();
         }
     }
 }

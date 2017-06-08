@@ -17,12 +17,12 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -226,7 +226,7 @@ public class NewGroupActivity extends BaseActivity {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayoutCompat mLinearLayoutCompat;
+        RelativeLayout mRelativeLayoutCompat;
         AppCompatImageView mImageViewProPic;
         AppCompatTextView mTextViewName;
 
@@ -236,7 +236,7 @@ public class NewGroupActivity extends BaseActivity {
         }
 
         private void findViews(View itemView) {
-            mLinearLayoutCompat = (LinearLayoutCompat) itemView.findViewById(R.id.linearLayout_friend);
+            mRelativeLayoutCompat = (RelativeLayout) itemView.findViewById(R.id.relativeLayout_friend);
             mImageViewProPic = (AppCompatImageView) itemView.findViewById(R.id.imageView_pro_pic);
             mTextViewName = (AppCompatTextView) itemView.findViewById(R.id.textView_name);
         }

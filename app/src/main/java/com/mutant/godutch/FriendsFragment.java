@@ -74,7 +74,7 @@ public class FriendsFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // TODO
+                mAdapterFriend.changeItemState(dataSnapshot.getValue(Friend.class));
             }
 
             @Override

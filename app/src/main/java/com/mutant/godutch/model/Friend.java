@@ -1,5 +1,7 @@
 package com.mutant.godutch.model;
 
+import android.support.annotation.IntDef;
+
 /**
  * Created by Mutant on 2017/5/26.
  */
@@ -12,6 +14,11 @@ public class Friend {
     int paid;
     int total;
 
+    public static final int STATE_ACCEPTED = 0;
+    public static final int STATE_NOT_BE_ACCEPTED = 1;
+    public static final int STATE_BE_INVITED = 2;
+    int state;
+
     public Friend() {
     }
 
@@ -22,7 +29,7 @@ public class Friend {
     }
 
     public String getName() {
-        return name;
+        return name != null ? name : "";
     }
 
     public void setName(String name) {
@@ -59,5 +66,18 @@ public class Friend {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    @IntDef({STATE_ACCEPTED, STATE_NOT_BE_ACCEPTED, STATE_BE_INVITED})
+    public @interface State {
+    }
+
+    public void setState(@State int state) {
+        this.state = state;
+    }
+
+    @State
+    public int getState() {
+        return state;
     }
 }

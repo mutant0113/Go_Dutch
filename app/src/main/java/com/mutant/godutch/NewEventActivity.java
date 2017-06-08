@@ -174,7 +174,7 @@ public class NewEventActivity extends BaseActivity {
         }
 
         private void findViews(View itemView) {
-            mLinearLayoutCompat = (LinearLayoutCompat) itemView.findViewById(R.id.linearLayout_friend);
+            mLinearLayoutCompat = (LinearLayoutCompat) itemView.findViewById(R.id.relativeLayout_friend);
             mImageViewProPic = (AppCompatImageView) itemView.findViewById(R.id.imageView_pro_pic);
             mTextViewName = (AppCompatTextView) itemView.findViewById(R.id.textView_name);
         }
