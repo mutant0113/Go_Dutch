@@ -2,6 +2,7 @@ package com.mutant.godutch;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -9,20 +10,28 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mutant.godutch.model.Event;
 import com.mutant.godutch.model.Friend;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class NewEventActivity extends BaseActivity {
@@ -34,7 +43,11 @@ public class NewEventActivity extends BaseActivity {
     AppCompatEditText mEditTextDescription;
     AppCompatEditText mEditTextTotalPaid;
     RecyclerView mRecycleViewFriends;
+    RecycleViewAdapterFriends mAdapterFriends;
+    FirebaseUser mFirebaseUser;
     DatabaseReference mDatabaseEvents;
+    DatabaseReference mDatabaseFriends;
+    StorageReference mStorage;
 
     public static Intent getIntent(Activity activity, String groupId) {
         Intent intent = new Intent(activity, NewEventActivity.class);
@@ -61,8 +74,37 @@ public class NewEventActivity extends BaseActivity {
         setupFriends();
     }
 
+    private void setupFriends() {
+        mRecycleViewFriends = (RecyclerView) findViewById(R.id.recycler_view_friends);
+        mRecycleViewFriends.setLayoutManager(new GridLayoutManager(this, 2));
+    }
+
     private void setupFireBase() {
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         mDatabaseEvents = FirebaseDatabase.getInstance().getReference().child("events").child(mGroupId);
+        if (mFirebaseUser != null) {
+            String filePath = mFirebaseUser.getUid() + "/" + System.currentTimeMillis() + ".png";
+            mStorage = FirebaseStorage.getInstance().getReference().child(filePath);
+            mDatabaseFriends = FirebaseDatabase.getInstance().getReference().child("friends").child(mFirebaseUser.getUid());
+            mDatabaseFriends.orderByChild("name").addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<Friend> friends = new ArrayList<>();
+                    Iterator iterator = dataSnapshot.getChildren().iterator();
+                    while (iterator.hasNext()) {
+                        friends.add(((DataSnapshot) iterator.next()).getValue(Friend.class));
+                    }
+                    mAdapterFriends = new RecycleViewAdapterFriends(NewEventActivity.this, friends);
+                    mRecycleViewFriends.setAdapter(mAdapterFriends);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     public void onClickCreateNewEvent(View view) {
@@ -91,25 +133,14 @@ public class NewEventActivity extends BaseActivity {
         });
     }
 
-    private void setupFriends() {
-        mRecycleViewFriends = (RecyclerView) findViewById(R.id.recycler_view_friends);
-        // TODO fetch from web;
-        List<Friend> friends = new ArrayList<>();
-        friends.add(new Friend("123", "小美", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend("123", "小明", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend("123", "小剛", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend("123", "小智", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        RecycleViewAdapterFriends adapter = new RecycleViewAdapterFriends(friends);
-        mRecycleViewFriends.setAdapter(adapter);
-        mRecycleViewFriends.setLayoutManager(new GridLayoutManager(this, 2));
-    }
-
     private class RecycleViewAdapterFriends extends RecyclerView.Adapter<ViewHolder> {
 
+        Context context;
         List<Friend> friends;
         boolean[] isSelected;
 
-        public RecycleViewAdapterFriends(List<Friend> friends) {
+        public RecycleViewAdapterFriends(Context context, List<Friend> friends) {
+            this.context = context;
             this.friends = friends;
             this.isSelected = new boolean[friends.size()];
         }
@@ -144,6 +175,7 @@ public class NewEventActivity extends BaseActivity {
                     }
                 }
             });
+            holder.mTextViewInvitationState.setVisibility(View.GONE);
         }
 
         @Override
@@ -164,9 +196,10 @@ public class NewEventActivity extends BaseActivity {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayoutCompat mLinearLayoutCompat;
+        RelativeLayout mRelativeLayoutCompat;
         AppCompatImageView mImageViewProPic;
         AppCompatTextView mTextViewName;
+        AppCompatTextView mTextViewInvitationState;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -174,9 +207,10 @@ public class NewEventActivity extends BaseActivity {
         }
 
         private void findViews(View itemView) {
-            mLinearLayoutCompat = (LinearLayoutCompat) itemView.findViewById(R.id.relativeLayout_friend);
+            mRelativeLayoutCompat = (RelativeLayout) itemView.findViewById(R.id.relativeLayout_friend);
             mImageViewProPic = (AppCompatImageView) itemView.findViewById(R.id.imageView_pro_pic);
             mTextViewName = (AppCompatTextView) itemView.findViewById(R.id.textView_name);
+            mTextViewInvitationState = (AppCompatTextView) itemView.findViewById(R.id.textView_invitation_state);
         }
     }
 

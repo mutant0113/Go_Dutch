@@ -35,7 +35,6 @@ public class AdapterGroup extends RecyclerView.Adapter<ViewHolderGroup> {
     @Override
     public void onBindViewHolder(ViewHolderGroup holder, int position) {
         final Group group = groups.get(position);
-        // TODO fetch image from web
         Glide.with(activity).load(group.getPhotoUrl()).error(R.drawable.take_a_photo).into(holder.mImageViewPhoto);
         holder.mTextViewTitle.setText(group.getTitle());
         holder.mTextViewDescription.setText(group.getDescription());

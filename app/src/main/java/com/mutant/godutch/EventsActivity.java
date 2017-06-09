@@ -53,8 +53,8 @@ public class EventsActivity extends BaseActivity {
     @Override
     public void setup() {
         mGroupId = getIntent().getStringExtra(BUNDLE_KEY_GROUP_ID);
-        setupFireBase();
         setupEvents();
+        setupFireBase();
         setupFabNewEvent();
     }
 

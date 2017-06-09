@@ -2,6 +2,7 @@ package com.mutant.godutch;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -24,13 +25,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,6 +44,7 @@ import com.mutant.godutch.model.Group;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class NewGroupActivity extends BaseActivity {
@@ -48,6 +54,8 @@ public class NewGroupActivity extends BaseActivity {
     AppCompatEditText mEditTextDescription;
     ImageView mImageViewPhoto;
     RecyclerView mRecycleViewFriends;
+    RecycleViewAdapterFriends mAdapterFriends;
+    FirebaseUser mFirebaseUser;
     DatabaseReference mDatabase;
     StorageReference mStorage;
 
@@ -71,15 +79,40 @@ public class NewGroupActivity extends BaseActivity {
 
     @Override
     public void setup() {
-        setupFireBase();
         setupFriends();
+        setupFireBase();
+    }
+
+    private void setupFriends() {
+        mRecycleViewFriends = (RecyclerView) findViewById(R.id.recycler_view_friends);
+        mRecycleViewFriends.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
     private void setupFireBase() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String filePath = firebaseUser.getUid() + "/" + System.currentTimeMillis() + ".png";
-        mStorage = FirebaseStorage.getInstance().getReference().child(filePath);
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mFirebaseUser != null) {
+            String filePath = mFirebaseUser.getUid() + "/" + System.currentTimeMillis() + ".png";
+            mStorage = FirebaseStorage.getInstance().getReference().child(filePath);
+            mDatabase.child("friends").child(mFirebaseUser.getUid()).orderByChild("name").addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<Friend> friends = new ArrayList<>();
+                    Iterator iterator = dataSnapshot.getChildren().iterator();
+                    while (iterator.hasNext()) {
+                        friends.add(((DataSnapshot) iterator.next()).getValue(Friend.class));
+                    }
+                    mAdapterFriends = new RecycleViewAdapterFriends(NewGroupActivity.this, friends);
+                    mRecycleViewFriends.setAdapter(mAdapterFriends);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -133,9 +166,8 @@ public class NewGroupActivity extends BaseActivity {
         String description = mEditTextDescription.getText().toString();
         List<Friend> friendsFilterBySelected = ((RecycleViewAdapterFriends) mRecycleViewFriends.getAdapter()).getFriendsFilterBySelected();
         Group group = new Group(title, description, imageDownloadUrl.toString(), 0, friendsFilterBySelected);
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            String userUid = firebaseUser.getUid();
+        if (mFirebaseUser != null) {
+            String userUid = mFirebaseUser.getUid();
             DatabaseReference databaseReference = mDatabase.child("groups").child(userUid).push();
             group.setId(databaseReference.getKey());
             databaseReference.setValue(group).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -153,25 +185,14 @@ public class NewGroupActivity extends BaseActivity {
         }
     }
 
-    private void setupFriends() {
-        mRecycleViewFriends = (RecyclerView) findViewById(R.id.recycler_view_friends);
-        // TODO fetch from web;
-        List<Friend> friends = new ArrayList<>();
-        friends.add(new Friend("123", "小美", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend("123", "小明", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend("123", "小剛", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        friends.add(new Friend("123", "小智", "http://i.epochtimes.com/assets/uploads/2016/07/05c1348a7d53f02a1cc861f01d21878e-600x400.jpg"));
-        RecycleViewAdapterFriends adapter = new RecycleViewAdapterFriends(friends);
-        mRecycleViewFriends.setAdapter(adapter);
-        mRecycleViewFriends.setLayoutManager(new GridLayoutManager(this, 2));
-    }
-
     private class RecycleViewAdapterFriends extends RecyclerView.Adapter<ViewHolder> {
 
+        Context context;
         List<Friend> friends;
         boolean[] isSelected;
 
-        public RecycleViewAdapterFriends(List<Friend> friends) {
+        public RecycleViewAdapterFriends(Context context, List<Friend> friends) {
+            this.context = context;
             this.friends = friends;
             this.isSelected = new boolean[friends.size()];
         }
@@ -187,8 +208,7 @@ public class NewGroupActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final Friend friend = friends.get(position);
-            // TODO set image
-//            holder.mImageViewProPic.setImageURI();
+            Glide.with(context).load(friend.getProPicUrl()).error(R.drawable.profile_pic).into(holder.mImageViewProPic);
             holder.mTextViewName.setText(friend.getName());
             final View itemView = holder.itemView;
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -206,6 +226,7 @@ public class NewGroupActivity extends BaseActivity {
                     }
                 }
             });
+            holder.mTextViewInvitationState.setVisibility(View.GONE);
         }
 
         @Override
@@ -229,6 +250,7 @@ public class NewGroupActivity extends BaseActivity {
         RelativeLayout mRelativeLayoutCompat;
         AppCompatImageView mImageViewProPic;
         AppCompatTextView mTextViewName;
+        AppCompatTextView mTextViewInvitationState;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -239,6 +261,7 @@ public class NewGroupActivity extends BaseActivity {
             mRelativeLayoutCompat = (RelativeLayout) itemView.findViewById(R.id.relativeLayout_friend);
             mImageViewProPic = (AppCompatImageView) itemView.findViewById(R.id.imageView_pro_pic);
             mTextViewName = (AppCompatTextView) itemView.findViewById(R.id.textView_name);
+            mTextViewInvitationState = (AppCompatTextView) itemView.findViewById(R.id.textView_invitation_state);
         }
     }
 }
