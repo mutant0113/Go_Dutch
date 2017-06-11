@@ -12,23 +12,23 @@ public class Group {
     private String title;
     private String description;
     private String photoUrl;
-    private int totalPaid;
+    private int subtotal;
     private List<Friend> friends;
 
     public Group() {
     }
 
-    public Group(String id, String title, String description, String photoUrl, int totalPaid, List<Friend> friends) {
+    public Group(String id, String title, String description, String photoUrl, int subtotal, List<Friend> friends) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.photoUrl = photoUrl;
-        this.totalPaid = totalPaid;
+        this.subtotal = subtotal;
         this.friends = friends;
     }
 
-    public Group(String title, String description, String photoUrl, int totalPaid, List<Friend> friends) {
-        this(null, title, description, photoUrl, totalPaid, friends);
+    public Group(String title, String description, String photoUrl, int total, List<Friend> friends) {
+        this(null, title, description, photoUrl, total, friends);
     }
 
     public String getTitle() {
@@ -39,8 +39,8 @@ public class Group {
         return description;
     }
 
-    public int getTotalPaid() {
-        return totalPaid;
+    public int getSubtotal() {
+        return subtotal;
     }
 
     public String getId() {

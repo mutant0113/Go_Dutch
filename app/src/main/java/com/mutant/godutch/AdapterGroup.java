@@ -38,7 +38,7 @@ public class AdapterGroup extends RecyclerView.Adapter<ViewHolderGroup> {
         Glide.with(activity).load(group.getPhotoUrl()).error(R.drawable.take_a_photo).into(holder.mImageViewPhoto);
         holder.mTextViewTitle.setText(group.getTitle());
         holder.mTextViewDescription.setText(group.getDescription());
-        holder.mTextViewTotalPay.setText("$" + String.valueOf(group.getTotalPaid()));
+        holder.mTextViewTotalPay.setText("$" + String.valueOf(group.getSubtotal()));
         // TODO add friends' photo
 //        holder.mLinearLayoutFriends.addView(new View());
         holder.itemView.setOnClickListener(new View.OnClickListener() {

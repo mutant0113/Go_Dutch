@@ -11,8 +11,7 @@ public class Friend {
     String uid;
     String name;
     String proPicUrl;
-    int paid;
-    int total;
+    int needToPay;
 
     public static final int STATE_ACCEPTED = 0;
     public static final int STATE_NOT_BE_ACCEPTED = 1;
@@ -44,20 +43,12 @@ public class Friend {
         this.proPicUrl = proPicUrl;
     }
 
-    public int getPaid() {
-        return paid;
+    public int getNeedToPay() {
+        return needToPay;
     }
 
-    public void setPaid(int paid) {
-        this.paid = paid;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
+    public void setNeedToPay(int needToPay) {
+        this.needToPay = needToPay;
     }
 
     public String getUid() {

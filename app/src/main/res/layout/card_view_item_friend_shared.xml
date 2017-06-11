@@ -8,6 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
         android:gravity="center_horizontal">
 
         <android.support.v7.widget.LinearLayoutCompat
@@ -33,12 +34,13 @@
         </android.support.v7.widget.LinearLayoutCompat>
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/textView_paid_and_total"
+            android:id="@+id/textView_need_to_pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_toRightOf="@id/relativeLayout_friend"
-            android:text="xxx/xxx" />
+            android:text="xxx" />
 
     </RelativeLayout>
 
