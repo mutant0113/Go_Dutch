@@ -84,7 +84,7 @@ public class NewGroupActivity extends BaseActivity {
     }
 
     private void setupFriends() {
-        mRecycleViewFriends = (RecyclerView) findViewById(R.id.recycler_view_friends);
+        mRecycleViewFriends = (RecyclerView) findViewById(R.id.recycler_view_friends_shared);
         mRecycleViewFriends.setLayoutManager(new GridLayoutManager(this, 2));
     }
 

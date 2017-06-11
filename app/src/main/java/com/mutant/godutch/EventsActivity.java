@@ -50,6 +50,10 @@ public class EventsActivity extends BaseActivity {
 
     }
 
+    public void onClickButtonCheckout(View view) {
+        startActivity(CheckoutActivity.getIntent(this, mAdapterEvent.getEvents()));
+    }
+
     @Override
     public void setup() {
         mGroupId = getIntent().getStringExtra(BUNDLE_KEY_GROUP_ID);
@@ -115,9 +119,9 @@ public class EventsActivity extends BaseActivity {
     class RecycleViewAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
 
         Activity activity;
-        List<Event> events;
+        ArrayList<Event> events;
 
-        public RecycleViewAdapterEvent(Activity activity, List<Event> events) {
+        public RecycleViewAdapterEvent(Activity activity, ArrayList<Event> events) {
             this.activity = activity;
             this.events = events;
         }
@@ -136,7 +140,7 @@ public class EventsActivity extends BaseActivity {
             holder.mTextViewDate.setText(Utility.getRelativeTimeSpanDate(event.getTimestampCreated()));
             holder.mTextViewDescription.setText(event.getDescription());
             holder.mTextViewNeedToPay.setText("$" + event.getSubtotal());
-            holder.mRecycleViewFriendsShared.setAdapter(new RecycleViewAdapterFriendsShared(event.getFriends()));
+            holder.mRecycleViewFriendsShared.setAdapter(new RecycleViewAdapterFriendsShared(event.getFriendsShared()));
             holder.mRecycleViewFriendsShared.setLayoutManager(new GridLayoutManager(EventsActivity.this, 2));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -172,6 +176,10 @@ public class EventsActivity extends BaseActivity {
         public void addItem(Event event) {
             events.add(0, event);
             notifyItemInserted(0);
+        }
+
+        public ArrayList<Event> getEvents() {
+            return events;
         }
     }
 

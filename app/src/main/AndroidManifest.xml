@@ -44,6 +44,10 @@
             android:name=".NewFriendActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".CheckoutActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".MyInstanceIDListenerService">
             <intent-filter>

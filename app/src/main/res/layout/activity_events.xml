@@ -22,4 +22,11 @@
         android:src="@drawable/ic_add_circle_outline_white"
         app:pressedTranslationZ="12dp" />
 
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:onClick="onClickButtonCheckout"
+        android:text="結帳" />
+
 </android.support.v7.widget.ContentFrameLayout>

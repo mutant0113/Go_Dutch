@@ -1,12 +1,14 @@
 package com.mutant.godutch.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.IntDef;
 
 /**
  * Created by Mutant on 2017/5/26.
  */
 
-public class Friend {
+public class Friend implements Parcelable {
 
     String uid;
     String name;
@@ -71,4 +73,36 @@ public class Friend {
     public int getState() {
         return state;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.uid);
+        dest.writeString(this.name);
+        dest.writeString(this.proPicUrl);
+        dest.writeInt(this.needToPay);
+        dest.writeInt(this.state);
+    }
+
+    protected Friend(Parcel in) {
+        this.uid = in.readString();
+        this.name = in.readString();
+        this.proPicUrl = in.readString();
+        this.needToPay = in.readInt();
+        this.state = in.readInt();
+    }
+
+    public static final Creator<Friend> CREATOR = new Creator<Friend>() {
+        public Friend createFromParcel(Parcel source) {
+            return new Friend(source);
+        }
+
+        public Friend[] newArray(int size) {
+            return new Friend[size];
+        }
+    };
 }

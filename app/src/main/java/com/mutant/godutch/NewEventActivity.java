@@ -50,7 +50,7 @@ public class NewEventActivity extends BaseActivity {
     AppCompatEditText mEditTextTax;
     AppCompatEditText mEditTextTotal;
     AppCompatButton mButtonTax10;
-    RecyclerView mRecycleViewFriends;
+    RecyclerView mRecycleViewFriendsShared;
     RecycleViewAdapterFriendsShared mAdapterFriendsShared;
     FirebaseUser mFirebaseUser;
     DatabaseReference mDatabaseEvents;
@@ -82,7 +82,7 @@ public class NewEventActivity extends BaseActivity {
     public void setup() {
         mGroupId = getIntent().getStringExtra(BUNDLE_KEY_GROUP_ID);
         setupFireBase();
-        setupFriends();
+        setupFriendsShard();
         setupButtonTax10Listener();
         setupSubtotalTextChangedListener();
         setupTotalTextChangedListener();
@@ -162,9 +162,9 @@ public class NewEventActivity extends BaseActivity {
         });
     }
 
-    private void setupFriends() {
-        mRecycleViewFriends = (RecyclerView) findViewById(R.id.recycler_view_friends);
-        mRecycleViewFriends.setLayoutManager(new GridLayoutManager(this, 2));
+    private void setupFriendsShard() {
+        mRecycleViewFriendsShared = (RecyclerView) findViewById(R.id.recycler_view_friends_shared);
+        mRecycleViewFriendsShared.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
     private void setupFireBase() {
@@ -186,7 +186,7 @@ public class NewEventActivity extends BaseActivity {
                     // TODO 如果付錢的不是自己的CASE，先假設都是自己付錢
                     friends.add(0, getMeInFriend());
                     mAdapterFriendsShared = new RecycleViewAdapterFriendsShared(NewEventActivity.this, 0, friends);
-                    mRecycleViewFriends.setAdapter(mAdapterFriendsShared);
+                    mRecycleViewFriendsShared.setAdapter(mAdapterFriendsShared);
                 }
 
                 @Override
@@ -203,11 +203,12 @@ public class NewEventActivity extends BaseActivity {
         int subtotal = Integer.parseInt(mEditTextSubtotal.getText().toString());
         int tax = Integer.parseInt(mEditTextTax.getText().toString());
         int total = Integer.parseInt(mEditTextTotal.getText().toString());
-        List<Friend> friendswhoPaid = ((RecycleViewAdapterFriendsShared) mRecycleViewFriends.getAdapter()).getFriendsFilterBySelected();
+        List<Friend> friendswhoPaid = ((RecycleViewAdapterFriendsShared) mRecycleViewFriendsShared.getAdapter()).getFriendsFilterBySelected();
         Event event = new Event(title, description, subtotal, tax, total, friendswhoPaid);
         event.setSubtotal(total);
         DatabaseReference databaseReference = mDatabaseEvents.push();
         event.setId(databaseReference.getKey());
+        event.setFriendWhoPaidFirst(mAdapterFriendsShared.getFriendWhoPaidFirst());
         databaseReference.setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -216,12 +217,13 @@ public class NewEventActivity extends BaseActivity {
         });
     }
 
-    private class RecycleViewAdapterFriendsShared extends RecyclerView.Adapter<ViewHolder> {
+    private class RecycleViewAdapterFriendsShared extends RecyclerView.Adapter<ViewHolderShared> {
 
         Context context;
         int total;
         List<Friend> friends;
         boolean[] isSelected;
+        Friend friendWhoPaidFirst;
 
         public RecycleViewAdapterFriendsShared(Context context, int total, List<Friend> friends) {
             this.context = context;
@@ -231,15 +233,15 @@ public class NewEventActivity extends BaseActivity {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolderShared onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_item_friend, parent, false);
             // TODO judge isclicked
-            ViewHolder holder = new ViewHolder(view);
+            ViewHolderShared holder = new ViewHolderShared(view);
             return holder;
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolderShared holder, final int position) {
             final Friend friend = friends.get(position);
             // TODO set image
 //            holder.mImageViewProPic.setImageURI();
@@ -252,15 +254,29 @@ public class NewEventActivity extends BaseActivity {
                     if (isSelected[position]) {
                         // TODO setbackground
                         itemView.setBackgroundColor(Color.WHITE);
+                        itemView.setSelected(false);
                         isSelected[position] = false;
                     } else {
                         // TODO setbackground
                         itemView.setBackgroundColor(Color.YELLOW);
+                        itemView.setSelected(true);
                         isSelected[position] = true;
                     }
                     modifyTotal(total);
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    // TODO bug if user modifies total.
+                    friend.setNeedToPay(friend.getNeedToPay() - total);
+                    friendWhoPaidFirst = friend;
+                    itemView.setBackgroundColor(Color.RED);
+                    return true;
+                }
+            });
+
             holder.mTextViewNeedToPay.setText(String.valueOf(friend.getNeedToPay()));
             holder.mTextViewInvitationState.setVisibility(View.GONE);
         }
@@ -318,9 +334,13 @@ public class NewEventActivity extends BaseActivity {
             }
             return friendsFliterBySelected;
         }
+
+        public Friend getFriendWhoPaidFirst() {
+            return friendWhoPaidFirst;
+        }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolderShared extends RecyclerView.ViewHolder {
 
         RelativeLayout mRelativeLayoutCompat;
         AppCompatImageView mImageViewProPic;
@@ -328,7 +348,7 @@ public class NewEventActivity extends BaseActivity {
         AppCompatTextView mTextViewNeedToPay;
         AppCompatTextView mTextViewInvitationState;
 
-        public ViewHolder(View itemView) {
+        public ViewHolderShared(View itemView) {
             super(itemView);
             findViews(itemView);
         }
