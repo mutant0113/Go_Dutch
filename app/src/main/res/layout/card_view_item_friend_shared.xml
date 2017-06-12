@@ -11,7 +11,7 @@
         android:padding="@dimen/activity_horizontal_margin"
         android:gravity="center_horizontal">
 
-        <android.support.v7.widget.LinearLayoutCompat
+        <RelativeLayout
             android:id="@+id/relativeLayout_friend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,10 +28,12 @@
                 android:layout_width="wrap_content"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/imageView_pro_pic"
                 android:text="名字" />
 
 
-        </android.support.v7.widget.LinearLayoutCompat>
+        </RelativeLayout>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/textView_need_to_pay"

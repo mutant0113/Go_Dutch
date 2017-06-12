@@ -29,11 +29,11 @@ public class PasswordEditText extends android.support.v7.widget.AppCompatEditTex
 	@Override
 	public void initializeSetting() {
 		this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-		Utility.setMaxLength(this, maxLength);
+		Utility.INSTANCE.setMaxLength(this, maxLength);
 	}
 	
 	public boolean isValid() {
-		return Patterns.PASSWORD.matcher(this.getText().toString()).matches();
+		return Patterns.INSTANCE.getPASSWORD().matcher(this.getText().toString()).matches();
 	}
 	
 	public boolean isEmpty() {

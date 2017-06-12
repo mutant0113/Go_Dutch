@@ -32,7 +32,7 @@ public class UserNameEditText extends android.support.v7.widget.AppCompatEditTex
 	public void initializeSetting() {
 		this.setInputType(InputType.TYPE_CLASS_TEXT);
 		this.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-		Utility.setMaxLength(this, maxLength);
+		Utility.INSTANCE.setMaxLength(this, maxLength);
 		addTextChangedListener(new TextWatcher() {
 
 			@Override

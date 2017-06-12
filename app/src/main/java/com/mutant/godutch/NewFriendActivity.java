@@ -103,7 +103,7 @@ public class NewFriendActivity extends BaseActivity {
         if (getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() == 0) {
             // 未安裝
             Snackbar.make(mCoordinatorLayoutParent, "請至 Play 商店安裝 ZXing 條碼掃描器", Toast.LENGTH_LONG).show();
-            Utility.intentToGoogleMarketToDowloadApp(this, "com.google.zxing.client.android");
+            Utility.INSTANCE.intentToGoogleMarketToDowloadApp(this, "com.google.zxing.client.android");
         } else {
             // SCAN_MODE, 可判別所有支援的條碼
             // QR_CODE_MODE, 只判別 QRCode

@@ -41,17 +41,17 @@
             android:text="description" />
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/textView_need_to_pay"
+            android:id="@+id/textView_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView_description"
-            android:text="total_paid" />
+            android:text="total" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_friends_with_pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView_need_to_pay">
+            android:layout_below="@+id/textView_total">
 
         </android.support.v7.widget.RecyclerView>
 

@@ -15,9 +15,8 @@ import io.reactivex.disposables.Disposable
 
 class TestActivity : BaseActivity() {
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_test;
-    }
+    override val layoutId: Int
+        get() = R.layout.activity_test //To change initializer of created properties use File | Settings | File Templates.
 
     override fun findViews() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

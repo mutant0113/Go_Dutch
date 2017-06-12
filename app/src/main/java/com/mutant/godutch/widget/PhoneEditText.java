@@ -29,7 +29,7 @@ public class PhoneEditText extends android.support.v7.widget.AppCompatEditText i
 	@Override
 	public void initializeSetting() {
 		this.setInputType(InputType.TYPE_CLASS_PHONE);
-		Utility.setMaxLength(this, maxLength);
+		Utility.INSTANCE.setMaxLength(this, maxLength);
 	}
 	
 	public boolean isValid() {
