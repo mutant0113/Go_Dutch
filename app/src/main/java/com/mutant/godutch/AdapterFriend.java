@@ -47,8 +47,7 @@ public class AdapterFriend extends RecyclerView.Adapter<ViewHolderFriend> {
         super.onBindViewHolder(holder, position, payloads);
         final Friend friend = friends.get(position);
         if(payloads.isEmpty()) {
-            // TODO fetch image from web
-            Glide.with(activity).load(friend.getProPicUrl()).error(R.drawable.profile_pic).into(holder.mImageViewPhoto);
+            Glide.with(activity).load(friend.getProPicUrl()).error(R.drawable.profile_pic).into(holder.mImageViewProPic);
             holder.mTextViewName.setText(friend.getName());
             setupFriendState(holder, friend);
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {

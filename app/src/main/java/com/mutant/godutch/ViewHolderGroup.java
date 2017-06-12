@@ -27,7 +27,7 @@ public class ViewHolderGroup extends RecyclerView.ViewHolder {
         mImageViewPhoto = (AppCompatImageView) itemView.findViewById(R.id.imageView_photo);
         mTextViewTitle = (AppCompatTextView) itemView.findViewById(R.id.textView_title);
         mTextViewDescription = (AppCompatTextView) itemView.findViewById(R.id.textView_description);
-        mTextViewTotalPay = (AppCompatTextView) itemView.findViewById(R.id.textView_total_paid);
+        mTextViewTotalPay = (AppCompatTextView) itemView.findViewById(R.id.textView_need_to_pay);
         mLinearLayoutFriends = (LinearLayout) itemView.findViewById(R.id.linearLayout_friends);
     }
 

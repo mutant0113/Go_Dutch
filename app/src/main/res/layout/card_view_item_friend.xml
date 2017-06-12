@@ -33,6 +33,14 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:text="名字" />
 
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_need_to_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:text="xxx" />
+
         </android.support.v7.widget.LinearLayoutCompat>
 
         <android.support.v7.widget.AppCompatTextView

@@ -1,18 +1,19 @@
 package com.mutant.godutch.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.IntDef;
 
 /**
  * Created by Mutant on 2017/5/26.
  */
 
-public class Friend {
+public class Friend implements Parcelable {
 
     String uid;
     String name;
     String proPicUrl;
-    int paid;
-    int total;
+    int needToPay;
 
     public static final int STATE_ACCEPTED = 0;
     public static final int STATE_NOT_BE_ACCEPTED = 1;
@@ -44,20 +45,12 @@ public class Friend {
         this.proPicUrl = proPicUrl;
     }
 
-    public int getPaid() {
-        return paid;
+    public int getNeedToPay() {
+        return needToPay;
     }
 
-    public void setPaid(int paid) {
-        this.paid = paid;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
+    public void setNeedToPay(int needToPay) {
+        this.needToPay = needToPay;
     }
 
     public String getUid() {
@@ -80,4 +73,36 @@ public class Friend {
     public int getState() {
         return state;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.uid);
+        dest.writeString(this.name);
+        dest.writeString(this.proPicUrl);
+        dest.writeInt(this.needToPay);
+        dest.writeInt(this.state);
+    }
+
+    protected Friend(Parcel in) {
+        this.uid = in.readString();
+        this.name = in.readString();
+        this.proPicUrl = in.readString();
+        this.needToPay = in.readInt();
+        this.state = in.readInt();
+    }
+
+    public static final Creator<Friend> CREATOR = new Creator<Friend>() {
+        public Friend createFromParcel(Parcel source) {
+            return new Friend(source);
+        }
+
+        public Friend[] newArray(int size) {
+            return new Friend[size];
+        }
+    };
 }

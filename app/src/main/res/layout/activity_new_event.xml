@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_margin="@dimen/activity_horizontal_margin"
+    android:orientation="vertical"
     tools:context="com.mutant.godutch.NewEventActivity">
 
     <android.support.design.widget.TextInputLayout
@@ -41,27 +41,85 @@
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/editText_total_paid"
+            android:id="@+id/editText_subtotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="總花費">
+            android:hint="小計"
+            android:inputType="number">
+
+        </android.support.v7.widget.AppCompatEditText>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/editText_tax"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:hint="服務費"
+                android:inputType="number">
+
+            </android.support.v7.widget.AppCompatEditText>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_tax_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:background="@null"
+            android:onClick="onClickButtonTax10"
+            android:text="10%" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:background="@null"
+            android:text="自訂" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editText_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:hint="合計"
+            android:text="0">
 
         </android.support.v7.widget.AppCompatEditText>
 
     </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_friends"
+        android:id="@+id/recycler_view_friends_shared"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:scrollbars="vertical" />
 
     <android.support.v7.widget.AppCompatButton
-        android:onClick="onClickCreateNewEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="新增項目"/>
+        android:onClick="onClickCreateNewEvent"
+        android:text="新增項目" />
 
 </LinearLayout>

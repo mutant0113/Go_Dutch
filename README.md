@@ -1,6 +1,6 @@
 ## GoDutch
 # Concepts
-An app For multiple members, like couples, friends and so on, to share payments simplier.
+An app For multiple members, like couples, friendsShared and so on, to share payments simplier.
 # Functions
 1. Authentication
 2. Group Member

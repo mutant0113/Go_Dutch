@@ -54,7 +54,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setupFriends(View view) {
-        mRecycleViewFriends = (RecyclerView) view.findViewById(R.id.recycler_view_friends);
+        mRecycleViewFriends = (RecyclerView) view.findViewById(R.id.recycler_view_friends_shared);
         mAdapterFriend = new AdapterFriend(getActivity(), new ArrayList<Friend>());
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

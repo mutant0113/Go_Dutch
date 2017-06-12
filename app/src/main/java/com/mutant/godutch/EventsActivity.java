@@ -50,11 +50,15 @@ public class EventsActivity extends BaseActivity {
 
     }
 
+    public void onClickButtonCheckout(View view) {
+        startActivity(CheckoutActivity.getIntent(this, mAdapterEvent.getEvents()));
+    }
+
     @Override
     public void setup() {
         mGroupId = getIntent().getStringExtra(BUNDLE_KEY_GROUP_ID);
-        setupFireBase();
         setupEvents();
+        setupFireBase();
         setupFabNewEvent();
     }
 
@@ -101,10 +105,10 @@ public class EventsActivity extends BaseActivity {
     private void setupEvents() {
         mRecycleViewEvent = (RecyclerView) findViewById(R.id.recycler_view_event);
         // TODO fetch from web;
-//        events.add(new Event("住宿", "六天住宿錢", friendWithPays));
-//        events.add(new Event("早餐", "好吃的懷石料理", friendWithPays));
-//        events.add(new Event("門票錢", "直接登上東京鐵塔!!", friendWithPays));
-//        events.add(new Event("喔米阿給", "三大待喔米阿給YA~~", friendWithPays));
+//        events.add(new Event("住宿", "六天住宿錢", friendShared));
+//        events.add(new Event("早餐", "好吃的懷石料理", friendShared));
+//        events.add(new Event("門票錢", "直接登上東京鐵塔!!", friendShared));
+//        events.add(new Event("喔米阿給", "三大待喔米阿給YA~~", friendShared));
         mAdapterEvent = new RecycleViewAdapterEvent(this, new ArrayList<Event>());
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this);
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -115,9 +119,9 @@ public class EventsActivity extends BaseActivity {
     class RecycleViewAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
 
         Activity activity;
-        List<Event> events;
+        ArrayList<Event> events;
 
-        public RecycleViewAdapterEvent(Activity activity, List<Event> events) {
+        public RecycleViewAdapterEvent(Activity activity, ArrayList<Event> events) {
             this.activity = activity;
             this.events = events;
         }
@@ -135,10 +139,9 @@ public class EventsActivity extends BaseActivity {
             holder.mTextViewTitle.setText(event.getTitle());
             holder.mTextViewDate.setText(Utility.getRelativeTimeSpanDate(event.getTimestampCreated()));
             holder.mTextViewDescription.setText(event.getDescription());
-            holder.mTextViewTotalPaid.setText("$" + event.getTotalPaid());
-            RecycleViewAdapterFriendsWhoPaid adapterFriendsWhoPaid = new RecycleViewAdapterFriendsWhoPaid(event.getFriends());
-            holder.mRecycleViewFriendsWhoPaid.setAdapter(adapterFriendsWhoPaid);
-            holder.mRecycleViewFriendsWhoPaid.setLayoutManager(new GridLayoutManager(EventsActivity.this, 2));
+            holder.mTextViewNeedToPay.setText("$" + event.getSubtotal());
+            holder.mRecycleViewFriendsShared.setAdapter(new RecycleViewAdapterFriendsShared(event.getFriendsShared()));
+            holder.mRecycleViewFriendsShared.setLayoutManager(new GridLayoutManager(EventsActivity.this, 2));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -174,35 +177,39 @@ public class EventsActivity extends BaseActivity {
             events.add(0, event);
             notifyItemInserted(0);
         }
+
+        public ArrayList<Event> getEvents() {
+            return events;
+        }
     }
 
-    class RecycleViewAdapterFriendsWhoPaid extends RecyclerView.Adapter<ViewHolderFriend> {
+    class RecycleViewAdapterFriendsShared extends RecyclerView.Adapter<ViewHolderFriendShared> {
 
-        List<Friend> friendWithPays;
+        List<Friend> friendShared;
 
-        public RecycleViewAdapterFriendsWhoPaid(List<Friend> friendWithPays) {
-            this.friendWithPays = friendWithPays;
+        public RecycleViewAdapterFriendsShared(List<Friend> friendsShared) {
+            this.friendShared = friendsShared;
         }
 
         @Override
-        public ViewHolderFriend onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_item_friend_with_pay, parent, false);
-            ViewHolderFriend holder = new ViewHolderFriend(view);
+        public ViewHolderFriendShared onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_item_friend_shared, parent, false);
+            ViewHolderFriendShared holder = new ViewHolderFriendShared(view);
             return holder;
         }
 
         @Override
-        public void onBindViewHolder(ViewHolderFriend holder, int position) {
-            Friend friendWithPay = friendWithPays.get(position);
-            holder.mTextViewName.setText(friendWithPay.getName());
+        public void onBindViewHolder(ViewHolderFriendShared holder, int position) {
+            Friend friendShared = this.friendShared.get(position);
+            holder.mTextViewName.setText(friendShared.getName());
             // TODO
 //            holder.mImageViewProPic.setImageURI();
-            holder.mTextViewPaidAndTotal.setText(friendWithPay.getPaid() + "/" + friendWithPay.getTotal());
+            holder.mTextViewNeedToPay.setText(String.valueOf(friendShared.getNeedToPay()));
         }
 
         @Override
         public int getItemCount() {
-            return friendWithPays.size();
+            return friendShared.size();
         }
     }
 
@@ -211,8 +218,8 @@ public class EventsActivity extends BaseActivity {
         public AppCompatTextView mTextViewTitle;
         public AppCompatTextView mTextViewDate;
         public AppCompatTextView mTextViewDescription;
-        public AppCompatTextView mTextViewTotalPaid;
-        public RecyclerView mRecycleViewFriendsWhoPaid;
+        public AppCompatTextView mTextViewNeedToPay;
+        public RecyclerView mRecycleViewFriendsShared;
 
         public ViewHolderEvent(View itemView) {
             super(itemView);
@@ -223,18 +230,18 @@ public class EventsActivity extends BaseActivity {
             mTextViewTitle = (AppCompatTextView) itemView.findViewById(R.id.textView_title);
             mTextViewDate = (AppCompatTextView) itemView.findViewById(R.id.textView_date);
             mTextViewDescription = (AppCompatTextView) itemView.findViewById(R.id.textView_description);
-            mTextViewTotalPaid = (AppCompatTextView) itemView.findViewById(R.id.textView_total_paid);
-            mRecycleViewFriendsWhoPaid = (RecyclerView) itemView.findViewById(R.id.recycler_view_friends_with_pay);
+            mTextViewNeedToPay = (AppCompatTextView) itemView.findViewById(R.id.textView_need_to_pay);
+            mRecycleViewFriendsShared = (RecyclerView) itemView.findViewById(R.id.recycler_view_friends_with_pay);
         }
     }
 
-    class ViewHolderFriend extends RecyclerView.ViewHolder {
+    class ViewHolderFriendShared extends RecyclerView.ViewHolder {
 
         public AppCompatImageView mImageViewProPic;
         public AppCompatTextView mTextViewName;
-        public AppCompatTextView mTextViewPaidAndTotal;
+        public AppCompatTextView mTextViewNeedToPay;
 
-        public ViewHolderFriend(View itemView) {
+        public ViewHolderFriendShared(View itemView) {
             super(itemView);
             findViews(itemView);
         }
@@ -242,7 +249,7 @@ public class EventsActivity extends BaseActivity {
         private void findViews(View itemView) {
             mImageViewProPic = (AppCompatImageView) itemView.findViewById(R.id.imageView_pro_pic);
             mTextViewName = (AppCompatTextView) itemView.findViewById(R.id.textView_name);
-            mTextViewPaidAndTotal = (AppCompatTextView) itemView.findViewById(R.id.textView_paid_and_total);
+            mTextViewNeedToPay = (AppCompatTextView) itemView.findViewById(R.id.textView_need_to_pay);
         }
     }
 }
