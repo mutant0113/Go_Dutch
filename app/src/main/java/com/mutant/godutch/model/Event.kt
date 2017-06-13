@@ -20,11 +20,8 @@ class Event : Parcelable{
     var photo: String = ""
     var subtotal: Int = 0
     var tax: Int = 0
-    internal set
     var total: Int = 0
-    internal set
     var timestamp: HashMap<String, Any> = hashMapOf()
-    internal set
     val timestampCreated: Long
     @Exclude
     get() = timestamp["timestamp"] as Long? ?: 0

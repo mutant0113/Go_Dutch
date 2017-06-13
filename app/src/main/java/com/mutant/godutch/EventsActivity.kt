@@ -20,7 +20,18 @@ class EventsActivity : BaseActivity() {
     internal var mGroupId: String = ""
 
     internal var mAdapterEvent: RecycleViewAdapterEvent = RecycleViewAdapterEvent(this@EventsActivity, ArrayList<Event>())
-    internal var mDatabaseEvents: DatabaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId)
+    internal var mDatabaseEvents: DatabaseReference? = null
+
+    companion object {
+
+        val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
+
+        fun getIntent(activity: Activity, groupId: String): Intent {
+            val intent = Intent(activity, EventsActivity::class.java)
+            intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId)
+            return intent
+        }
+    }
 
     override val layoutId: Int
         get() = R.layout.activity_events
@@ -41,28 +52,31 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupFireBase() {
-        mDatabaseEvents.orderByKey().addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                mAdapterEvent.addItem(dataSnapshot.getValue(Event::class.java))
-                recycler_view_event.scrollToPosition(0)
-            }
+        mDatabaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId)
+        if (mDatabaseEvents != null) {
+            mDatabaseEvents?.orderByKey()?.addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                    mAdapterEvent.addItem(dataSnapshot.getValue(Event::class.java))
+                    recycler_view_event.scrollToPosition(0)
+                }
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-                // TODO
-            }
+                override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
+                    // TODO
+                }
 
-            override fun onChildRemoved(dataSnapshot: com.google.firebase.database.DataSnapshot) {
-                // TODO
-            }
+                override fun onChildRemoved(dataSnapshot: com.google.firebase.database.DataSnapshot) {
+                    // TODO
+                }
 
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
-                // TODO
-            }
+                override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
+                    // TODO
+                }
 
-            override fun onCancelled(databaseError: DatabaseError) {
+                override fun onCancelled(databaseError: DatabaseError) {
 
-            }
-        })
+                }
+            })
+        }
     }
 
     private fun setupFabNewEvent() {
@@ -107,7 +121,8 @@ class EventsActivity : BaseActivity() {
 
         private fun removeEvent(event: Event) {
             AlertDialog.Builder(activity).setTitle("系統提示").setMessage("確定要刪除此筆？")
-                    .setPositiveButton("確定") { dialog, which -> mDatabaseEvents.child(event.id).removeValue() }.setNeutralButton("取消", null).show()
+                    .setPositiveButton("確定") { dialog, which -> mDatabaseEvents?.child(event.id)?.removeValue() }
+                    .setNeutralButton("取消", null).show()
         }
 
         override fun getItemCount(): Int {
@@ -161,14 +176,4 @@ class EventsActivity : BaseActivity() {
         var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
     }
 
-    companion object {
-
-        val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
-
-        fun getIntent(activity: Activity, groupId: String): Intent {
-            val intent = Intent(activity, EventsActivity::class.java)
-            intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId)
-            return intent
-        }
-    }
 }

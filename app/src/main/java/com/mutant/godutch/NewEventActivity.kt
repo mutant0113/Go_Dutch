@@ -34,7 +34,6 @@ class NewEventActivity : BaseActivity() {
     internal var mGroupId: String = ""
     internal var mAdapterFriendsShared: RecycleViewAdapterFriendsShared = RecycleViewAdapterFriendsShared(this@NewEventActivity, 0, arrayListOf())
     internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    internal var mDatabaseEvents: DatabaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId)
     internal var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
     internal var mStorage: StorageReference? = null
 
@@ -156,7 +155,7 @@ class NewEventActivity : BaseActivity() {
         val friendswhoPaid = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
         val event = Event(title, description, subtotal, tax, total, friendswhoPaid)
         event.subtotal = total
-        val databaseReference = mDatabaseEvents.push()
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).push()
         event.id = databaseReference.key
         event.friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst as Friend
         databaseReference.setValue(event).addOnSuccessListener { finish() }
