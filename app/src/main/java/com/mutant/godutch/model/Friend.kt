@@ -25,43 +25,43 @@ class Friend : Parcelable {
         this.proPicUrl = proPicUrl
     }
 
+    constructor(uid: String, name: String, proPicUrl: String, needToPay: Int, @State state: Int) {
+        this.uid = uid
+        this.name = name
+        this.proPicUrl = proPicUrl
+        this.needToPay = needToPay
+        this.state = state
+    }
+
     @IntDef(STATE_ACCEPTED.toLong(), STATE_NOT_BE_ACCEPTED.toLong(), STATE_BE_INVITED.toLong())
     annotation class State
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(this.uid)
-        dest.writeString(this.name)
-        dest.writeString(this.proPicUrl)
-        dest.writeInt(this.needToPay)
-        dest.writeInt(this.state)
-    }
-
-    protected constructor(`in`: Parcel) {
-        this.uid = `in`.readString()
-        this.name = `in`.readString()
-        this.proPicUrl = `in`.readString()
-        this.needToPay = `in`.readInt()
-        this.state = `in`.readInt()
-    }
-
     companion object {
-
         const val STATE_ACCEPTED = 0
         const val STATE_NOT_BE_ACCEPTED = 1
         const val STATE_BE_INVITED = 2
 
-        val CREATOR: Parcelable.Creator<Friend> = object : Parcelable.Creator<Friend> {
-            override fun createFromParcel(source: Parcel): Friend {
-                return Friend(source)
-            }
-
-            override fun newArray(size: Int): Array<Friend?> {
-                return arrayOfNulls(size)
-            }
+        @JvmField val CREATOR: Parcelable.Creator<Friend> = object : Parcelable.Creator<Friend> {
+            override fun createFromParcel(source: Parcel): Friend = Friend(source)
+            override fun newArray(size: Int): Array<Friend?> = arrayOfNulls(size)
         }
+    }
+
+    constructor(source: Parcel) : this(
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readInt(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(uid)
+        dest.writeString(name)
+        dest.writeString(proPicUrl)
+        dest.writeInt(needToPay)
+        dest.writeInt(state)
     }
 }

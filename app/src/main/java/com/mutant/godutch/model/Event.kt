@@ -4,52 +4,50 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.firebase.client.ServerValue
 import com.google.firebase.database.Exclude
-import java.util.*
 
 /**
  * Created by evanfang102 on 2017/5/26.
  */
 
-class Event : Parcelable{
+class Event : Parcelable {
 
     var id: String = ""
     var title: String = ""
     var description: String = ""
-    var friendsShared: List<Friend> = arrayListOf()
-    var friendWhoPaidFirst: Friend = Friend()
-    var photo: String = ""
     var subtotal: Int = 0
     var tax: Int = 0
     var total: Int = 0
-    var timestamp: HashMap<String, Any> = hashMapOf()
-    val timestampCreated: Long
-    @Exclude
-    get() = timestamp["timestamp"] as Long? ?: 0
+    var friendsShared: List<Friend> = arrayListOf()
+    var friendWhoPaidFirst: Friend = Friend()
+    var photo: String = ""
+    val timestamp: HashMap<String, Any> = hashMapOf()
+    var timestampCreated: Long = 0
+        @Exclude
+        get() = timestamp["timestamp"] as Long? ?: 0
 
-    constructor() {}
+    constructor()
 
-    constructor(title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List< Friend >) {
+    constructor(title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List<Friend>) {
         this.title = title
         this.description = description
         this.subtotal = subtotal
         this.tax = tax
         this.total = total
         this.friendsShared = friendsShared
-        this.timestamp = HashMap<String, Any>()
         this.timestamp.put("timestamp", ServerValue.TIMESTAMP)
     }
 
-    protected constructor (`in`: Parcel) {
-        this.id = `in`.readString()
-        this.title = `in`.readString()
-        this.description = `in`.readString()
-        this.friendsShared = `in`.createTypedArrayList(Friend.CREATOR)
-        this.friendWhoPaidFirst = `in`.readParcelable<Friend>(Friend::class.java.classLoader)
-        this.photo = `in`.readString()
-        this.subtotal = `in`.readInt()
-        this.tax = `in`.readInt()
-        this.total = `in`.readInt()
-        this.timestamp = `in`.readSerializable() as HashMap<String, Any>
+    constructor(id: String, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, photo: String, timestampCreated: Long) {
+        this.id = id
+        this.title = title
+        this.description = description
+        this.subtotal = subtotal
+        this.tax = tax
+        this.total = total
+        this.friendsShared = friendsShared
+        this.friendWhoPaidFirst = friendWhoPaidFirst
+        this.photo = photo
+        this.timestampCreated = timestampCreated
     }
 
     companion object {
@@ -59,7 +57,31 @@ class Event : Parcelable{
         }
     }
 
+    constructor(source: Parcel) : this(
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readInt(),
+            source.readInt(),
+            source.readInt(),
+            source.readArrayList(Friend.javaClass.classLoader) as ArrayList<Friend>,
+            source.readParcelable(Friend.javaClass.classLoader),
+            source.readString(),
+            source.readLong()
+    )
+
     override fun describeContents() = 0
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {}
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(id)
+        dest.writeString(title)
+        dest.writeString(description)
+        dest.writeInt(subtotal)
+        dest.writeInt(tax)
+        dest.writeInt(total)
+        dest.writeList(friendsShared)
+        dest.writeParcelable(friendWhoPaidFirst, flags)
+        dest.writeString(photo)
+        dest.writeLong(timestampCreated)
+    }
 }

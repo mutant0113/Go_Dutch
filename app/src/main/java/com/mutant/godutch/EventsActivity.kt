@@ -41,7 +41,7 @@ class EventsActivity : BaseActivity() {
     }
 
     fun onClickButtonCheckout(view: View) {
-        startActivity(CheckoutActivity.getIntent(this, mAdapterEvent.events))
+        startActivity(CheckoutActivity.getIntent(this, mAdapterEvent.getEvents))
     }
 
     override fun setup() {
@@ -95,7 +95,8 @@ class EventsActivity : BaseActivity() {
         recycler_view_event.layoutManager = MyLayoutManager
     }
 
-    internal inner class RecycleViewAdapterEvent(var activity: Activity, var events: ArrayList<Event>) : RecyclerView.Adapter<ViewHolderEvent>() {
+    internal inner class RecycleViewAdapterEvent(var activity: Activity, var events: ArrayList<Event>) :
+            RecyclerView.Adapter<ViewHolderEvent>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderEvent {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_event, parent, false)

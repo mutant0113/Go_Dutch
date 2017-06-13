@@ -21,6 +21,16 @@ import java.util.*
 
 class CheckoutActivity : BaseActivity() {
 
+    companion object {
+        private val BUNDLE_KEY_LIST_EVENTS = "BUNDLE_KEY_LIST_EVENTS"
+
+        fun getIntent(context: Context, events: ArrayList<Event>?): Intent {
+            val intent = Intent(context, CheckoutActivity::class.java)
+            intent.putParcelableArrayListExtra(BUNDLE_KEY_LIST_EVENTS, events)
+            return intent
+        }
+    }
+
     override val layoutId: Int
         get() = R.layout.activity_checkout
 
@@ -84,13 +94,4 @@ class CheckoutActivity : BaseActivity() {
         var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
     }
 
-    companion object {
-        private val BUNDLE_KEY_LIST_EVENTS = "BUNDLE_KEY_LIST_EVENTS"
-
-        fun getIntent(context: Context, events: ArrayList<Event>?): Intent {
-            val intent = Intent(context, CheckoutActivity::class.java)
-            intent.putParcelableArrayListExtra(BUNDLE_KEY_LIST_EVENTS, events)
-            return intent
-        }
-    }
 }
