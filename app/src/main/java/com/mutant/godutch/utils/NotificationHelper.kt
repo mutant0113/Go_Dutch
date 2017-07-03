@@ -1,13 +1,12 @@
 package com.mutant.godutch.utils
 
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import io.fabric.sdk.android.services.settings.IconRequest.build
+import com.google.firebase.database.FirebaseDatabase
 
 /**
  * Created by evanfang102 on 2016/5/11.
@@ -17,11 +16,19 @@ object NotificationHelper {
     val NOTIFY_FLAG_DEFAULT = -1
     val NOTIFY_ID_DEFAULT = 0
 
+    fun sendNotificationToUser(userFcmToken: String, message: String) {
+        var firebaseNotification = FirebaseDatabase.getInstance().reference.child("notificationRequests")
+        var map : HashMap<String, String> = hashMapOf()
+        map.put("userFcmToken", userFcmToken)
+        map.put("message", message)
+        firebaseNotification.push().setValue(map)
+    }
+
     fun getNotificationBuilder(context: Context, notifyId: Int, title: String, content: String, iconId: Int, flags: Int): Notification.Builder {
         return getNotifyBuilder(context, title, content, iconId, null, flags)
     }
 
-    fun notify(context: Context, notifyId: Int, title: String, content: String, iconId: Int, pendingIntent: PendingIntent, flags: Int) {
+    fun notify(context: Context, notifyId: Int, title: String, content: String?, iconId: Int, pendingIntent: PendingIntent, flags: Int) {
         var notifyId = notifyId
         //取得Notification服務
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -71,7 +78,7 @@ object NotificationHelper {
         return selectIconId
     }
 
-    fun getNotifyBuilder(context: Context, title: String, content: String, iconId: Int, pendingIntent: PendingIntent?, flags: Int): Notification.Builder {
+    fun getNotifyBuilder(context: Context, title: String, content: String?, iconId: Int, pendingIntent: PendingIntent?, flags: Int): Notification.Builder {
         val autoCancel = true // 點擊通知後是否要自動移除掉通知
         val bigTextStyle = Notification.BigTextStyle() // 建立BigTextStyle
         bigTextStyle.setBigContentTitle(title) // 當BigTextStyle顯示時，用BigTextStyle的setBigContentTitle覆蓋setContentTitle的設定

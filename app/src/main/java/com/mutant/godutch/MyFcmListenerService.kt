@@ -18,6 +18,6 @@ class MyFcmListenerService : FirebaseMessagingService() {
         val content =  data?.get("body")
         val drawableId = R.drawable.ic_add_circle_outline_white
         val pendingIntent = NotificationHelper.getPendingIntent(this, EventsActivity::class.java)
-        NotificationHelper.notify(this, NotificationHelper.NOTIFY_FLAG_DEFAULT, title, content, drawableId, NotificationHelper.NOTIFY_FLAG_DEFAULT)
+        NotificationHelper.notify(this, NotificationHelper.NOTIFY_FLAG_DEFAULT, title, content, drawableId, pendingIntent, NotificationHelper.NOTIFY_FLAG_DEFAULT)
     }
 }

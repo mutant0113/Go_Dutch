@@ -113,7 +113,6 @@ class EventsActivity : BaseActivity() {
             holder.mRecycleViewFriendsShared.adapter = RecycleViewAdapterFriendsShared(event.friendsShared)
             holder.mRecycleViewFriendsShared.layoutManager = GridLayoutManager(this@EventsActivity, 2)
             holder.itemView.setOnClickListener { activity.startActivity(NewEventActivity.getIntent(activity, mGroupId)) }
-
             holder.itemView.setOnLongClickListener {
                 removeEvent(event)
                 false
@@ -161,7 +160,6 @@ class EventsActivity : BaseActivity() {
     }
 
     internal inner class ViewHolderEvent(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         var mTextViewTitle: AppCompatTextView = itemView.textView_title
         var mTextViewDate: AppCompatTextView = itemView.textView_date
         var mTextViewDescription: AppCompatTextView = itemView.textView_description
@@ -171,7 +169,6 @@ class EventsActivity : BaseActivity() {
     }
 
     internal inner class ViewHolderFriendShared(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         var mImageViewProPic: AppCompatImageView = itemView.imageView_pro_pic
         var mTextViewName: AppCompatTextView = itemView.textView_name
         var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.GridLayoutManager
@@ -17,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -25,7 +27,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
+import com.mutant.godutch.utils.NotificationHelper
 import kotlinx.android.synthetic.main.activity_new_event.*
+import kotlinx.android.synthetic.main.activity_new_friend.*
 import kotlinx.android.synthetic.main.card_view_item_friend.view.*
 import java.util.*
 
@@ -157,8 +161,28 @@ class NewEventActivity : BaseActivity() {
         event.subtotal = total
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).push()
         event.id = databaseReference.key
-        event.friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst as Friend
-        databaseReference.setValue(event).addOnSuccessListener { finish() }
+        event.friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst
+        databaseReference.setValue(event).addOnSuccessListener {
+            sendNewEventNotificationToFriends(friendswhoPaid[1].uid, title)
+            finish()
+        }
+    }
+
+    fun sendNewEventNotificationToFriends(userUid: String, title: String) {
+        FirebaseDatabase.getInstance().reference.child("users").child(userUid).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val fcmToken = dataSnapshot.child("fcmToken").value as String
+                    // TODO title, content, icon
+                    NotificationHelper.sendNotificationToUser(fcmToken, title)
+                } else {
+                    Snackbar.make(coordinatorLayout_parent, "此ID不存在", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
     }
 
     inner class RecycleViewAdapterFriendsShared(internal var context: Context, internal var total: Int, internal var friends: List<Friend>) : RecyclerView.Adapter<ViewHolderShared>() {

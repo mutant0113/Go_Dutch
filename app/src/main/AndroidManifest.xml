@@ -48,10 +48,6 @@
             android:name=".CheckoutActivity"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".TestActivity"
-            android:screenOrientation="portrait" />
-
         <service
             android:name=".MyInstanceIDListenerService">
             <intent-filter>
