@@ -30,10 +30,11 @@ class Utility {
                     DateUtils.SECOND_IN_MILLIS)
         }
 
-        fun intentToGoogleMarketToDowloadApp(context: Context, appMarketId: String) {
+        fun intentToGoogleMarketToDownloadApp(context: Context, appMarketId: String) {
             val marketIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appMarketId))
             context.startActivity(marketIntent)
         }
+
     }
 
 }

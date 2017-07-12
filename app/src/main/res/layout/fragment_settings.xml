@@ -10,4 +10,10 @@
         android:layout_height="wrap_content"
         android:text="登出"/>
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button_exchange_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="匯率"/>
+
 </android.support.v7.widget.LinearLayoutCompat>
