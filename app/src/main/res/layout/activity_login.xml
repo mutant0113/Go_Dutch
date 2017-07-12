@@ -36,8 +36,8 @@
             android:id="@+id/editText_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="Password" />
+            android:hint="Password"
+            android:inputType="textPassword" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -48,5 +48,10 @@
         android:layout_gravity="center_horizontal"
         android:onClick="login"
         android:text="LOGIN" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button_google"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

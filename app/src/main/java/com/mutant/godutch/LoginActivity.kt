@@ -4,9 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInResult
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
@@ -14,6 +20,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.mutant.godutch.widget.EmailEditText
 import com.mutant.godutch.widget.PasswordEditText
 import io.fabric.sdk.android.Fabric
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -24,13 +31,29 @@ class LoginActivity : AppCompatActivity() {
     internal var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     internal var mFirebaseAuthStateListener: FirebaseAuth.AuthStateListener? = null
 
+    internal var mGoogleApiClient: GoogleApiClient? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setupFireBase()
+        setupGoogleSignIn()
         autoLoginIfGotAuth()
         if (DebugHelper.bUseCrashlytics) {
             Fabric.with(this.applicationContext, Crashlytics())
+        }
+    }
+
+    private fun setupGoogleSignIn() {
+        // Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).
+                requestEmail().build()
+        // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
+        mGoogleApiClient = GoogleApiClient.Builder(this).enableAutoManage(this, GoogleApiClient.OnConnectionFailedListener {})
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build()
+        findViewById(R.id.sign_in_button_google).setOnClickListener {
+            val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
+            startActivityForResult(signInIntent, RC_SIGN_IN)
         }
     }
 
@@ -98,6 +121,50 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    val RC_SIGN_IN = 1
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            handleSignInResult(result)
+        }
+    }
+
+    private fun handleSignInResult(result: GoogleSignInResult) {
+        Log.d(this.javaClass.simpleName, "handleSignInResult:" + result.isSuccess)
+        if (result.isSuccess) {
+            // Signed in successfully, show authenticated UI.
+            firebaseAuthWithGoogle(result.getSignInAccount())
+        } else {
+            // Signed out, show unauthenticated UI.
+            Toast.makeText(this, "sign in from google failed", Toast.LENGTH_LONG)
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
+//        Log.d(LoginActivity.TAG, "firebaseAuthWithGoogle:" + account.getId)
+//
+//        val credential = GoogleAuthProvider.getCredential(account.getIdToken, null)
+//        mFirebaseAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
+//                    override fun onComplete(task: Task<AuthResult>) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d(LoginActivity.TAG, "signInWithCredential:success")
+//                            intentToMainActivity()
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.getException())
+//                            Toast.makeText(this@LoginActivity, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                })
     }
 
     private fun register(email: String, password: String) {
