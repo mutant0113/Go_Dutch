@@ -30,14 +30,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     internal var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    internal var mFirebaseAuthStateListener: FirebaseAuth.AuthStateListener? = null
 
     internal var mGoogleApiClient: GoogleApiClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        setupFireBase()
         setupGoogleSignIn()
         autoLoginIfGotAuth()
         if (DebugHelper.bUseCrashlytics) {
@@ -58,16 +56,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupFireBase() {
-        mFirebaseAuthStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                Toast.makeText(this@LoginActivity, "user logged in", Toast.LENGTH_SHORT).show()
-                saveUserDataToDatabase(user)
-                intentToMainActivity()
-            } else {
-                Toast.makeText(this@LoginActivity, "user logged out", Toast.LENGTH_SHORT).show()
-            }
+    private fun loginSuccessfully() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            Toast.makeText(this@LoginActivity, "user logged in", Toast.LENGTH_SHORT).show()
+            saveUserDataToDatabase(user)
+            intentToMainActivity()
+        } else {
+            Toast.makeText(this@LoginActivity, "user logged out", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -76,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
         database.child(user.uid).child("uid").setValue(user.uid)
         database.child(user.uid).child("name").setValue(user.displayName)
         database.child(user.uid).child("email").setValue(user.email)
-        database.child(user.uid).child("photo_url").setValue(user.photoUrl)
+        database.child(user.uid).child("photoUrl").setValue(user.photoUrl.toString())
     }
 
     private fun autoLoginIfGotAuth() {
@@ -113,7 +109,7 @@ class LoginActivity : AppCompatActivity() {
                     val refreshedToken = FirebaseInstanceId.getInstance().token
                     if (refreshedToken != null) {
                         MyInstanceIDListenerService.sendRegistrationToServer(refreshedToken)
-                        intentToMainActivity()
+                        loginSuccessfully()
                     } else {
                         // TODO
                     }
@@ -156,7 +152,7 @@ class LoginActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(LoginActivity.TAG, "signInWithCredential:success")
-                        intentToMainActivity()
+                        loginSuccessfully()
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.getException())
@@ -178,16 +174,6 @@ class LoginActivity : AppCompatActivity() {
             AlertDialog.Builder(this@LoginActivity).setMessage(message)
                     .setPositiveButton("OK", null).show()
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mFirebaseAuth.addAuthStateListener(mFirebaseAuthStateListener!!)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mFirebaseAuth.removeAuthStateListener(mFirebaseAuthStateListener!!)
     }
 
 }
