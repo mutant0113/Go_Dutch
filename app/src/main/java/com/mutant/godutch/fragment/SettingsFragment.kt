@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import org.json.JSONObject
 import server.WebAgent
 import java.io.IOException
 
@@ -33,7 +34,7 @@ class SettingsFragment : Fragment() {
         button_logout.setOnClickListener {
             val auth = FirebaseAuth.getInstance()
             auth.addAuthStateListener { firebaseAuth ->
-                if (firebaseAuth.currentUser == null) {
+                if (firebaseAuth.currentUser == null && activity != null) {
                     startActivity(Intent(activity, LoginActivity::class.java))
                     activity.finish()
                 }
@@ -44,8 +45,9 @@ class SettingsFragment : Fragment() {
         button_exchange_rate.setOnClickListener {
             WebAgent.fetchExchangeRate(object : Callback {
                 override fun onResponse(call: Call, response: Response) {
-                    val json = response.body().string()
-                    Log.d("OKHTTP", json)
+                    val jsonStr = response.body().string()
+                    Log.d("erJson", "MOP -> TWD:" + calculateExchangeRate(jsonStr, "USDMOP"))
+                    Log.d("erJson", "HKD -> TWD:" + calculateExchangeRate(jsonStr, "USDHKD"))
                 }
 
                 override fun onFailure(call: Call, e: IOException) {
@@ -53,6 +55,20 @@ class SettingsFragment : Fragment() {
                 }
 
             })
+        }
+    }
+
+    /**
+     * TODO 先以台幣為主，之後再做各國家
+     */
+    fun calculateExchangeRate(json: String, fromWhichCountry: String): Double {
+        var erJson = JSONObject(json)
+        var fromSell = erJson.getJSONObject(fromWhichCountry).optDouble("Exrate")
+        var TWDSell = erJson.getJSONObject("USDTWD").optDouble("Exrate")
+        if(fromSell != 0.0) {
+            return TWDSell / fromSell
+        } else {
+            return -1.0
         }
     }
 }

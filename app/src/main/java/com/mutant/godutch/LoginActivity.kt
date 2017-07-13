@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.iid.FirebaseInstanceId
 import com.mutant.godutch.widget.EmailEditText
@@ -139,7 +140,7 @@ class LoginActivity : AppCompatActivity() {
         Log.d(this.javaClass.simpleName, "handleSignInResult:" + result.isSuccess)
         if (result.isSuccess) {
             // Signed in successfully, show authenticated UI.
-            firebaseAuthWithGoogle(result.getSignInAccount())
+            firebaseAuthWithGoogle(result.signInAccount)
         } else {
             // Signed out, show unauthenticated UI.
             Toast.makeText(this, "sign in from google failed", Toast.LENGTH_LONG)
@@ -147,24 +148,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
-//        Log.d(LoginActivity.TAG, "firebaseAuthWithGoogle:" + account.getId)
-//
-//        val credential = GoogleAuthProvider.getCredential(account.getIdToken, null)
-//        mFirebaseAuth.signInWithCredential(credential)
-//                .addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
-//                    override fun onComplete(task: Task<AuthResult>) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(LoginActivity.TAG, "signInWithCredential:success")
-//                            intentToMainActivity()
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.getException())
-//                            Toast.makeText(this@LoginActivity, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
-//                })
+        Log.d(LoginActivity.TAG, "firebaseAuthWithGoogle:" + account?.id)
+
+        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+        mFirebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(LoginActivity.TAG, "signInWithCredential:success")
+                        intentToMainActivity()
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.getException())
+                        Toast.makeText(this@LoginActivity, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show()
+                    }
+                }
     }
 
     private fun register(email: String, password: String) {
