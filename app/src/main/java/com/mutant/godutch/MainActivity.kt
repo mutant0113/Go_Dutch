@@ -32,23 +32,24 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupBottomNavigationView() {
-        bottom_navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.action_groups -> {
-                    viewpager.currentItem = VIEW_PAGER_GROUPS
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.action_friends -> {
-                    viewpager.currentItem = VIEW_PAGER_FRIENDS
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.action_settings -> {
-                    viewpager.currentItem = VIEW_PAGER_SETTINGS
-                    return@OnNavigationItemSelectedListener true
-                }
-            }
-            false
-        })
+        bottom_navigation.setOnNavigationItemSelectedListener(
+                BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                    when (item.itemId) {
+                        R.id.action_groups -> {
+                            viewpager.currentItem = VIEW_PAGER_GROUPS
+                            return@OnNavigationItemSelectedListener true
+                        }
+                        R.id.action_friends -> {
+                            viewpager.currentItem = VIEW_PAGER_FRIENDS
+                            return@OnNavigationItemSelectedListener true
+                        }
+                        R.id.action_settings -> {
+                            viewpager.currentItem = VIEW_PAGER_SETTINGS
+                            return@OnNavigationItemSelectedListener true
+                        }
+                    }
+                    false
+                })
     }
 
     companion object {

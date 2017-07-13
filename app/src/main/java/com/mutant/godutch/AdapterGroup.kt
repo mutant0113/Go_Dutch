@@ -4,6 +4,7 @@ import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.mutant.godutch.model.Group
 
@@ -26,7 +27,12 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
         holder.mTextViewDescription.text = group.description
         holder.mTextViewTotalPay.text = "$" + group.subtotal.toString()
         // TODO add friends' photo
-        //        holder.mLinearLayoutFriends.addView(new View());
+        for (friend in group.friends) {
+            val imageViewFriendPhoto = ImageView(activity)
+            Glide.with(activity).load(friend.proPicUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
+                    .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
+            holder.mLinearLayoutFriends.addView(imageViewFriendPhoto)
+        }
         holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, group.id)) }
     }
 
