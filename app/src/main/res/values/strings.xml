@@ -23,7 +23,8 @@
     <string name="upload_image_successfully">上傳圖片成功</string>
     <string name="upload_image_failed">上傳圖片失敗</string>
 
-    <!--&lt;!&ndash; Google Sign in: Web application id&ndash;&gt;-->
-    <!--<string name="default_web_client_id">82235768702-4brc2a9obmrp38ooi20eejcv50gk5321.apps.googleusercontent.com</string>-->
+    <!-- Facebook -->
+    <string name="facebook_app_id">247296392442341</string>
+    <string name="fb_login_protocol_scheme">fb247296392442341</string>
 
 </resources>

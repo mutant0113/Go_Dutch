@@ -49,9 +49,21 @@
         android:onClick="login"
         android:text="LOGIN" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button_google"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button_google"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/sign_in_button_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </android.support.v7.widget.LinearLayoutCompat>
 
 </LinearLayout>

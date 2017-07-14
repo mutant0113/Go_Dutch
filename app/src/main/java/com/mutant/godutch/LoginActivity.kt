@@ -8,19 +8,24 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.iid.FirebaseInstanceId
 import com.mutant.godutch.widget.EmailEditText
 import com.mutant.godutch.widget.PasswordEditText
 import io.fabric.sdk.android.Fabric
+import kotlinx.android.synthetic.main.activity_login.*
+import java.util.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -30,13 +35,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     internal var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
     internal var mGoogleApiClient: GoogleApiClient? = null
+    internal var mCallbackManager: CallbackManager = CallbackManager.Factory.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setupGoogleSignIn()
+        setupFaceBookSignIn()
         autoLoginIfGotAuth()
         if (DebugHelper.bUseCrashlytics) {
             Fabric.with(this.applicationContext, Crashlytics())
@@ -54,6 +60,24 @@ class LoginActivity : AppCompatActivity() {
             val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
+    }
+
+    private fun setupFaceBookSignIn() {
+        sign_in_button_facebook.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"))
+        sign_in_button_facebook.registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                firebaseAuthWithFacebook(loginResult.accessToken)
+                Toast.makeText(this@LoginActivity, "fb onSuccess", Toast.LENGTH_LONG)
+            }
+
+            override fun onCancel() {
+                Toast.makeText(this@LoginActivity, "fb onCancel", Toast.LENGTH_LONG)
+            }
+
+            override fun onError(exception: FacebookException) {
+                Toast.makeText(this@LoginActivity, "fb onError", Toast.LENGTH_LONG)
+            }
+        })
     }
 
     private fun loginSuccessfully() {
@@ -129,6 +153,8 @@ class LoginActivity : AppCompatActivity() {
         if (requestCode == RC_SIGN_IN) {
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             handleSignInResult(result)
+        } else {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -155,11 +181,30 @@ class LoginActivity : AppCompatActivity() {
                         loginSuccessfully()
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.getException())
+                        Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.exception)
                         Toast.makeText(this@LoginActivity, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
                     }
                 }
+    }
+
+    private fun firebaseAuthWithFacebook(token: AccessToken) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token)
+
+        val credential: AuthCredential = FacebookAuthProvider.getCredential(token.token)
+        mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d(LoginActivity.TAG, "signInWithCredential:success")
+                loginSuccessfully()
+            } else {
+                // If sign in fails, display a message to the user.
+                Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.exception)
+                Toast.makeText(this@LoginActivity, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     private fun register(email: String, password: String) {
