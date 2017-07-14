@@ -29,7 +29,7 @@ import com.google.firebase.storage.UploadTask
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.model.Group
 import kotlinx.android.synthetic.main.activity_new_group.*
-import kotlinx.android.synthetic.main.card_view_item_friend.*
+import kotlinx.android.synthetic.main.card_view_item_friend.view.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -124,9 +124,10 @@ class NewGroupActivity : BaseActivity() {
         val group = Group(title, description, imageDownloadUrl?.toString() ?: "", 0, friendsFilterBySelected)
         if (mFirebaseUser != null) {
             val userUid = mFirebaseUser!!.uid
-            val databaseReference = mDatabase.child("groups").child(userUid).push()
-            group.id = databaseReference.key
-            databaseReference.setValue(group).addOnSuccessListener { finish() }
+            for(friend in friendsFilterBySelected) {
+                mDatabase.child("groups").child(friend.uid).push().setValue(group)
+            }
+            mDatabase.child("groups").child(userUid).push().setValue(group).addOnSuccessListener { finish() }
         } else {
             try {
                 Crashlytics.logException(NullPointerException())
@@ -138,11 +139,7 @@ class NewGroupActivity : BaseActivity() {
     }
 
     inner class RecycleViewAdapterFriends(internal var context: Context, internal var friends: List<Friend>) : RecyclerView.Adapter<ViewHolder>() {
-        internal var isSelected: BooleanArray
-
-        init {
-            this.isSelected = BooleanArray(friends.size)
-        }
+        var isSelected: BooleanArray = BooleanArray(friends.size)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_friend, parent, false)
@@ -187,11 +184,9 @@ class NewGroupActivity : BaseActivity() {
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var mImageViewProPic: AppCompatImageView = imageView_pro_pic
-        var mTextViewName: AppCompatTextView = textView_name
-        var mTextViewInvitationState: AppCompatTextView = textView_invitation_state
-
+        var mImageViewProPic: AppCompatImageView = itemView.imageView_pro_pic
+        var mTextViewName: AppCompatTextView = itemView.textView_name
+        var mTextViewInvitationState: AppCompatTextView = itemView.textView_invitation_state
     }
 
     companion object {
