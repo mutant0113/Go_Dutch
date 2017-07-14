@@ -28,15 +28,15 @@ class FriendsFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupFirebase()
-        setupFriends(view)
-        setupFabNewGroup(view)
+        setupFriends()
+        setupFabNewGroup()
     }
 
-    private fun setupFabNewGroup(view: View?) {
+    private fun setupFabNewGroup() {
         fab_new_friend.setOnClickListener { startActivity(NewFriendActivity.getIntent(activity)) }
     }
 
-    private fun setupFriends(view: View?) {
+    private fun setupFriends() {
         val MyLayoutManager = LinearLayoutManager(activity)
         MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
         mAdapterFriend = AdapterFriend(activity, ArrayList<Friend>())

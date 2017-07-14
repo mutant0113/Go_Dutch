@@ -121,14 +121,12 @@ class NewFriendActivity : BaseActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if (dataSnapshot.exists()) {
                         val newFriend = dataSnapshot.getValue(Friend::class.java)
-                        newFriend.state = Friend.STATE_NOT_BE_ACCEPTED
+                        newFriend.state = Friend.STATE_BE_INVITED
                         val databaseFriends = FirebaseDatabase.getInstance().reference.child("friends")
                         databaseFriends.child(mFirebaseUser!!.uid).child(newFriendUid).setValue(newFriend)
 
-                        // TODO fix me
-                        //                        Friend me = new Friend(mFirebaseUser.getUid(), mFirebaseUser.getDisplayName(), mFirebaseUser.getPhotoUrl().toString());
-                        val me = Friend(mFirebaseUser!!.uid, "Evan", "")
-                        me.state = Friend.STATE_BE_INVITED
+                        val me = Friend(mFirebaseUser!!.uid, mFirebaseUser?.displayName ?: "", mFirebaseUser?.photoUrl?.toString() ?: "")
+                        me.state = Friend.STATE_NOT_BE_ACCEPTED
                         databaseFriends.child(newFriendUid).child(me.uid).setValue(me)
                         finish()
                     } else {

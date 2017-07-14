@@ -29,7 +29,7 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
         // TODO add friends' photo
         for (friend in group.friends) {
             val imageViewFriendPhoto = ImageView(activity)
-            Glide.with(activity).load(friend.proPicUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
+            Glide.with(activity).load(friend.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
                     .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
             holder.mLinearLayoutFriends.addView(imageViewFriendPhoto)
         }

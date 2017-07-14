@@ -153,7 +153,7 @@ class NewGroupActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val friend = friends[position]
-            Glide.with(context).load(friend.proPicUrl).error(R.drawable.profile_pic).into(holder.mImageViewProPic)
+            Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewProPic)
             holder.mTextViewName.text = friend.name
             val itemView = holder.itemView
             itemView.setOnClickListener {

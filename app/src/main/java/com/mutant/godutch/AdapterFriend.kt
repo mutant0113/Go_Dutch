@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -28,9 +29,10 @@ class AdapterFriend(private val activity: Activity, private val friends: Mutable
         super.onBindViewHolder(holder, position, payloads)
         val friend = friends[position]
         if (payloads!!.isEmpty()) {
-            Glide.with(activity).load(friend.proPicUrl).error(R.drawable.profile_pic).into(holder.mImageViewProPic)
+            Glide.with(activity).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewProPic)
             holder.mTextViewName.text = friend.name
             setupFriendState(holder, friend)
+            holder.mTextViewNeedToPay.visibility = View.INVISIBLE
             //        holder.itemView.setOnClickListener(new View.OnClickListener() {
             //            @Override
             //            public void onClick(View v) {

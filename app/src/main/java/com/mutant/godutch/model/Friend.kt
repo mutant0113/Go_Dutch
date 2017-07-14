@@ -12,23 +12,23 @@ class Friend : Parcelable {
 
     var uid: String = ""
     var name: String = ""
-    var proPicUrl: String = ""
+    var photoUrl: String = ""
     var needToPay: Int = 0
     var state: Int = STATE_ACCEPTED
         @State set
 
     constructor() {}
 
-    constructor(uid: String, name: String, proPicUrl: String) {
+    constructor(uid: String, name: String, photoUrl: String) {
         this.uid = uid
         this.name = name
-        this.proPicUrl = proPicUrl
+        this.photoUrl = photoUrl
     }
 
-    constructor(uid: String, name: String, proPicUrl: String, needToPay: Int, @State state: Int) {
+    constructor(uid: String, name: String, photoUrl: String, needToPay: Int, @State state: Int) {
         this.uid = uid
         this.name = name
-        this.proPicUrl = proPicUrl
+        this.photoUrl = photoUrl
         this.needToPay = needToPay
         this.state = state
     }
@@ -60,7 +60,7 @@ class Friend : Parcelable {
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(uid)
         dest.writeString(name)
-        dest.writeString(proPicUrl)
+        dest.writeString(photoUrl)
         dest.writeInt(needToPay)
         dest.writeInt(state)
     }
