@@ -29,7 +29,8 @@ class AdapterFriend(private val activity: Activity, private val friends: Mutable
         super.onBindViewHolder(holder, position, payloads)
         val friend = friends[position]
         if (payloads!!.isEmpty()) {
-            Glide.with(activity).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewProPic)
+            Glide.with(activity).load(friend.photoUrl).placeholder(R.drawable.profile_pic)
+                    .error(R.drawable.profile_pic).into(holder.mImageViewProPic)
             holder.mTextViewName.text = friend.name
             setupFriendState(holder, friend)
             holder.mTextViewNeedToPay.visibility = View.INVISIBLE
@@ -66,8 +67,9 @@ class AdapterFriend(private val activity: Activity, private val friends: Mutable
         }
 
         textView.setOnClickListener {
-            if (state == Friend.STATE_BE_INVITED) {
-                textView.setTextColor(Color.GREEN)
+            if (state == Friend.STATE_NOT_BE_ACCEPTED) {
+                textView.setTextColor(Color.BLACK)
+                textView.text = "朋友"
                 sendAcceptMsgToServer(holder, friend)
             }
         }
