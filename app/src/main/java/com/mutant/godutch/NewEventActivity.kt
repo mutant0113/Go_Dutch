@@ -66,11 +66,14 @@ class NewEventActivity : BaseActivity() {
                 isButtonTax10Clicked = false
                 view.setBackgroundColor(0)
             } else {
-                val subtotal = Integer.valueOf(editText_subtotal.text.toString())!!
-                editText_tax.setText(Math.round(subtotal * 0.1).toString())
-                editText_total.setText(Math.round(subtotal * 1.1).toString())
-                isButtonTax10Clicked = true
-                view.setBackgroundColor(Color.YELLOW)
+                val subtotalText = editText_subtotal.text.toString()
+                if(!TextUtils.isEmpty(subtotalText)) {
+                    val subtotal = Integer.valueOf(subtotalText)!!
+                    editText_tax.setText(Math.round(subtotal * 0.1).toString())
+                    editText_total.setText(Math.round(subtotal * 1.1).toString())
+                    isButtonTax10Clicked = true
+                    view.setBackgroundColor(Color.YELLOW)
+                }
             }
         }
     }
@@ -124,7 +127,7 @@ class NewEventActivity : BaseActivity() {
     }
 
     private fun setupFriendsShard() {
-        recycler_view_friends_shared.layoutManager = GridLayoutManager(this, 2)
+        recycler_view_friends_shared.layoutManager = GridLayoutManager(this, 2) as RecyclerView.LayoutManager?
     }
 
     private fun setupFireBase() {
@@ -172,9 +175,11 @@ class NewEventActivity : BaseActivity() {
         FirebaseDatabase.getInstance().reference.child("users").child(userUid).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    val fcmToken = dataSnapshot.child("fcmToken").value as String
+                    val fcmToken = dataSnapshot.child("fcmToken").value as? String
                     // TODO title, content, icon
-                    NotificationHelper.sendNotificationToUser(fcmToken, title)
+                    if(!TextUtils.isEmpty(fcmToken)) {
+                        NotificationHelper.sendNotificationToUser(fcmToken!!, title)
+                    }
                 } else {
                     Snackbar.make(coordinatorLayout_parent, "此ID不存在", Toast.LENGTH_LONG).show()
                 }
