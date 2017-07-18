@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.provider.MediaStore
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.AppCompatImageView
