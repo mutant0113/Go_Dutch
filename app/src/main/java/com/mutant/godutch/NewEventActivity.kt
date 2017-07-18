@@ -44,9 +44,6 @@ class NewEventActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_new_event
 
-    override fun findViews() {
-    }
-
     override fun setup() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
         setupFireBase()

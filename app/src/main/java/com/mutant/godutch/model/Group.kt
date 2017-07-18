@@ -6,7 +6,6 @@ package com.mutant.godutch.model
 
 class Group {
 
-    var id: String = ""
     var title: String = ""
     var description: String = ""
     var photoUrl: String = ""
@@ -15,8 +14,7 @@ class Group {
 
     constructor() {}
 
-    constructor(id: String, title: String, description: String, photoUrl: String, subtotal: Int, friends: List<Friend>) {
-        this.id = id
+    constructor(title: String, description: String, photoUrl: String, subtotal: Int, friends: List<Friend>) {
         this.title = title
         this.description = description
         this.photoUrl = photoUrl
@@ -24,5 +22,4 @@ class Group {
         this.friends = friends
     }
 
-    constructor(title: String, description: String, photoUrl: String, total: Int, friends: List<Friend>) : this("", title, description, photoUrl, total, friends) {}
 }

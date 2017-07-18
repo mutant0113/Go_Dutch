@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.google.firebase.database.*
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
@@ -33,12 +31,24 @@ class EventsActivity : BaseActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_list, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val id = item?.itemId
+
+        if (id == R.id.action_settings) {
+            TODO()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override val layoutId: Int
         get() = R.layout.activity_events
-
-    override fun findViews() {
-
-    }
 
     fun onClickButtonCheckout(view: View) {
         startActivity(CheckoutActivity.getIntent(this, mAdapterEvent.getEvents))
@@ -84,11 +94,6 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupEvents() {
-        // TODO fetch from web;
-        //        events.add(new Event("住宿", "六天住宿錢", friendShared));
-        //        events.add(new Event("早餐", "好吃的懷石料理", friendShared));
-        //        events.add(new Event("門票錢", "直接登上東京鐵塔!!", friendShared));
-        //        events.add(new Event("喔米阿給", "三大待喔米阿給YA~~", friendShared));
         val MyLayoutManager = LinearLayoutManager(this)
         MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recycler_view_event.adapter = mAdapterEvent

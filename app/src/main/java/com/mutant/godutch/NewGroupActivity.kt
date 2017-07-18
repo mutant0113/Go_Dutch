@@ -43,9 +43,6 @@ class NewGroupActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_new_group
 
-    override fun findViews() {
-    }
-
     override fun setup() {
         setupFriends()
         setupFireBase()
@@ -127,7 +124,8 @@ class NewGroupActivity : BaseActivity() {
             for(friend in friendsFilterBySelected) {
                 mDatabase.child("groups").child(friend.uid).push().setValue(group)
             }
-            mDatabase.child("groups").child(userUid).push().setValue(group).addOnSuccessListener { finish() }
+            val databaseReference = mDatabase.child("groups").child(userUid).push()
+            databaseReference.setValue(group).addOnSuccessListener { finish() }
         } else {
             try {
                 Crashlytics.logException(NullPointerException())

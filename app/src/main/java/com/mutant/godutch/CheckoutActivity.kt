@@ -34,9 +34,6 @@ class CheckoutActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_checkout
 
-    override fun findViews() {
-    }
-
     override fun setup() {
         setupCheckout()
     }

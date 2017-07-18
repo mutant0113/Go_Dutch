@@ -3,8 +3,10 @@ package com.mutant.godutch
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.mutant.godutch.model.Friend
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Created by jackie780919 on 2016/2/16.
@@ -13,15 +15,13 @@ abstract class BaseActivity : AppCompatActivity() {
 
     abstract val layoutId: Int
 
-    abstract fun findViews()
-
     abstract fun setup()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
+        setSupportActionBar(tool_bar as Toolbar?)
         overridePendingTransition(0, 0)
-        findViews()
         setup()
         setOrientationLand()
     }

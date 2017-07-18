@@ -15,9 +15,6 @@ class MainActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_main
 
-    override fun findViews() {
-    }
-
     override fun setup() {
         setupViewPager()
         setupBottomNavigationView()
