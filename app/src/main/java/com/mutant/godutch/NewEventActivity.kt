@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.provider.MediaStore
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.AppCompatImageView
@@ -45,6 +46,13 @@ class NewEventActivity : BaseActivity() {
         get() = R.layout.activity_new_event
 
     override fun findViews() {
+    }
+
+    fun onClickTakeAPhoto(view: View) {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(takePictureIntent, NewGroupActivity.REQUEST_IMAGE_CAPTURE)
+        }
     }
 
     override fun setup() {

@@ -2,11 +2,14 @@ package com.mutant.godutch
 
 import android.app.Activity
 import android.content.Intent
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.google.firebase.database.*
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
@@ -84,11 +87,6 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupEvents() {
-        // TODO fetch from web;
-        //        events.add(new Event("住宿", "六天住宿錢", friendShared));
-        //        events.add(new Event("早餐", "好吃的懷石料理", friendShared));
-        //        events.add(new Event("門票錢", "直接登上東京鐵塔!!", friendShared));
-        //        events.add(new Event("喔米阿給", "三大待喔米阿給YA~~", friendShared));
         val MyLayoutManager = LinearLayoutManager(this)
         MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recycler_view_event.adapter = mAdapterEvent
@@ -106,22 +104,29 @@ class EventsActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: ViewHolderEvent, position: Int) {
             val event = events[position]
+            // TODO glide.into(imageview)
             holder.mTextViewTitle.text = event.title
             holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(event.timestampCreated)
             holder.mTextViewDescription.text = event.description
             holder.mTextViewTotal.text = "$" + event.subtotal
             holder.mRecycleViewFriendsShared.adapter = RecycleViewAdapterFriendsShared(event.friendsShared)
             holder.mRecycleViewFriendsShared.layoutManager = GridLayoutManager(this@EventsActivity, 2)
-            holder.itemView.setOnClickListener { activity.startActivity(NewEventActivity.getIntent(activity, mGroupId)) }
+            holder.itemView.setOnClickListener { intentToNewEvent(holder) }
             holder.itemView.setOnLongClickListener {
                 removeEvent(event)
                 false
             }
         }
 
+        private fun intentToNewEvent(holder: ViewHolderEvent) {
+            val imagePhotoPair = android.support.v4.util.Pair.create(holder.mImageViewPhoto as View, getString(R.string.events_image_photo))
+            val compat = ActivityOptionsCompat.makeSceneTransitionAnimation(this@EventsActivity, imagePhotoPair)
+            ActivityCompat.startActivity(this@EventsActivity, NewEventActivity.getIntent(activity, mGroupId), compat.toBundle())
+        }
+
         private fun removeEvent(event: Event) {
             AlertDialog.Builder(activity).setTitle("系統提示").setMessage("確定要刪除此筆？")
-                    .setPositiveButton("確定") { dialog, which -> mDatabaseEvents?.child(event.id)?.removeValue() }
+                    .setPositiveButton("確定") { _, _ -> mDatabaseEvents?.child(event.id)?.removeValue() }
                     .setNeutralButton("取消", null).show()
         }
 
@@ -160,6 +165,7 @@ class EventsActivity : BaseActivity() {
     }
 
     internal inner class ViewHolderEvent(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var mImageViewPhoto: ImageView = itemView.imageView_photo
         var mTextViewTitle: AppCompatTextView = itemView.textView_title
         var mTextViewDate: AppCompatTextView = itemView.textView_date
         var mTextViewDescription: AppCompatTextView = itemView.textView_description
