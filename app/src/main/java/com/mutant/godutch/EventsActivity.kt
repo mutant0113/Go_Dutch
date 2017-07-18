@@ -2,9 +2,14 @@ package com.mutant.godutch
 
 import android.app.Activity
 import android.content.Intent
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import com.google.firebase.database.*
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend

@@ -44,6 +44,13 @@ class NewEventActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_new_event
 
+    fun onClickTakeAPhoto(view: View) {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(takePictureIntent, NewGroupActivity.REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
     override fun setup() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
         setupFireBase()
@@ -53,30 +60,16 @@ class NewEventActivity : BaseActivity() {
         setupTotalTextChangedListener()
     }
 
-    internal var isButtonTax10Clicked = false
-
     private fun setupButtonTax10Listener() {
-        button_tax_10.setOnClickListener { view ->
-            if (isButtonTax10Clicked) {
-                editText_tax.setText("0")
-                editText_total.text = editText_subtotal.text
-                isButtonTax10Clicked = false
-                view.setBackgroundColor(0)
-            } else {
-                val subtotalText = editText_subtotal.text.toString()
-                if(!TextUtils.isEmpty(subtotalText)) {
-                    val subtotal = Integer.valueOf(subtotalText)!!
-                    editText_tax.setText(Math.round(subtotal * 0.1).toString())
-                    editText_total.setText(Math.round(subtotal * 1.1).toString())
-                    isButtonTax10Clicked = true
-                    view.setBackgroundColor(Color.YELLOW)
-                }
+        slider_tax.setOnValueChangedListener {
+            val subtotalText = editText_subtotal.text.toString()
+            if (!TextUtils.isEmpty(subtotalText)) {
+                val subtotal = Integer.valueOf(subtotalText)!!
+                val tax = Math.round(subtotal * (it.toDouble() / 100))
+                editText_tax.setText(tax.toString())
+                editText_total.setText((subtotal + tax).toString())
             }
         }
-    }
-
-    fun onClickButtonTaxCustom(view: View) {
-        // TODO
     }
 
     private fun setupSubtotalTextChangedListener() {
@@ -87,8 +80,7 @@ class NewEventActivity : BaseActivity() {
 
             @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                isButtonTax10Clicked = true
-                button_tax_10.callOnClick()
+                slider_tax.value = 0
             }
 
             override fun afterTextChanged(s: Editable) {
@@ -174,7 +166,7 @@ class NewEventActivity : BaseActivity() {
                 if (dataSnapshot.exists()) {
                     val fcmToken = dataSnapshot.child("fcmToken").value as? String
                     // TODO title, content, icon
-                    if(!TextUtils.isEmpty(fcmToken)) {
+                    if (!TextUtils.isEmpty(fcmToken)) {
                         NotificationHelper.sendNotificationToUser(fcmToken!!, title)
                     }
                 } else {

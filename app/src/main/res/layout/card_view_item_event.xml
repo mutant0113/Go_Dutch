@@ -12,7 +12,17 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/imageView_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/take_a_photo"
+            android:transitionName="@string/events_image_photo"/>
+
         <android.support.v7.widget.ContentFrameLayout
+            android:layout_below="@+id/imageView_photo"
             android:id="@+id/linearLayoutCompat_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

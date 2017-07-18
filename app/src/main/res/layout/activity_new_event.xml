@@ -1,130 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.mutant.godutch.NewEventActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:orientation="vertical"
-        tools:context="com.mutant.godutch.NewEventActivity">
+        android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/imageView_photo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/editText_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="主題">
-
-            </android.support.v7.widget.AppCompatEditText>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/editText_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="詳細敘述">
-
-            </android.support.v7.widget.AppCompatEditText>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/editText_subtotal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="小計"
-                android:inputType="number">
-
-            </android.support.v7.widget.AppCompatEditText>
-
-        </android.support.design.widget.TextInputLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="onClickTakeAPhoto"
+            android:scaleType="centerCrop"
+            android:src="@drawable/take_a_photo"
+            android:transitionName="@string/events_image_photo"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/editText_tax"
+                    android:id="@+id/editText_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:hint="服務費"
+                    android:hint="主題">
+
+                </android.support.v7.widget.AppCompatEditText>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/editText_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="詳細敘述">
+
+                </android.support.v7.widget.AppCompatEditText>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/editText_subtotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="小計"
                     android:inputType="number">
 
                 </android.support.v7.widget.AppCompatEditText>
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/button_tax_10"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                android:background="@null"
-                android:onClick="onClickButtonTax10"
-                android:text="10%" />
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="3">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/editText_tax"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:hint="服務費"
+                        android:inputType="number">
+
+                    </android.support.v7.widget.AppCompatEditText>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <com.gc.materialdesign.views.Slider
+                    android:id="@+id/slider_tax"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:tickMark="@drawable/tickmark"
+                    materialdesign:max="100"
+                    materialdesign:min="0"
+                    materialdesign:showNumberIndicator="true" />
+
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/editText_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:hint="合計"
+                    android:text="0">
+
+                </android.support.v7.widget.AppCompatEditText>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_friends_shared"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical" />
 
             <android.support.v7.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                android:background="@null"
-                android:text="自訂" />
-
+                android:onClick="onClickCreateNewEvent"
+                android:text="新增項目" />
         </LinearLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/editText_total"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:hint="合計"
-                android:text="0">
-
-            </android.support.v7.widget.AppCompatEditText>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_friends_shared"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onClickCreateNewEvent"
-            android:text="新增項目" />
-
     </LinearLayout>
 </ScrollView>
