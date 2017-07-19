@@ -31,7 +31,7 @@
             fab:fab_colorPressed="@android:color/holo_red_light"
             fab:fab_icon="@drawable/food_fork_drink"
             fab:fab_size="mini"
-            fab:fab_title="吃吃喝喝" />
+            fab:fab_title="eat" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             fab:fab_colorPressed="@android:color/holo_red_light"
             fab:fab_icon="@drawable/ic_shopping_cart_white_24dp"
             fab:fab_size="mini"
-            fab:fab_title="大買特買" />
+            fab:fab_title="buy" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
@@ -49,7 +49,16 @@
             fab:fab_colorPressed="@android:color/holo_red_light"
             fab:fab_icon="@drawable/ic_local_hotel_white_24dp"
             fab:fab_size="mini"
-            fab:fab_title="住宿" />
+            fab:fab_title="hotel" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@android:color/holo_red_dark"
+            fab:fab_colorPressed="@android:color/holo_red_light"
+            fab:fab_icon="@drawable/ticket"
+            fab:fab_size="mini"
+            fab:fab_title="ticket" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
