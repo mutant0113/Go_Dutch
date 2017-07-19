@@ -45,9 +45,6 @@ class NewEventActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_new_event
 
-    override fun findViews() {
-    }
-
     fun onClickTakeAPhoto(view: View) {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(packageManager) != null) {

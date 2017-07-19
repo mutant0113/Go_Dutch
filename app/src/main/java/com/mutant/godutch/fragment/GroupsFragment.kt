@@ -21,8 +21,9 @@ import java.util.*
 
 class GroupsFragment : Fragment() {
 
-    internal var mAdapterGroup: AdapterGroup? = null
-    private var mDatabaseGroup: DatabaseReference? = null
+    var mAdapterGroup: AdapterGroup? = null
+    var firebaseUser = FirebaseAuth.getInstance().currentUser
+    var mDatabaseGroup: DatabaseReference? = FirebaseDatabase.getInstance().reference.child("groups").child(firebaseUser?.uid)
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_groups, container, false)
@@ -40,7 +41,7 @@ class GroupsFragment : Fragment() {
     }
 
     private fun setupGroups(view: View) {
-        mAdapterGroup = AdapterGroup(activity, ArrayList<Group>())
+        mAdapterGroup = AdapterGroup(activity, ArrayList<Group>(), mDatabaseGroup!!.key)
         val MyLayoutManager = LinearLayoutManager(activity)
         MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recycler_view_groups.adapter = mAdapterGroup
@@ -48,8 +49,6 @@ class GroupsFragment : Fragment() {
     }
 
     private fun setupFirebase() {
-        val firebaseUser = FirebaseAuth.getInstance().currentUser
-        mDatabaseGroup = FirebaseDatabase.getInstance().reference.child("groups").child(firebaseUser?.uid)
         mDatabaseGroup?.orderByKey()?.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 mAdapterGroup?.addItem(dataSnapshot.getValue(Group::class.java))

@@ -35,9 +35,6 @@ class NewFriendActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_new_friend
 
-    override fun findViews() {
-    }
-
     override fun setup() {
         setupFirebase()
         setupZxingGenerateQrcode()

@@ -12,7 +12,7 @@ import com.mutant.godutch.model.Group
  * Created by evanfang102 on 2017/3/30.
  */
 
-class AdapterGroup(private val activity: Activity, private val groups: MutableList<Group>) : RecyclerView.Adapter<ViewHolderGroup>() {
+class AdapterGroup(private val activity: Activity, private val groups: MutableList<Group>, val groupId: String) : RecyclerView.Adapter<ViewHolderGroup>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderGroup {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_group, parent, false)
@@ -33,7 +33,7 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
                     .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
             holder.mLinearLayoutFriends.addView(imageViewFriendPhoto)
         }
-        holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, group.id)) }
+        holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, groupId)) }
     }
 
     override fun getItemCount(): Int {
