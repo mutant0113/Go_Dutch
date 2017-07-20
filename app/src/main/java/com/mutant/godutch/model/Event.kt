@@ -11,7 +11,7 @@ import com.google.firebase.database.Exclude
 
 class Event : Parcelable {
 
-    var id: String = ""
+    var key: String = ""
     var title: String = ""
     var description: String = ""
     var subtotal: Int = 0
@@ -19,7 +19,7 @@ class Event : Parcelable {
     var total: Int = 0
     var friendsShared: List<Friend> = arrayListOf()
     var friendWhoPaidFirst: Friend = Friend()
-    var photo: String = ""
+    var photoUrl: String = ""
     val timestamp: HashMap<String, Any> = hashMapOf()
     var timestampCreated: Long = 0
         @Exclude
@@ -27,18 +27,7 @@ class Event : Parcelable {
 
     constructor()
 
-    constructor(title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List<Friend>) {
-        this.title = title
-        this.description = description
-        this.subtotal = subtotal
-        this.tax = tax
-        this.total = total
-        this.friendsShared = friendsShared
-        this.timestamp.put("timestamp", ServerValue.TIMESTAMP)
-    }
-
-    constructor(id: String, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, photo: String, timestampCreated: Long) {
-        this.id = id
+    constructor(title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List<Friend>, friendWhoPaidFirst: Friend) {
         this.title = title
         this.description = description
         this.subtotal = subtotal
@@ -46,7 +35,18 @@ class Event : Parcelable {
         this.total = total
         this.friendsShared = friendsShared
         this.friendWhoPaidFirst = friendWhoPaidFirst
-        this.photo = photo
+        this.timestamp.put("timestamp", ServerValue.TIMESTAMP)
+    }
+
+    constructor(photoUrl: String, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, timestampCreated: Long) {
+        this.title = title
+        this.description = description
+        this.subtotal = subtotal
+        this.tax = tax
+        this.total = total
+        this.friendsShared = friendsShared
+        this.friendWhoPaidFirst = friendWhoPaidFirst
+        this.photoUrl = photoUrl
         this.timestampCreated = timestampCreated
     }
 
@@ -66,14 +66,13 @@ class Event : Parcelable {
             source.readInt(),
             source.readArrayList(Friend.javaClass.classLoader) as ArrayList<Friend>,
             source.readParcelable(Friend.javaClass.classLoader),
-            source.readString(),
             source.readLong()
     )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(id)
+        dest.writeString(photoUrl)
         dest.writeString(title)
         dest.writeString(description)
         dest.writeInt(subtotal)
@@ -81,7 +80,6 @@ class Event : Parcelable {
         dest.writeInt(total)
         dest.writeList(friendsShared)
         dest.writeParcelable(friendWhoPaidFirst, flags)
-        dest.writeString(photo)
         dest.writeLong(timestampCreated)
     }
 }

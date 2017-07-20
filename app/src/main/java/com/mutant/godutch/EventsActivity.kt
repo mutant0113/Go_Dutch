@@ -66,7 +66,9 @@ class EventsActivity : BaseActivity() {
         if (mDatabaseEvents != null) {
             mDatabaseEvents?.orderByKey()?.addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                    mAdapterEvent.addItem(dataSnapshot.getValue(Event::class.java))
+                    var event = dataSnapshot.getValue(Event::class.java)
+                    event.key = dataSnapshot.key
+                    mAdapterEvent.addItem(event)
                     recycler_view_event.scrollToPosition(0)
                 }
 
@@ -135,7 +137,7 @@ class EventsActivity : BaseActivity() {
 
         private fun removeEvent(event: Event) {
             AlertDialog.Builder(activity).setTitle("系統提示").setMessage("確定要刪除此筆？")
-                    .setPositiveButton("確定") { dialog, which -> mDatabaseEvents?.child(event.id)?.removeValue() }
+                    .setPositiveButton("確定") { dialog, which -> mDatabaseEvents?.child(event.key)?.removeValue() }
                     .setNeutralButton("取消", null).show()
         }
 

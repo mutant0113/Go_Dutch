@@ -23,14 +23,13 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.model.Group
+import com.mutant.godutch.utils.Utility.Companion.uploadImage
 import kotlinx.android.synthetic.main.activity_new_group.*
 import kotlinx.android.synthetic.main.card_view_item_friend.view.*
-import java.io.ByteArrayOutputStream
 import java.util.*
 
 class NewGroupActivity : BaseActivity() {
@@ -55,8 +54,6 @@ class NewGroupActivity : BaseActivity() {
     private fun setupFireBase() {
         mFirebaseUser = FirebaseAuth.getInstance().currentUser
         if (mFirebaseUser != null) {
-            val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
-            mStorage = FirebaseStorage.getInstance().reference.child(filePath)
             mDatabase.child("friends").child(mFirebaseUser!!.uid).orderByChild("name").addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -91,20 +88,10 @@ class NewGroupActivity : BaseActivity() {
         }
     }
 
-    private fun uploadImage(bitmap: Bitmap, onFailureListener: OnFailureListener, onSuccessListener: OnSuccessListener<UploadTask.TaskSnapshot>) {
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
-
-        val uploadTask = mStorage?.putBytes(data)
-        if(uploadTask != null) {
-            uploadTask.addOnFailureListener(onFailureListener).addOnSuccessListener(onSuccessListener)
-        }
-    }
-
     fun onClickCreateNewGroup(view: View) {
         val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
-        uploadImage(bitmap, OnFailureListener { exception ->
+        val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
+        uploadImage(filePath, bitmap, OnFailureListener { exception ->
             exception.printStackTrace()
             Snackbar.make(coordinatorLayout_parent, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
         }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->

@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.support.annotation.RequiresApi
@@ -23,16 +25,19 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.NotificationHelper
+import com.mutant.godutch.utils.Utility
 import kotlinx.android.synthetic.main.activity_new_event.*
-import kotlinx.android.synthetic.main.activity_new_friend.*
 import kotlinx.android.synthetic.main.card_view_item_friend.view.*
 import java.util.*
 
@@ -169,19 +174,31 @@ class NewEventActivity : BaseActivity() {
     }
 
     fun onClickCreateNewEvent(view: View) {
+        val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
+        val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
+        Utility.uploadImage(filePath, bitmap, OnFailureListener { exception ->
+            exception.printStackTrace()
+            Snackbar.make(coordinatorLayout_parent, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
+        }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
+            Snackbar.make(coordinatorLayout_parent, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
+            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+            createNewEvent(taskSnapshot?.downloadUrl)
+        })
+    }
+
+    fun createNewEvent(imageDownloadUrl: Uri?) {
         val title = editText_title.text.toString()
         val description = editText_description.text.toString()
         val subtotal = Integer.parseInt(editText_subtotal.text.toString())
         val tax = Integer.parseInt(editText_tax.text.toString())
         val total = Integer.parseInt(editText_total.text.toString())
-        val friendswhoPaid = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
-        val event = Event(title, description, subtotal, tax, total, friendswhoPaid)
-        event.subtotal = total
+        val friendsShared = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
+        val friendWhoPaidFirst =mAdapterFriendsShared?.friendWhoPaidFirst
+        val event = Event(title, description, subtotal, tax, total, friendsShared, friendWhoPaidFirst)
+//        event.subtotal = total
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).push()
-        event.id = databaseReference.key
-        event.friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst
         databaseReference.setValue(event).addOnSuccessListener {
-            sendNewEventNotificationToFriends(friendswhoPaid[1].uid, title)
+            sendNewEventNotificationToFriends(friendsShared[1].uid, title)
             finish()
         }
     }
