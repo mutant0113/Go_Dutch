@@ -22,43 +22,48 @@
         android:elevation="6dp"
         fab:fab_colorNormal="@android:color/holo_red_dark"
         fab:fab_colorPressed="@android:color/holo_red_light"
+        fab:fab_labelStyle="@style/menu_labels_style"
         fab:pressedTranslationZ="12dp">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_food"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@android:color/holo_red_dark"
             fab:fab_colorPressed="@android:color/holo_red_light"
             fab:fab_icon="@drawable/food_fork_drink"
             fab:fab_size="mini"
-            fab:fab_title="eat" />
+            fab:fab_title="吃吃喝喝" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_shopping"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@android:color/holo_red_dark"
             fab:fab_colorPressed="@android:color/holo_red_light"
             fab:fab_icon="@drawable/ic_shopping_cart_white_24dp"
             fab:fab_size="mini"
-            fab:fab_title="buy" />
+            fab:fab_title="大買特買" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_hotel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@android:color/holo_red_dark"
             fab:fab_colorPressed="@android:color/holo_red_light"
             fab:fab_icon="@drawable/ic_local_hotel_white_24dp"
             fab:fab_size="mini"
-            fab:fab_title="hotel" />
+            fab:fab_title="住宿" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_ticket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@android:color/holo_red_dark"
             fab:fab_colorPressed="@android:color/holo_red_light"
             fab:fab_icon="@drawable/ticket"
             fab:fab_size="mini"
-            fab:fab_title="ticket" />
+            fab:fab_title="票券" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

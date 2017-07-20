@@ -1,8 +1,10 @@
 package com.mutant.godutch
 
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import android.provider.MediaStore
@@ -37,6 +39,7 @@ import java.util.*
 class NewEventActivity : BaseActivity() {
 
     internal var mGroupId: String = ""
+    internal var mType: TYPE = TYPE.FOOD
     internal var mAdapterFriendsShared: RecycleViewAdapterFriendsShared = RecycleViewAdapterFriendsShared(this@NewEventActivity, 0, arrayListOf())
     internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     internal var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
@@ -45,20 +48,42 @@ class NewEventActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_new_event
 
-    fun onClickTakeAPhoto(view: View) {
+    fun onClickTakeAPhoto() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(packageManager) != null) {
             startActivityForResult(takePictureIntent, NewGroupActivity.REQUEST_IMAGE_CAPTURE)
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (requestCode == NewGroupActivity.REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val extras = data.extras
+            val imageBitmap = extras.get("data") as Bitmap
+            imageView_photo.setImageBitmap(imageBitmap)
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun setup() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
+        mType = intent.getSerializableExtra(BUNDLE_KEY_TYPE) as TYPE
+        imageView_photo.setOnClickListener { onClickTakeAPhoto() }
+        setupTypeFabButton()
         setupFireBase()
         setupFriendsShard()
         setupButtonTax10Listener()
         setupSubtotalTextChangedListener()
         setupTotalTextChangedListener()
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun setupTypeFabButton() {
+        when(mType) {
+            TYPE.FOOD -> fab_event_type.setImageDrawable(getDrawable(R.drawable.food_fork_drink))
+            TYPE.SHOPPING -> fab_event_type.setImageDrawable(getDrawable(R.drawable.ic_shopping_cart_white_24dp))
+            TYPE.HOTEL -> fab_event_type.setImageDrawable(getDrawable(R.drawable.ic_local_hotel_white_24dp))
+            TYPE.TICKET -> fab_event_type.setImageDrawable(getDrawable(R.drawable.ticket))
+        }
     }
 
     private fun setupButtonTax10Listener() {
@@ -299,9 +324,18 @@ class NewEventActivity : BaseActivity() {
 
         val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
 
-        fun getIntent(activity: Activity, groupId: String): Intent {
+        public enum class TYPE {
+            FOOD,
+            SHOPPING,
+            HOTEL,
+            TICKET
+        }
+        val BUNDLE_KEY_TYPE = "BUNDLE_KEY_TYPE"
+
+        fun getIntent(activity: Activity, groupId: String, type: TYPE): Intent {
             val intent = Intent(activity, NewEventActivity::class.java)
             intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId)
+            intent.putExtra(BUNDLE_KEY_TYPE, type)
             return intent
         }
     }

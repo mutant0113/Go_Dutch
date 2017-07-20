@@ -6,7 +6,8 @@
     xmlns:tools2="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context="com.mutant.godutch.NewEventActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -34,8 +35,7 @@
                 android:id="@+id/imageView_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="200dp"
-                android:onClick="onClickTakeAPhoto"
+                android:minHeight="250dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/take_a_photo"
                 android:transitionName="@string/events_image_photo"

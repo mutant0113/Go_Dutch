@@ -90,7 +90,14 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupFabNewEvent() {
-        findViewById(R.id.fab_new_event).setOnClickListener { startActivity(NewEventActivity.getIntent(this@EventsActivity, mGroupId)) }
+        fab_food.setOnClickListener { startActivity(NewEventActivity.getIntent(
+                this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.FOOD)) }
+        fab_shopping.setOnClickListener { startActivity(NewEventActivity.getIntent(
+                this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.SHOPPING)) }
+        fab_hotel.setOnClickListener { startActivity(NewEventActivity.getIntent(
+                this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.HOTEL)) }
+        fab_ticket.setOnClickListener { startActivity(NewEventActivity.getIntent(
+                this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.TICKET)) }
     }
 
     private fun setupEvents() {
@@ -117,7 +124,9 @@ class EventsActivity : BaseActivity() {
             holder.mTextViewTotal.text = "$" + event.subtotal
             holder.mRecycleViewFriendsShared.adapter = RecycleViewAdapterFriendsShared(event.friendsShared)
             holder.mRecycleViewFriendsShared.layoutManager = GridLayoutManager(this@EventsActivity, 2)
-            holder.itemView.setOnClickListener { activity.startActivity(NewEventActivity.getIntent(activity, mGroupId)) }
+            // TODO fetch from firebase
+            holder.itemView.setOnClickListener { activity.startActivity(NewEventActivity.getIntent(
+                    activity, mGroupId, NewEventActivity.Companion.TYPE.FOOD)) }
             holder.itemView.setOnLongClickListener {
                 removeEvent(event)
                 false
