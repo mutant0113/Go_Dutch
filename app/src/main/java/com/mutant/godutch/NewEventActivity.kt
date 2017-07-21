@@ -72,13 +72,17 @@ class NewEventActivity : BaseActivity() {
     override fun setup() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
         mType = intent.getSerializableExtra(BUNDLE_KEY_TYPE) as TYPE
-        imageView_photo.setOnClickListener { onClickTakeAPhoto() }
+        setupPhotoOnClickListener()
         setupTypeFabButton()
         setupFireBase()
         setupFriendsShard()
         setupButtonTax10Listener()
         setupSubtotalTextChangedListener()
         setupTotalTextChangedListener()
+    }
+
+    fun setupPhotoOnClickListener() {
+        imageView_photo.setOnClickListener { onClickTakeAPhoto() }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

@@ -3,4 +3,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
+    <dimen name="title">80dp</dimen>
+    <dimen name="toolbar_and_list_item">64dp</dimen>
+    <dimen name="subtitle">48dp</dimen>
+    <dimen name="card_left_and_right_padding">32dp</dimen>
+    <dimen name="status_bar">24dp</dimen>
+    <dimen name="screen_edge_left_and_right_padding">24dp</dimen>
+    <dimen name="space_between_content_areas">8dp</dimen>
 </resources>
