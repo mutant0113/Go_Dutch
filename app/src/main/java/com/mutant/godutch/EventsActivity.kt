@@ -5,7 +5,6 @@ import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
 import android.view.*
-import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.google.firebase.database.*
 import com.mutant.godutch.model.Event
@@ -130,6 +129,7 @@ class EventsActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: ViewHolderEvent, position: Int) {
             val event = events[position]
+            Glide.with(activity).load(event.photoUrl).error(R.drawable.take_a_photo).into(holder.mImageViewPhoto)
             holder.mTextViewTitle.text = event.title
             holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(event.timestampCreated)
             holder.mTextViewDescription.text = event.description
@@ -177,9 +177,8 @@ class EventsActivity : BaseActivity() {
         override fun onBindViewHolder(holder: ViewHolderFriendShared, position: Int) {
             val friendShared = this.friendShared[position]
             holder.mTextViewName.text = friendShared.name
-            val imageViewFriendPhoto = ImageView(activity)
             Glide.with(activity).load(friendShared.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
-                    .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
+                    .fitCenter().animate(R.anim.design_fab_in).into(holder.mImageViewPhotoUrl)
             holder.mTextViewNeedToPay.text = friendShared.needToPay.toString()
         }
 
@@ -189,6 +188,7 @@ class EventsActivity : BaseActivity() {
     }
 
     internal inner class ViewHolderEvent(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var mImageViewPhoto: AppCompatImageView = itemView.imageView_photo
         var mTextViewTitle: AppCompatTextView = itemView.textView_title
         var mTextViewDate: AppCompatTextView = itemView.textView_date
         var mTextViewDescription: AppCompatTextView = itemView.textView_description

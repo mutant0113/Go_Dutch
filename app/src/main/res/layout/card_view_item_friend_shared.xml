@@ -8,8 +8,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:gravity="center_horizontal">
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin">
 
         <RelativeLayout
             android:id="@+id/relativeLayout_friend"
@@ -19,18 +20,18 @@
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/imageView_photo_url"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/propic_size_in_events"
+                android:layout_height="@dimen/propic_size_in_events"
                 android:src="@drawable/ic_account_circle_black_48dp" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/textView_name"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/imageView_photo_url"
-                android:text="名字" />
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:text="name" />
 
 
         </RelativeLayout>
@@ -42,7 +43,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_toRightOf="@id/relativeLayout_friend"
-            android:text="xxx" />
+            android:text="payment" />
 
     </RelativeLayout>
 
