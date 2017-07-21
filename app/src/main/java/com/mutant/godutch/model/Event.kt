@@ -12,6 +12,7 @@ import com.google.firebase.database.Exclude
 class Event : Parcelable {
 
     var key: String = ""
+    var photoUrl: String = ""
     var title: String = ""
     var description: String = ""
     var subtotal: Int = 0
@@ -19,7 +20,6 @@ class Event : Parcelable {
     var total: Int = 0
     var friendsShared: List<Friend> = arrayListOf()
     var friendWhoPaidFirst: Friend = Friend()
-    var photoUrl: String = ""
     val timestamp: HashMap<String, Any> = hashMapOf()
     var timestampCreated: Long = 0
         @Exclude
@@ -27,7 +27,8 @@ class Event : Parcelable {
 
     constructor()
 
-    constructor(title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List<Friend>, friendWhoPaidFirst: Friend) {
+    constructor(photoUrl: String, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List<Friend>, friendWhoPaidFirst: Friend) {
+        this.photoUrl = photoUrl
         this.title = title
         this.description = description
         this.subtotal = subtotal
@@ -39,6 +40,7 @@ class Event : Parcelable {
     }
 
     constructor(photoUrl: String, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, timestampCreated: Long) {
+        this.photoUrl = photoUrl
         this.title = title
         this.description = description
         this.subtotal = subtotal
@@ -46,7 +48,6 @@ class Event : Parcelable {
         this.total = total
         this.friendsShared = friendsShared
         this.friendWhoPaidFirst = friendWhoPaidFirst
-        this.photoUrl = photoUrl
         this.timestampCreated = timestampCreated
     }
 

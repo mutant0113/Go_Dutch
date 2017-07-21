@@ -24,14 +24,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
@@ -48,7 +47,6 @@ class NewEventActivity : BaseActivity() {
     internal var mAdapterFriendsShared: RecycleViewAdapterFriendsShared = RecycleViewAdapterFriendsShared(this@NewEventActivity, 0, arrayListOf())
     internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     internal var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
-    internal var mStorage: StorageReference? = null
 
     override val layoutId: Int
         get() = R.layout.activity_new_event
@@ -151,13 +149,11 @@ class NewEventActivity : BaseActivity() {
     }
 
     private fun setupFriendsShard() {
-        recycler_view_friends_shared.layoutManager = GridLayoutManager(this, 2) as RecyclerView.LayoutManager?
+        recycler_view_friends_shared.layoutManager = GridLayoutManager(this, 2)
     }
 
     private fun setupFireBase() {
         if (mFirebaseUser != null) {
-            val filePath = mFirebaseUser?.uid + "/" + System.currentTimeMillis() + ".png"
-            mStorage = FirebaseStorage.getInstance().reference.child(filePath)
             mDatabaseFriends.orderByChild("name").addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -198,8 +194,7 @@ class NewEventActivity : BaseActivity() {
         val total = Integer.parseInt(editText_total.text.toString())
         val friendsShared = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
         val friendWhoPaidFirst =mAdapterFriendsShared?.friendWhoPaidFirst
-        val event = Event(title, description, subtotal, tax, total, friendsShared, friendWhoPaidFirst)
-//        event.subtotal = total
+        val event = Event(imageDownloadUrl?.toString() ?: "", title, description, subtotal, tax, total, friendsShared, friendWhoPaidFirst)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).push()
         databaseReference.setValue(event).addOnSuccessListener {
             sendNewEventNotificationToFriends(friendsShared[1].uid, title)
@@ -244,8 +239,7 @@ class NewEventActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: ViewHolderShared, position: Int) {
             val friend = friends[position]
-            // TODO set image
-            //            holder.mImageViewProPic.setImageURI();
+            Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
             holder.mTextViewName.text = friend.name
             val itemView = holder.itemView
             itemView.setOnClickListener {
@@ -334,7 +328,7 @@ class NewEventActivity : BaseActivity() {
     inner class ViewHolderShared(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var mRelativeLayoutCompat: RelativeLayout = itemView.relativeLayout_friend
-        var mImageViewProPic: AppCompatImageView = itemView.imageView_pro_pic
+        var mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
         var mTextViewName: AppCompatTextView = itemView.textView_name
         var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
         var mTextViewInvitationState: AppCompatTextView = itemView.textView_invitation_state

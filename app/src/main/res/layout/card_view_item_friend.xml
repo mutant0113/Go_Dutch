@@ -20,7 +20,7 @@
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/imageView_pro_pic"
+                android:id="@+id/imageView_photo_url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/profile_pic" />

@@ -26,7 +26,6 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
         holder.mTextViewTitle.text = group.title
         holder.mTextViewDescription.text = group.description
         holder.mTextViewTotalPay.text = "$" + group.subtotal.toString()
-        // TODO add friends' photo
         for (friend in group.friends) {
             val imageViewFriendPhoto = ImageView(activity)
             Glide.with(activity).load(friend.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)

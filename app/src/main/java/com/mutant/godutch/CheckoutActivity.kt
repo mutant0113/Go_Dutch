@@ -74,7 +74,7 @@ class CheckoutActivity : BaseActivity() {
             val friendShared = this.friendShared[position]
             holder.mTextViewName.text = friendShared.name
             // TODO
-            // holder.mImageViewProPic.setImageURI();
+            // holder.mImageViewPhotoUrl.setImageURI();
             holder.mTextViewNeedToPay.text = friendShared.needToPay.toString()
         }
 
@@ -86,7 +86,7 @@ class CheckoutActivity : BaseActivity() {
 
     internal inner class ViewHolderFriendShared(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var mImageViewProPic: AppCompatImageView = itemView.imageView_pro_pic
+        var mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
         var mTextViewName: AppCompatTextView = itemView.textView_name
         var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
     }

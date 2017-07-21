@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.card_view_item_friend.view.*
 
 class ViewHolderFriend(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    var mImageViewProPic: AppCompatImageView = itemView.imageView_pro_pic
+    var mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
     var mTextViewName: AppCompatTextView = itemView.textView_name
     var mTextViewInvitationState: AppCompatTextView = itemView.textView_invitation_state
     var mTextViewNeedToPay: TextView = itemView.textView_need_to_pay

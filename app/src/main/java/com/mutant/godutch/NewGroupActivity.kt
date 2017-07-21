@@ -62,6 +62,7 @@ class NewGroupActivity : BaseActivity() {
                     while (iterator.hasNext()) {
                         friends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
                     }
+                    friends.add(0, meInFriend)
                     mAdapterFriends = RecycleViewAdapterFriends(this@NewGroupActivity, friends)
                     recycler_view_friends_shared.adapter = mAdapterFriends
                 }
@@ -135,7 +136,7 @@ class NewGroupActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val friend = friends[position]
-            Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewProPic)
+            Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
             holder.mTextViewName.text = friend.name
             val itemView = holder.itemView
             itemView.setOnClickListener {
@@ -169,7 +170,7 @@ class NewGroupActivity : BaseActivity() {
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var mImageViewProPic: AppCompatImageView = itemView.imageView_pro_pic
+        var mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
         var mTextViewName: AppCompatTextView = itemView.textView_name
         var mTextViewInvitationState: AppCompatTextView = itemView.textView_invitation_state
     }

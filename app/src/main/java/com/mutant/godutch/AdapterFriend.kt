@@ -30,7 +30,7 @@ class AdapterFriend(private val activity: Activity, private val friends: Mutable
         val friend = friends[position]
         if (payloads!!.isEmpty()) {
             Glide.with(activity).load(friend.photoUrl).placeholder(R.drawable.profile_pic)
-                    .error(R.drawable.profile_pic).into(holder.mImageViewProPic)
+                    .error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
             holder.mTextViewName.text = friend.name
             setupFriendState(holder, friend)
             holder.mTextViewNeedToPay.visibility = View.INVISIBLE

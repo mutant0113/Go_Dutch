@@ -5,6 +5,8 @@ import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
 import android.view.*
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.google.firebase.database.*
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
@@ -92,14 +94,22 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupFabNewEvent() {
-        fab_food.setOnClickListener { startActivity(NewEventActivity.getIntent(
-                this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.FOOD)) }
-        fab_shopping.setOnClickListener { startActivity(NewEventActivity.getIntent(
-                this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.SHOPPING)) }
-        fab_hotel.setOnClickListener { startActivity(NewEventActivity.getIntent(
-                this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.HOTEL)) }
-        fab_ticket.setOnClickListener { startActivity(NewEventActivity.getIntent(
-                this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.TICKET)) }
+        fab_food.setOnClickListener {
+            startActivity(NewEventActivity.getIntent(
+                    this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.FOOD))
+        }
+        fab_shopping.setOnClickListener {
+            startActivity(NewEventActivity.getIntent(
+                    this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.SHOPPING))
+        }
+        fab_hotel.setOnClickListener {
+            startActivity(NewEventActivity.getIntent(
+                    this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.HOTEL))
+        }
+        fab_ticket.setOnClickListener {
+            startActivity(NewEventActivity.getIntent(
+                    this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.TICKET))
+        }
     }
 
     private fun setupEvents() {
@@ -124,11 +134,13 @@ class EventsActivity : BaseActivity() {
             holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(event.timestampCreated)
             holder.mTextViewDescription.text = event.description
             holder.mTextViewTotal.text = "$" + event.subtotal
-            holder.mRecycleViewFriendsShared.adapter = RecycleViewAdapterFriendsShared(event.friendsShared)
+            holder.mRecycleViewFriendsShared.adapter = RecycleViewAdapterFriendsShared(activity, event.friendsShared)
             holder.mRecycleViewFriendsShared.layoutManager = GridLayoutManager(this@EventsActivity, 2)
             // TODO fetch from firebase
-            holder.itemView.setOnClickListener { activity.startActivity(NewEventActivity.getIntent(
-                    activity, mGroupId, NewEventActivity.Companion.TYPE.FOOD)) }
+            holder.itemView.setOnClickListener {
+                activity.startActivity(NewEventActivity.getIntent(
+                        activity, mGroupId, NewEventActivity.Companion.TYPE.FOOD))
+            }
             holder.itemView.setOnLongClickListener {
                 removeEvent(event)
                 false
@@ -154,7 +166,7 @@ class EventsActivity : BaseActivity() {
             get() = events
     }
 
-    internal inner class RecycleViewAdapterFriendsShared(var friendShared: List<Friend>) : RecyclerView.Adapter<ViewHolderFriendShared>() {
+    internal inner class RecycleViewAdapterFriendsShared(var activity: Activity, var friendShared: List<Friend>) : RecyclerView.Adapter<ViewHolderFriendShared>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderFriendShared {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_friend_shared, parent, false)
@@ -165,8 +177,9 @@ class EventsActivity : BaseActivity() {
         override fun onBindViewHolder(holder: ViewHolderFriendShared, position: Int) {
             val friendShared = this.friendShared[position]
             holder.mTextViewName.text = friendShared.name
-            // TODO
-            //            holder.mImageViewProPic.setImageURI();
+            val imageViewFriendPhoto = ImageView(activity)
+            Glide.with(activity).load(friendShared.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
+                    .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
             holder.mTextViewNeedToPay.text = friendShared.needToPay.toString()
         }
 
@@ -185,7 +198,7 @@ class EventsActivity : BaseActivity() {
     }
 
     internal inner class ViewHolderFriendShared(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var mImageViewProPic: AppCompatImageView = itemView.imageView_pro_pic
+        var mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
         var mTextViewName: AppCompatTextView = itemView.textView_name
         var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
     }
