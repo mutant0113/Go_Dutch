@@ -19,13 +19,13 @@ import java.util.*
  * Created by Mutant on 2017/6/11.
  */
 
-class CheckoutActivity : BaseActivity() {
+class CheckActivity : BaseActivity() {
 
     companion object {
         private val BUNDLE_KEY_LIST_EVENTS = "BUNDLE_KEY_LIST_EVENTS"
 
         fun getIntent(context: Context, events: ArrayList<Event>?): Intent {
-            val intent = Intent(context, CheckoutActivity::class.java)
+            val intent = Intent(context, CheckActivity::class.java)
             intent.putParcelableArrayListExtra(BUNDLE_KEY_LIST_EVENTS, events)
             return intent
         }

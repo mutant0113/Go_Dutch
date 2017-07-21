@@ -48,6 +48,8 @@ class NewEventActivity : BaseActivity() {
     internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     internal var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
 
+    var isTakePhoto: Boolean = false
+
     override val layoutId: Int
         get() = R.layout.activity_new_event
 
@@ -63,6 +65,7 @@ class NewEventActivity : BaseActivity() {
             val extras = data.extras
             val imageBitmap = extras.get("data") as Bitmap
             imageView_photo.setImageBitmap(imageBitmap)
+            isTakePhoto = true
         }
     }
 
@@ -71,7 +74,7 @@ class NewEventActivity : BaseActivity() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
         mType = intent.getSerializableExtra(BUNDLE_KEY_TYPE) as TYPE
         setupPhotoOnClickListener()
-        setupTypeFabButton()
+        setupFabType()
         setupFireBase()
         setupFriendsShard()
         setupButtonTax10Listener()
@@ -84,12 +87,24 @@ class NewEventActivity : BaseActivity() {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setupTypeFabButton() {
-        when(mType) {
-            TYPE.FOOD -> fab_event_type.setImageDrawable(getDrawable(R.drawable.food_fork_drink))
-            TYPE.SHOPPING -> fab_event_type.setImageDrawable(getDrawable(R.drawable.ic_shopping_cart_white_24dp))
-            TYPE.HOTEL -> fab_event_type.setImageDrawable(getDrawable(R.drawable.ic_local_hotel_white_24dp))
-            TYPE.TICKET -> fab_event_type.setImageDrawable(getDrawable(R.drawable.ticket))
+    private fun setupFabType() {
+        when (mType) {
+            TYPE.FOOD -> {
+                fab_event_type.setImageDrawable(getDrawable(R.drawable.food_fork_drink))
+                imageView_photo.setImageResource(R.drawable.food_default_640)
+            }
+            TYPE.SHOPPING -> {
+                fab_event_type.setImageDrawable(getDrawable(R.drawable.ic_shopping_cart_white_24dp))
+                imageView_photo.setImageResource(R.drawable.shopping_default_640)
+            }
+            TYPE.HOTEL -> {
+                fab_event_type.setImageDrawable(getDrawable(R.drawable.ic_local_hotel_white_24dp))
+                imageView_photo.setImageResource(R.drawable.hotel_default_640)
+            }
+            TYPE.TICKET -> {
+                fab_event_type.setImageDrawable(getDrawable(R.drawable.ticket))
+                imageView_photo.setImageResource(R.drawable.ticket_default_640)
+            }
         }
     }
 
@@ -174,16 +189,20 @@ class NewEventActivity : BaseActivity() {
     }
 
     fun onClickCreateNewEvent(view: View) {
-        val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
-        val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
-        Utility.uploadImage(filePath, bitmap, OnFailureListener { exception ->
-            exception.printStackTrace()
-            Snackbar.make(coordinatorLayout_parent, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
-        }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
-            Snackbar.make(coordinatorLayout_parent, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
-            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-            createNewEvent(taskSnapshot?.downloadUrl)
-        })
+        if (isTakePhoto) {
+            val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
+            val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
+            Utility.uploadImage(filePath, bitmap, OnFailureListener { exception ->
+                exception.printStackTrace()
+                Snackbar.make(coordinatorLayout_parent, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
+            }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
+                Snackbar.make(coordinatorLayout_parent, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                createNewEvent(taskSnapshot?.downloadUrl)
+            })
+        } else {
+            createNewEvent(null)
+        }
     }
 
     fun createNewEvent(imageDownloadUrl: Uri?) {
@@ -193,8 +212,8 @@ class NewEventActivity : BaseActivity() {
         val tax = Integer.parseInt(editText_tax.text.toString())
         val total = Integer.parseInt(editText_total.text.toString())
         val friendsShared = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
-        val friendWhoPaidFirst =mAdapterFriendsShared?.friendWhoPaidFirst
-        val event = Event(imageDownloadUrl?.toString() ?: "", title, description, subtotal, tax, total, friendsShared, friendWhoPaidFirst)
+        val friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst
+        val event = Event(imageDownloadUrl?.toString() ?: "", mType, title, description, subtotal, tax, total, friendsShared, friendWhoPaidFirst)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).push()
         databaseReference.setValue(event).addOnSuccessListener {
             sendNewEventNotificationToFriends(friendsShared[1].uid, title)
@@ -339,12 +358,13 @@ class NewEventActivity : BaseActivity() {
 
         val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
 
-        public enum class TYPE {
+        enum class TYPE {
             FOOD,
             SHOPPING,
             HOTEL,
             TICKET
         }
+
         val BUNDLE_KEY_TYPE = "BUNDLE_KEY_TYPE"
 
         fun getIntent(activity: Activity, groupId: String, type: TYPE): Intent {

@@ -7,6 +7,10 @@
     android:orientation="vertical"
     tools:ignore="NamespaceTypo">
 
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_event"
         android:layout_width="match_parent"
@@ -66,13 +70,5 @@
             fab:fab_title="票券" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/appCompatButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:onClick="onClickButtonCheckout"
-        android:text="結帳" />
 
 </android.support.v7.widget.ContentFrameLayout>

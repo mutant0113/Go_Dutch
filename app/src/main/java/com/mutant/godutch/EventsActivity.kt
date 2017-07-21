@@ -1,12 +1,18 @@
 package com.mutant.godutch
 
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
+import android.text.TextUtils
 import android.view.*
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.firebase.database.*
+import com.mutant.godutch.NewEventActivity.Companion.TYPE
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.Utility
@@ -33,16 +39,14 @@ class EventsActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_list, menu)
+        menuInflater.inflate(R.menu.menu_events, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val id = item?.itemId
-
-        if (id == R.id.action_settings) {
-            TODO()
-            return true
+        when (item?.itemId) {
+            R.id.action_list -> Toast.makeText(this@EventsActivity, "action_list", Toast.LENGTH_LONG).show()
+            R.id.action_list_check -> check()
         }
 
         return super.onOptionsItemSelected(item)
@@ -51,8 +55,8 @@ class EventsActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_events
 
-    fun onClickButtonCheckout(view: View) {
-        startActivity(CheckoutActivity.getIntent(this, mAdapterEvent.getEvents))
+    fun check() {
+        startActivity(CheckActivity.getIntent(this, mAdapterEvent.getEvents))
     }
 
     override fun setup() {
@@ -127,9 +131,11 @@ class EventsActivity : BaseActivity() {
             return holder
         }
 
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onBindViewHolder(holder: ViewHolderEvent, position: Int) {
             val event = events[position]
-            Glide.with(activity).load(event.photoUrl).error(R.drawable.take_a_photo).into(holder.mImageViewPhoto)
+            setupPhoto(holder, event)
+            setupFabType(holder, event)
             holder.mTextViewTitle.text = event.title
             holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(event.timestampCreated)
             holder.mTextViewDescription.text = event.description
@@ -144,6 +150,37 @@ class EventsActivity : BaseActivity() {
             holder.itemView.setOnLongClickListener {
                 removeEvent(event)
                 false
+            }
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        private fun setupFabType(holder: ViewHolderEvent, event: Event) {
+            when (event.type) {
+                TYPE.FOOD -> {
+                    holder.mFabType.setImageDrawable(getDrawable(R.drawable.food_fork_drink))
+                }
+                TYPE.SHOPPING -> {
+                    holder.mFabType.setImageDrawable(getDrawable(R.drawable.ic_shopping_cart_white_24dp))
+                }
+                TYPE.HOTEL -> {
+                    holder.mFabType.setImageDrawable(getDrawable(R.drawable.ic_local_hotel_white_24dp))
+                }
+                TYPE.TICKET -> {
+                    holder.mFabType.setImageDrawable(getDrawable(R.drawable.ticket))
+                }
+            }
+        }
+
+        private fun setupPhoto(holder: ViewHolderEvent, event: Event) {
+            if(TextUtils.isEmpty(event.photoUrl)) {
+                when(event.type) {
+                    TYPE.FOOD -> holder.mImageViewPhoto.setImageResource(R.drawable.food_default_640)
+                    TYPE.SHOPPING -> holder.mImageViewPhoto.setImageResource(R.drawable.shopping_default_640)
+                    TYPE.HOTEL -> holder.mImageViewPhoto.setImageResource(R.drawable.hotel_default_640)
+                    TYPE.TICKET -> holder.mImageViewPhoto.setImageResource(R.drawable.ticket_default_640)
+                }
+            } else {
+                Glide.with(activity).load(event.photoUrl).error(R.drawable.take_a_photo).into(holder.mImageViewPhoto)
             }
         }
 
@@ -189,6 +226,7 @@ class EventsActivity : BaseActivity() {
 
     internal inner class ViewHolderEvent(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var mImageViewPhoto: AppCompatImageView = itemView.imageView_photo
+        var mFabType: FloatingActionButton = itemView.fab_event_type
         var mTextViewTitle: AppCompatTextView = itemView.textView_title
         var mTextViewDate: AppCompatTextView = itemView.textView_date
         var mTextViewDescription: AppCompatTextView = itemView.textView_description

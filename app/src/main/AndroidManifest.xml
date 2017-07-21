@@ -46,7 +46,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".CheckoutActivity"
+            android:name=".CheckActivity"
             android:screenOrientation="portrait" />
 
         <activity

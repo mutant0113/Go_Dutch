@@ -4,6 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.firebase.client.ServerValue
 import com.google.firebase.database.Exclude
+import com.mutant.godutch.NewEventActivity
+import com.mutant.godutch.NewEventActivity.Companion.TYPE
 
 /**
  * Created by evanfang102 on 2017/5/26.
@@ -13,6 +15,7 @@ class Event : Parcelable {
 
     var key: String = ""
     var photoUrl: String = ""
+    var type: TYPE = TYPE.FOOD
     var title: String = ""
     var description: String = ""
     var subtotal: Int = 0
@@ -27,8 +30,9 @@ class Event : Parcelable {
 
     constructor()
 
-    constructor(photoUrl: String, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List<Friend>, friendWhoPaidFirst: Friend) {
+    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List<Friend>, friendWhoPaidFirst: Friend) {
         this.photoUrl = photoUrl
+        this.type = type
         this.title = title
         this.description = description
         this.subtotal = subtotal

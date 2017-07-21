@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="250dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/take_a_photo"
+                android:src="@drawable/food_default_640"
                 android:transitionName="@string/events_image_photo"
                 app:layout_collapseMode="parallax"
                 tools2:targetApi="lollipop" />
