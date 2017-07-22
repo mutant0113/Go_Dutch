@@ -61,9 +61,20 @@ class EventsActivity : BaseActivity() {
 
     override fun setup() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
+        collapseFabMenuWhenClickingOutside()
         setupEvents()
         setupFireBase()
         setupFabNewEvent()
+    }
+
+    fun collapseFabMenuWhenClickingOutside() {
+        coordinatorLayout_parent.setOnTouchListener { _, _ ->
+            if (fab_new_event.isExpanded) {
+                fab_new_event.collapse()
+                true
+            }
+            false
+        }
     }
 
     private fun setupFireBase() {
@@ -98,21 +109,22 @@ class EventsActivity : BaseActivity() {
 
     private fun setupFabNewEvent() {
         fab_food.setOnClickListener {
-            startActivity(NewEventActivity.getIntent(
-                    this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.FOOD))
+            intentToNewEvent(NewEventActivity.Companion.TYPE.FOOD)
         }
         fab_shopping.setOnClickListener {
-            startActivity(NewEventActivity.getIntent(
-                    this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.SHOPPING))
+            intentToNewEvent(NewEventActivity.Companion.TYPE.SHOPPING)
         }
         fab_hotel.setOnClickListener {
-            startActivity(NewEventActivity.getIntent(
-                    this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.HOTEL))
+            intentToNewEvent(NewEventActivity.Companion.TYPE.HOTEL)
         }
         fab_ticket.setOnClickListener {
-            startActivity(NewEventActivity.getIntent(
-                    this@EventsActivity, mGroupId, NewEventActivity.Companion.TYPE.TICKET))
+            intentToNewEvent(NewEventActivity.Companion.TYPE.TICKET)
         }
+    }
+
+    fun intentToNewEvent(type: TYPE) {
+        startActivity(NewEventActivity.getIntent(this@EventsActivity, mGroupId, type))
+        fab_new_event.collapse()
     }
 
     private fun setupEvents() {
@@ -172,8 +184,8 @@ class EventsActivity : BaseActivity() {
         }
 
         private fun setupPhoto(holder: ViewHolderEvent, event: Event) {
-            if(TextUtils.isEmpty(event.photoUrl)) {
-                when(event.type) {
+            if (TextUtils.isEmpty(event.photoUrl)) {
+                when (event.type) {
                     TYPE.FOOD -> holder.mImageViewPhoto.setImageResource(R.drawable.food_default_640)
                     TYPE.SHOPPING -> holder.mImageViewPhoto.setImageResource(R.drawable.shopping_default_640)
                     TYPE.HOTEL -> holder.mImageViewPhoto.setImageResource(R.drawable.hotel_default_640)

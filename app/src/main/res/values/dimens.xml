@@ -12,5 +12,5 @@
     <dimen name="screen_edge_left_and_right_padding">24dp</dimen>
     <dimen name="space_between_content_areas">8dp</dimen>
     
-    <dimen name="propic_size_in_events">50dp</dimen>
+    <dimen name="pro_pic_size">50dp</dimen>
 </resources>
