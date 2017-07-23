@@ -32,7 +32,7 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
                     .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
             holder.mLinearLayoutFriends.addView(imageViewFriendPhoto)
         }
-        holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, groupId)) }
+        holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, groupId, group.title)) }
     }
 
     override fun getItemCount(): Int {

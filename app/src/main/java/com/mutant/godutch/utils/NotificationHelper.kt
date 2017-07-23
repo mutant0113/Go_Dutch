@@ -16,11 +16,12 @@ object NotificationHelper {
     val NOTIFY_FLAG_DEFAULT = -1
     val NOTIFY_ID_DEFAULT = 0
 
-    fun sendNotificationToUser(userFcmToken: String, message: String) {
+    fun sendNotificationToUser(fcmToken: String, title: String, content: String) {
         var firebaseNotification = FirebaseDatabase.getInstance().reference.child("notificationRequests")
         var map : HashMap<String, String> = hashMapOf()
-        map.put("userFcmToken", userFcmToken)
-        map.put("message", message)
+        map.put("fcmToken", fcmToken)
+        map.put("title", title)
+        map.put("content", content)
         firebaseNotification.push().setValue(map)
     }
 

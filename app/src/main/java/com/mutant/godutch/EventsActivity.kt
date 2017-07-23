@@ -22,7 +22,9 @@ import kotlinx.android.synthetic.main.card_view_item_friend_shared.view.*
 import java.util.*
 
 class EventsActivity : BaseActivity() {
+
     internal var mGroupId: String = ""
+    internal var mGroupName: String = ""
 
     internal var mAdapterEvent: RecycleViewAdapterEvent = RecycleViewAdapterEvent(this@EventsActivity, ArrayList<Event>())
     internal var mDatabaseEvents: DatabaseReference? = null
@@ -30,10 +32,12 @@ class EventsActivity : BaseActivity() {
     companion object {
 
         val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
+        val BUNDLE_KEY_GROUP_NAME = "BUNDLE_KEY_GROUP_NAME"
 
-        fun getIntent(activity: Activity, groupId: String): Intent {
+        fun getIntent(activity: Activity, groupId: String, groupName: String): Intent {
             val intent = Intent(activity, EventsActivity::class.java)
             intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId)
+            intent.putExtra(BUNDLE_KEY_GROUP_NAME, groupName)
             return intent
         }
     }
@@ -61,6 +65,7 @@ class EventsActivity : BaseActivity() {
 
     override fun setup() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
+        mGroupName = intent.getStringExtra(BUNDLE_KEY_GROUP_NAME)
         collapseFabMenuWhenClickingOutside()
         setupEvents()
         setupFireBase()
@@ -123,7 +128,7 @@ class EventsActivity : BaseActivity() {
     }
 
     fun intentToNewEvent(type: TYPE) {
-        startActivity(NewEventActivity.getIntent(this@EventsActivity, mGroupId, type))
+        startActivity(NewEventActivity.getIntent(this@EventsActivity, mGroupId, mGroupName, type))
         fab_new_event.collapse()
     }
 
@@ -157,7 +162,7 @@ class EventsActivity : BaseActivity() {
             // TODO fetch from firebase
             holder.itemView.setOnClickListener {
                 activity.startActivity(NewEventActivity.getIntent(
-                        activity, mGroupId, NewEventActivity.Companion.TYPE.FOOD))
+                        activity, mGroupId, mGroupName, NewEventActivity.Companion.TYPE.FOOD))
             }
             holder.itemView.setOnLongClickListener {
                 removeEvent(event)

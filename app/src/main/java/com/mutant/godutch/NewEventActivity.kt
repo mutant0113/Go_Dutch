@@ -43,12 +43,36 @@ import java.util.*
 class NewEventActivity : BaseActivity() {
 
     internal var mGroupId: String = ""
+    internal var mGroupName: String = ""
     internal var mType: TYPE = TYPE.FOOD
     internal var mAdapterFriendsShared: RecycleViewAdapterFriendsShared = RecycleViewAdapterFriendsShared(this@NewEventActivity, 0, arrayListOf())
     internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     internal var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
 
     var isTakePhoto: Boolean = false
+
+    companion object {
+
+        val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
+        val BUNDLE_KEY_GROUP_NAME = "BUNDLE_KEY_GROUP_NAME"
+
+        enum class TYPE {
+            FOOD,
+            SHOPPING,
+            HOTEL,
+            TICKET
+        }
+
+        val BUNDLE_KEY_TYPE = "BUNDLE_KEY_TYPE"
+
+        fun getIntent(activity: Activity, groupId: String, groupName: String, type: TYPE): Intent {
+            val intent = Intent(activity, NewEventActivity::class.java)
+            intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId)
+            intent.putExtra(BUNDLE_KEY_GROUP_NAME, groupName)
+            intent.putExtra(BUNDLE_KEY_TYPE, type)
+            return intent
+        }
+    }
 
     override val layoutId: Int
         get() = R.layout.activity_new_event
@@ -72,6 +96,7 @@ class NewEventActivity : BaseActivity() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun setup() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
+        mGroupName = intent.getStringExtra(EventsActivity.BUNDLE_KEY_GROUP_NAME)
         mType = intent.getSerializableExtra(BUNDLE_KEY_TYPE) as TYPE
         setupPhotoOnClickListener()
         setupFabType()
@@ -214,19 +239,21 @@ class NewEventActivity : BaseActivity() {
         val event = Event(imageDownloadUrl?.toString() ?: "", mType, title, description, subtotal, tax, total, friendsShared, friendWhoPaidFirst)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).push()
         databaseReference.setValue(event).addOnSuccessListener {
-            sendNewEventNotificationToFriends(friendsShared[1].uid, title)
+            val notiyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mGroupName)
+            val notifyContent = getString(R.string.notify_new_event_content, title)
+            sendNewEventNotificationToFriends(friendsShared[1].uid, notiyTitle, notifyContent)
             finish()
         }
     }
 
-    fun sendNewEventNotificationToFriends(userUid: String, title: String) {
+    fun sendNewEventNotificationToFriends(userUid: String, title: String, content: String) {
         FirebaseDatabase.getInstance().reference.child("users").child(userUid).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val fcmToken = dataSnapshot.child("fcmToken").value as? String
                     // TODO title, content, icon
                     if (!TextUtils.isEmpty(fcmToken)) {
-                        NotificationHelper.sendNotificationToUser(fcmToken!!, title)
+                        NotificationHelper.sendNotificationToUser(fcmToken!!, title, content)
                     }
                 } else {
                     Snackbar.make(coordinatorLayout_parent, "此ID不存在", Toast.LENGTH_LONG).show()
@@ -350,27 +377,6 @@ class NewEventActivity : BaseActivity() {
         var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
         var mTextViewInvitationState: AppCompatTextView = itemView.textView_invitation_state
 
-    }
-
-    companion object {
-
-        val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
-
-        enum class TYPE {
-            FOOD,
-            SHOPPING,
-            HOTEL,
-            TICKET
-        }
-
-        val BUNDLE_KEY_TYPE = "BUNDLE_KEY_TYPE"
-
-        fun getIntent(activity: Activity, groupId: String, type: TYPE): Intent {
-            val intent = Intent(activity, NewEventActivity::class.java)
-            intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId)
-            intent.putExtra(BUNDLE_KEY_TYPE, type)
-            return intent
-        }
     }
 
 }

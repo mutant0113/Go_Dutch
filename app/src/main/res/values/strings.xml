@@ -32,4 +32,7 @@
 
     <string name="log_out">登出</string>
 
+    <string name="notify_new_event_title">%1$s 在 %2$s 記錄新的項目</string>
+    <string name="notify_new_event_content">標題: %s</string>
+
 </resources>
