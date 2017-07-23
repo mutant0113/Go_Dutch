@@ -21,6 +21,7 @@
     <string name="bottom_navi_settings">設定</string>
 
     <string name="events_check">結帳</string>
+    <string name="add_friends">加朋友</string>
 
     <string name="upload_image_successfully">上傳圖片成功</string>
     <string name="upload_image_failed">上傳圖片失敗</string>
@@ -28,5 +29,7 @@
     <!-- Facebook -->
     <string name="facebook_app_id">247296392442341</string>
     <string name="fb_login_protocol_scheme">fb247296392442341</string>
+
+    <string name="log_out">登出</string>
 
 </resources>

@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.iid.FirebaseInstanceId
@@ -54,8 +55,7 @@ class LoginActivity : AppCompatActivity() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).
                 requestEmail().build()
         // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
-        mGoogleApiClient = GoogleApiClient.Builder(this).enableAutoManage(this, GoogleApiClient.OnConnectionFailedListener {})
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build()
+        mGoogleApiClient = GoogleApiClient.Builder(this).enableAutoManage(this, {}).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build()
         findViewById(R.id.sign_in_button_google).setOnClickListener {
             val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
             startActivityForResult(signInIntent, RC_SIGN_IN)
@@ -78,6 +78,22 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, "fb onError", Toast.LENGTH_LONG)
             }
         })
+    }
+
+    private fun onLoginComplete(task: Task<*>) {
+        if (task.isSuccessful) {
+            Toast.makeText(this@LoginActivity, "user login succeed", Toast.LENGTH_SHORT).show()
+            val refreshedToken = FirebaseInstanceId.getInstance().token
+            if (refreshedToken != null) {
+                MyInstanceIDListenerService.sendRegistrationToServer(refreshedToken)
+                loginSuccessfully()
+            } else {
+                // TODO
+            }
+        } else {
+            // TODO register
+//            register(email, password)
+        }
     }
 
     private fun loginSuccessfully() {
@@ -125,22 +141,12 @@ class LoginActivity : AppCompatActivity() {
         } else {
             val email = editTextEmail.text.toString()
             val password = editTextPassword.text.toString()
-            mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnFailureListener { e -> e.printStackTrace() }.addOnCompleteListener { task ->
-                // TODO com.google.firebase.FirebaseNetworkException
-                // TODO password failed
-                if (task.isSuccessful) {
-                    Toast.makeText(this@LoginActivity, "user login succeed", Toast.LENGTH_SHORT).show()
-                    val refreshedToken = FirebaseInstanceId.getInstance().token
-                    if (refreshedToken != null) {
-                        MyInstanceIDListenerService.sendRegistrationToServer(refreshedToken)
-                        loginSuccessfully()
-                    } else {
-                        // TODO
+            mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnFailureListener { e -> e.printStackTrace() }
+                    .addOnCompleteListener {
+                        // TODO com.google.firebase.FirebaseNetworkException
+                        // TODO password failed
+                        onLoginComplete(it)
                     }
-                } else {
-                    register(email, password)
-                }
-            }
         }
     }
 
@@ -173,37 +179,14 @@ class LoginActivity : AppCompatActivity() {
         Log.d(LoginActivity.TAG, "firebaseAuthWithGoogle:" + account?.id)
 
         val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-        mFirebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(LoginActivity.TAG, "signInWithCredential:success")
-                        loginSuccessfully()
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.exception)
-                        Toast.makeText(this@LoginActivity, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show()
-                    }
-                }
+        mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this) { onLoginComplete(it) }
     }
 
     private fun firebaseAuthWithFacebook(token: AccessToken) {
         Log.d(TAG, "handleFacebookAccessToken:" + token)
 
         val credential: AuthCredential = FacebookAuthProvider.getCredential(token.token)
-        mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d(LoginActivity.TAG, "signInWithCredential:success")
-                loginSuccessfully()
-            } else {
-                // If sign in fails, display a message to the user.
-                Log.w(LoginActivity.TAG, "signInWithCredential:failure", task.exception)
-                Toast.makeText(this@LoginActivity, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
-            }
-        }
+        mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this) { onLoginComplete(it) }
 
     }
 

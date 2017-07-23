@@ -1,11 +1,13 @@
 package com.mutant.godutch
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.mutant.godutch.model.Friend
@@ -29,12 +31,45 @@ class FriendsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupFirebase()
         setupFriends()
-        setupFabNewGroup()
+        setupProPic()
+        setupButtonCurrency()
+        setupButtonLogout()
+//        setupFabNewGroup()
     }
 
-    private fun setupFabNewGroup() {
-        fab_new_friend.setOnClickListener { startActivity(NewFriendActivity.getIntent(activity)) }
+    private fun setupProPic() {
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        if(firebaseUser != null) {
+            Glide.with(context).load(firebaseUser.photoUrl).error(R.drawable.profile_pic).into(imageView_photo_me)
+        }
+
+        imageView_photo_me.setOnClickListener {
+            // TODO
+        }
     }
+
+    private fun setupButtonCurrency() {
+        button_currency.setOnClickListener {
+            // TODO
+        }
+    }
+
+    private fun setupButtonLogout() {
+        button_logout.setOnClickListener {
+            val auth = FirebaseAuth.getInstance()
+            auth.addAuthStateListener { firebaseAuth ->
+                if (firebaseAuth.currentUser == null && activity != null) {
+                    startActivity(Intent(activity, LoginActivity::class.java))
+                    activity.finish()
+                }
+            }
+            auth.signOut()
+        }
+    }
+
+//    private fun setupFabNewGroup() {
+//        fab_new_friend.setOnClickListener { startActivity(NewFriendActivity.getIntent(activity)) }
+//    }
 
     private fun setupFriends() {
         val MyLayoutManager = LinearLayoutManager(activity)
@@ -70,4 +105,5 @@ class FriendsFragment : Fragment() {
             }
         })
     }
+
 }

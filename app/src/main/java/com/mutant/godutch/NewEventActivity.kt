@@ -152,9 +152,7 @@ class NewEventActivity : BaseActivity() {
                     } catch (ie: IllegalThreadStateException) {
                         ie.printStackTrace()
                     }
-
                 }
-
             }
 
             override fun afterTextChanged(s: Editable) {

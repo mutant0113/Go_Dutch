@@ -13,4 +13,5 @@
     <dimen name="space_between_content_areas">8dp</dimen>
     
     <dimen name="pro_pic_size">50dp</dimen>
+    <dimen name="pro_pic_size_big">100dp</dimen>
 </resources>
