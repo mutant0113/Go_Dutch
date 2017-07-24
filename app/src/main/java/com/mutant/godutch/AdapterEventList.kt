@@ -3,6 +3,8 @@ package com.mutant.godutch
 import android.annotation.TargetApi
 import android.app.Activity
 import android.os.Build
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
@@ -15,6 +17,8 @@ import com.google.firebase.database.DatabaseReference
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.utils.Utility
 import java.util.*
+
+
 
 
 /**
@@ -43,8 +47,10 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
         holder.mTextViewTotal.text = "TWD $" + event.subtotal
         // TODO fetch from firebase
         holder.itemView.setOnClickListener {
-            activity.startActivity(NewEventActivity.getIntent(
-                    activity, groupId, groupName, NewEventActivity.Companion.TYPE.FOOD))
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, it,
+                    activity.resources.getString(R.string.events_image_photo))
+            ActivityCompat.startActivity(activity, NewEventActivity.getIntent(
+                    activity, groupId, groupName, NewEventActivity.Companion.TYPE.FOOD), options.toBundle())
         }
         holder.itemView.setOnLongClickListener {
             removeEvent(event)
