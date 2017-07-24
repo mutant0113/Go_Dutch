@@ -32,7 +32,7 @@ class MyInstanceIDListenerService : FirebaseInstanceIdService() {
         var TAG = MyInstanceIDListenerService::class.java.simpleName
 
         // need to send token to realtime database after user logged in
-        // TODO create a server to deliver message to other devices
+        // TODO create a com.mutant.godutch.server to deliver message to other devices
         fun sendRegistrationToServer(refreshedToken: String) {
             val firebaseUser = FirebaseAuth.getInstance().currentUser
             if (!TextUtils.isEmpty(refreshedToken) && firebaseUser != null) {

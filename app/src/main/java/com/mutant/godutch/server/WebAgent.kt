@@ -1,4 +1,4 @@
-package server
+package com.mutant.godutch.server
 
 import okhttp3.Callback
 import okhttp3.OkHttpClient

@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+    <dimen name="tool_bar">56dp</dimen>
     <dimen name="title">80dp</dimen>
     <dimen name="toolbar_and_list_item">64dp</dimen>
     <dimen name="subtitle">48dp</dimen>
@@ -11,7 +12,23 @@
     <dimen name="status_bar">24dp</dimen>
     <dimen name="screen_edge_left_and_right_padding">24dp</dimen>
     <dimen name="space_between_content_areas">8dp</dimen>
-    
+
     <dimen name="pro_pic_size">50dp</dimen>
     <dimen name="pro_pic_size_big">100dp</dimen>
+
+    <dimen name="list_item">72dp</dimen>
+    <dimen name="list_screen_edge_left_and_right_margins">16dp</dimen>
+    <dimen name="list_content_associated_with_an_icon_or_avatar_left_margin">72dp</dimen>
+
+    <dimen name="font_size_display_4">112sp</dimen>
+    <dimen name="font_size_display_3">56sp</dimen>
+    <dimen name="font_size_display_2">45sp</dimen>
+    <dimen name="font_size_display_1">34sp</dimen>
+    <dimen name="font_size_headline">24sp</dimen>
+    <dimen name="font_size_title">20sp</dimen>
+    <dimen name="font_size_subheading">16sp</dimen>
+    <dimen name="font_size_body">14sp</dimen>
+    <dimen name="font_size_caption">12sp</dimen>
+    <dimen name="font_size_button">14sp</dimen>
+
 </resources>

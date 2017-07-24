@@ -35,4 +35,9 @@
     <string name="notify_new_event_title">%1$s 在 %2$s 記錄新的項目</string>
     <string name="notify_new_event_content">標題: %s</string>
 
+    <string name="event_type_food">吃吃喝喝</string>
+    <string name="event_type_shopping">大買特買</string>
+    <string name="event_type_hotel">住宿</string>
+    <string name="event_type_ticket">票券</string>
+
 </resources>

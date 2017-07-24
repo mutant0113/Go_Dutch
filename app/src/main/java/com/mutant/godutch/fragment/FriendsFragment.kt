@@ -1,4 +1,4 @@
-package com.mutant.godutch
+package com.mutant.godutch.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,9 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.mutant.godutch.AdapterFriend
+import com.mutant.godutch.LoginActivity
+import com.mutant.godutch.R
 import com.mutant.godutch.model.Friend
 import kotlinx.android.synthetic.main.fragment_friends.*
 import java.util.*

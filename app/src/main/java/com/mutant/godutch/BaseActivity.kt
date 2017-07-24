@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import com.mutant.godutch.model.Friend
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,16 +21,31 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
-        setSupportActionBar(tool_bar as Toolbar?)
         overridePendingTransition(0, 0)
+        setupToolbar()
         setup()
         setOrientationLand()
+    }
+
+    internal fun hideToobar() {
+        tool_bar.visibility = View.GONE
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(tool_bar as Toolbar?)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     protected fun setOrientationLand() {
         if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun finish() {

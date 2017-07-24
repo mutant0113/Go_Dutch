@@ -17,12 +17,25 @@
             android:id="@+id/tool_bar"
             layout="@layout/tool_bar" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_event"
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/tool_bar"
-            android:scrollbars="vertical" />
+            android:layout_below="@+id/tool_bar">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_event_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_event_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+        </ViewFlipper>
     </RelativeLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu

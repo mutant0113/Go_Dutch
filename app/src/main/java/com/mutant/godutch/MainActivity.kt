@@ -1,6 +1,7 @@
 package com.mutant.godutch
 
 import android.support.design.widget.BottomNavigationView
+import com.mutant.godutch.fragment.FriendsFragment
 import com.mutant.godutch.fragment.GroupsFragment
 import com.mutant.godutch.fragment.SettingsFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,6 +17,7 @@ class MainActivity : BaseActivity() {
         get() = R.layout.activity_main
 
     override fun setup() {
+        hideToobar()
         setupViewPager()
         setupBottomNavigationView()
     }

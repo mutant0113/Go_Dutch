@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="@dimen/list_screen_edge_left_and_right_margins">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/imageView_photo"
+        android:layout_width="@dimen/pro_pic_size_big"
+        android:layout_height="@dimen/pro_pic_size_big"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/food_default_640"
+        android:transitionName="@string/events_image_photo" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/textView_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_photo"
+        android:layout_alignLeft="@+id/imageView_photo"
+        android:layout_alignRight="@+id/imageView_photo"
+        android:background="@color/gray_50"
+        android:gravity="center"
+        android:padding="@dimen/space_between_content_areas"
+        android:text="TWD $550"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/font_size_subheading" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/list_screen_edge_left_and_right_margins"
+        android:layout_toRightOf="@+id/imageView_photo"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.ContentFrameLayout
+            android:id="@+id/linearLayoutCompat_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="title"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/font_size_subheading" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="date"
+                android:textSize="@dimen/font_size_caption" />
+
+        </android.support.v7.widget.ContentFrameLayout>
+
+        <android.support.v7.widget.ContentFrameLayout
+            android:id="@+id/linearLayoutCompat_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayoutCompat_title"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="description"
+                android:textSize="@dimen/font_size_body" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="food"
+                android:textSize="@dimen/font_size_caption" />
+        </android.support.v7.widget.ContentFrameLayout>
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/linearLayout_friends_shared"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pro_pic_size"
+            android:layout_below="@+id/linearLayoutCompat_description"
+            android:layout_marginTop="@dimen/space_between_content_areas">
+
+        </android.support.v7.widget.LinearLayoutCompat>
+    </RelativeLayout>
+
+</RelativeLayout>
