@@ -39,6 +39,8 @@ class NewGroupActivity : BaseActivity() {
     internal var mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
     internal var mStorage: StorageReference? = null
 
+    var isTakePhoto: Boolean = false
+
     override val layoutId: Int
         get() = R.layout.activity_new_group
 
@@ -86,20 +88,25 @@ class NewGroupActivity : BaseActivity() {
             val extras = data.extras
             val imageBitmap = extras.get("data") as Bitmap
             imageView_photo.setImageBitmap(imageBitmap)
+            isTakePhoto = true
         }
     }
 
     fun onClickCreateNewGroup(view: View) {
-        val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
-        val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
-        uploadImage(filePath, bitmap, OnFailureListener { exception ->
-            exception.printStackTrace()
-            Snackbar.make(coordinatorLayout_parent, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
-        }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
-            Snackbar.make(coordinatorLayout_parent, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
-            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-            createNewGroup(taskSnapshot?.downloadUrl)
-        })
+        if (isTakePhoto) {
+            val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
+            val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
+            uploadImage(filePath, bitmap, OnFailureListener { exception ->
+                exception.printStackTrace()
+                Snackbar.make(coordinatorLayout_parent, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
+            }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
+                Snackbar.make(coordinatorLayout_parent, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                createNewGroup(taskSnapshot?.downloadUrl)
+            })
+        } else {
+            createNewGroup(null)
+        }
     }
 
     private fun createNewGroup(imageDownloadUrl: Uri?) {

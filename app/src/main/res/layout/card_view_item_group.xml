@@ -1,63 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+    android:layout_marginLeft="@dimen/space_between_content_areas"
+    android:layout_marginRight="@dimen/space_between_content_areas"
+    android:layout_marginTop="@dimen/space_between_content_areas"
     card_view:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:orientation="vertical">
 
-        <android.support.v7.widget.LinearLayoutCompat
-            android:id="@+id/linearLayout_info"
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/imageView_photo"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/food_default_640"
+            android:transitionName="@string/events_image_photo" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textView_need_to_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_photo"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:background="@color/gray_50"
+            android:padding="@dimen/space_between_content_areas"
+            android:text="TWD $550"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_below="@+id/imageView_photo"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/screen_edge_left_and_right_padding"
+            android:paddingLeft="@dimen/screen_edge_left_and_right_padding"
+            android:paddingRight="@dimen/screen_edge_left_and_right_padding"
+            android:paddingTop="@dimen/activity_horizontal_margin">
 
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/imageView_photo"
-                android:layout_width="350px"
-                android:layout_height="350px"
-                android:src="@drawable/take_a_photo" />
-
-            <RelativeLayout
+            <android.support.v7.widget.ContentFrameLayout
+                android:id="@+id/linearLayoutCompat_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/textView_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="title" />
+                    android:text="title"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/black" />
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/textView_description"
+                    android:id="@+id/textView_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textView_title"
-                    android:text="description" />
+                    android:layout_gravity="right|center_vertical"
+                    android:text="date" />
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/textView_need_to_pay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView_description"
-                    android:text="$300" />
-            </RelativeLayout>
+            </android.support.v7.widget.ContentFrameLayout>
 
-        </android.support.v7.widget.LinearLayoutCompat>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/linearLayoutCompat_title"
+                android:text="description" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout_friends"
-            android:layout_width="@dimen/pro_pic_size"
-            android:layout_height="@dimen/pro_pic_size"
-            android:layout_below="@id/linearLayout_info"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:orientation="horizontal">
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:id="@+id/linearLayout_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView_description">
 
-        </LinearLayout>
+            </android.support.v7.widget.LinearLayoutCompat>
+
+        </RelativeLayout>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

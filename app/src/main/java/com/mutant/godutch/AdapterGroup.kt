@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.mutant.godutch.model.Group
+import com.mutant.godutch.utils.Utility
 
 /**
  * Created by evanfang102 on 2017/3/30.
@@ -22,7 +24,8 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
 
     override fun onBindViewHolder(holder: ViewHolderGroup, position: Int) {
         val group = groups[position]
-        Glide.with(activity).load(group.photoUrl).error(R.drawable.take_a_photo).into(holder.mImageViewPhoto)
+        Glide.with(activity).load(group.photoUrl).placeholder(R.drawable.travel_default_640).into(holder.mImageViewPhoto)
+        holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(group.timestampCreated)
         holder.mTextViewTitle.text = group.title
         holder.mTextViewDescription.text = group.description
         holder.mTextViewTotalPay.text = "$" + group.subtotal.toString()
@@ -30,7 +33,9 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
             val imageViewFriendPhoto = ImageView(activity)
             Glide.with(activity).load(friend.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
                     .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
-            holder.mLinearLayoutFriends.addView(imageViewFriendPhoto)
+            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            params.rightMargin = activity.resources.getDimension(R.dimen.activity_vertical_margin).toInt()
+            holder.mLinearLayoutFriends.addView(imageViewFriendPhoto, params)
         }
         holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, groupId, group.title)) }
     }
