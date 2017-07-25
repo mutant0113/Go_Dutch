@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.fragment_event_detail.view.*
 
 class EventDetailActivity : BaseActivity() {
 
-    private var mSectionsPagerAdapter: SectionsPagerAdapter? = SectionsPagerAdapter(supportFragmentManager)
-    private var mEvents: ArrayList<Event>? = null
+    private lateinit var mSectionsPagerAdapter: SectionsPagerAdapter
+    private lateinit var mEvents: ArrayList<Event>
 
     companion object {
 
@@ -37,9 +37,43 @@ class EventDetailActivity : BaseActivity() {
 
     override fun setup() {
         mEvents = intent.getParcelableArrayListExtra<Event>(BUNDLE_KEY_EVENTS)
-
+        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         // Set up the ViewPager with the sections adapter.
         container!!.adapter = mSectionsPagerAdapter
+        setupAppbarOffsestChanged()
+    }
+
+    private var state: CollapsingToolbarLayoutState? = null
+
+    private enum class CollapsingToolbarLayoutState {
+        EXPANDED,
+        COLLAPSED,
+        INTERNEDIATE
+    }
+
+    private fun setupAppbarOffsestChanged() {
+        app_bar_layout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            if (verticalOffset == 0) {
+                if (state != CollapsingToolbarLayoutState.EXPANDED) {
+                    state = CollapsingToolbarLayoutState.EXPANDED
+                    title = "EXPANDED"
+                }
+            } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                if (state != CollapsingToolbarLayoutState.COLLAPSED) {
+                    title = ""
+//                    playButton.setVisibility(View.VISIBLE)
+                    state = CollapsingToolbarLayoutState.COLLAPSED
+                }
+            } else {
+                if (state != CollapsingToolbarLayoutState.INTERNEDIATE) {
+//                    if(state == CollapsingToolbarLayoutState.COLLAPSED){
+//                        playButton.setVisibility(View.GONE);//由折叠变为中间状态时隐藏播放按钮
+//                    }
+                    title = "INTERNEDIATE"
+                    state = CollapsingToolbarLayoutState.INTERNEDIATE
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -77,11 +111,11 @@ class EventDetailActivity : BaseActivity() {
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater!!.inflate(R.layout.fragment_event_detail, container, false)
-            setupFabType(rootView, mEvent.type)
+            setupToolbar(rootView)
+            setupFabType(mEvent.type)
             if(!TextUtils.isEmpty(mEvent.photoUrl)) {
-                Glide.with(context).load(mEvent.photoUrl).error(R.drawable.food_default_640).into(rootView.imageView_photo)
+                Glide.with(context).load(mEvent.photoUrl).error(R.drawable.food_default_640).into(imageView_photo)
             }
-            rootView.textView_title.text = mEvent.title
             rootView.textView_date.text = Utility.getRelativeTimeSpanDate(mEvent.timestampCreated)
             rootView.textView_description.text = mEvent.description
             rootView.recycler_view_friends_who_paid_first
@@ -89,24 +123,28 @@ class EventDetailActivity : BaseActivity() {
             return rootView
         }
 
+        private fun  setupToolbar(rootView: View) {
+            activity.title = mEvent.title
+        }
+
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        private fun setupFabType(rootView: View, type: NewEventActivity.Companion.TYPE?) {
+        private fun setupFabType(type: NewEventActivity.Companion.TYPE?) {
             when (type) {
                 NewEventActivity.Companion.TYPE.FOOD -> {
-                    rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.food_fork_drink))
-                    rootView.imageView_photo.setImageResource(R.drawable.food_default_640)
+                    activity.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.food_fork_drink))
+                    activity.imageView_photo.setImageResource(R.drawable.food_default_640)
                 }
                 NewEventActivity.Companion.TYPE.SHOPPING -> {
-                    rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ic_shopping_cart_white_24dp))
-                    rootView.imageView_photo.setImageResource(R.drawable.shopping_default_640)
+                    activity.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ic_shopping_cart_white_24dp))
+                    activity.imageView_photo.setImageResource(R.drawable.shopping_default_640)
                 }
                 NewEventActivity.Companion.TYPE.HOTEL -> {
-                    rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ic_local_hotel_white_24dp))
-                    rootView.imageView_photo.setImageResource(R.drawable.hotel_default_640)
+                    activity.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ic_local_hotel_white_24dp))
+                    activity.imageView_photo.setImageResource(R.drawable.hotel_default_640)
                 }
                 NewEventActivity.Companion.TYPE.TICKET -> {
-                    rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ticket))
-                    rootView.imageView_photo.setImageResource(R.drawable.ticket_default_640)
+                    activity.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ticket))
+                    activity.imageView_photo.setImageResource(R.drawable.ticket_default_640)
                 }
             }
         }
@@ -143,15 +181,15 @@ class EventDetailActivity : BaseActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1, mEvents?.get(position))
+            return PlaceholderFragment.newInstance(position, mEvents?.get(position))
         }
 
         override fun getCount(): Int {
-            return mEvents?.size ?: 0
+            return mEvents.size
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            return mEvents?.get(position)?.title ?: ""
+            return mEvents[position].title
         }
     }
 }

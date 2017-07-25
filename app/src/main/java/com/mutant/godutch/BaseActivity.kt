@@ -36,6 +36,12 @@ abstract class BaseActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
+    internal fun setupToolbar(rootView: View) {
+        setSupportActionBar(rootView.findViewById(R.id.tool_bar) as Toolbar?)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
     protected fun setOrientationLand() {
         if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
