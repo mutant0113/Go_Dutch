@@ -238,7 +238,8 @@ class NewEventActivity : BaseActivity() {
         val friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst
         val event = Event(imageDownloadUrl?.toString() ?: "", mType, title, description, subtotal, tax, total, friendsShared, friendWhoPaidFirst)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).push()
-        databaseReference.setValue(event).addOnSuccessListener {
+        databaseReference.setValue(event)
+        databaseReference.setValue(ServerValue.TIMESTAMP).addOnSuccessListener {
             val notiyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mGroupName)
             val notifyContent = getString(R.string.notify_new_event_content, title)
             sendNewEventNotificationToFriends(friendsShared[1].uid, notiyTitle, notifyContent)

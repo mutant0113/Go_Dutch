@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import com.mutant.godutch.model.Friend
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Created by jackie780919 on 2016/2/16.
@@ -28,11 +27,11 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     internal fun hideToobar() {
-        tool_bar.visibility = View.GONE
+        findViewById(R.id.tool_bar)?.visibility = View.GONE
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(tool_bar as Toolbar?)
+        setSupportActionBar(findViewById(R.id.tool_bar) as Toolbar?)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }

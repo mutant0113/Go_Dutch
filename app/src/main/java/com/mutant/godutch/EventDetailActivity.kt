@@ -1,24 +1,33 @@
 package com.mutant.godutch
 
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.text.TextUtils
 import android.view.*
-import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.mutant.godutch.model.Event
+import com.mutant.godutch.utils.Utility
 import kotlinx.android.synthetic.main.activity_event_detail.*
+import kotlinx.android.synthetic.main.fragment_event_detail.view.*
 
 class EventDetailActivity : BaseActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = SectionsPagerAdapter(supportFragmentManager)
+    private var mEvents: ArrayList<Event>? = null
 
     companion object {
 
-        fun getIntent(activity: Activity): Intent {
+        private val BUNDLE_KEY_EVENTS = "BUNDLE_KEY_EVENTS"
+
+        fun getIntent(activity: Activity, events: ArrayList<Event>): Intent {
             val intent = Intent(activity, EventDetailActivity::class.java)
+            intent.putExtra(BUNDLE_KEY_EVENTS, events)
             return intent
         }
     }
@@ -27,13 +36,10 @@ class EventDetailActivity : BaseActivity() {
         get() = R.layout.activity_event_detail
 
     override fun setup() {
+        mEvents = intent.getParcelableArrayListExtra<Event>(BUNDLE_KEY_EVENTS)
+
         // Set up the ViewPager with the sections adapter.
         container!!.adapter = mSectionsPagerAdapter
-
-        fab.setOnClickListener {
-            Snackbar.make(it, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,12 +66,49 @@ class EventDetailActivity : BaseActivity() {
      */
     class PlaceholderFragment : Fragment() {
 
+        lateinit var mEvent: Event
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            mEvent = arguments.getParcelable(BUNDLE_KEY_EVENT)
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater!!.inflate(R.layout.fragment_event_detail, container, false)
-            val textView = rootView.findViewById(R.id.section_label) as TextView
-            textView.text = getString(R.string.section_format, arguments.getInt(ARG_SECTION_NUMBER))
+            setupFabType(rootView, mEvent.type)
+            if(!TextUtils.isEmpty(mEvent.photoUrl)) {
+                Glide.with(context).load(mEvent.photoUrl).error(R.drawable.food_default_640).into(rootView.imageView_photo)
+            }
+            rootView.textView_title.text = mEvent.title
+            rootView.textView_date.text = Utility.getRelativeTimeSpanDate(mEvent.timestampCreated)
+            rootView.textView_description.text = mEvent.description
+            rootView.recycler_view_friends_who_paid_first
+            rootView.recycler_view_friends_shared
             return rootView
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        private fun setupFabType(rootView: View, type: NewEventActivity.Companion.TYPE?) {
+            when (type) {
+                NewEventActivity.Companion.TYPE.FOOD -> {
+                    rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.food_fork_drink))
+                    rootView.imageView_photo.setImageResource(R.drawable.food_default_640)
+                }
+                NewEventActivity.Companion.TYPE.SHOPPING -> {
+                    rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ic_shopping_cart_white_24dp))
+                    rootView.imageView_photo.setImageResource(R.drawable.shopping_default_640)
+                }
+                NewEventActivity.Companion.TYPE.HOTEL -> {
+                    rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ic_local_hotel_white_24dp))
+                    rootView.imageView_photo.setImageResource(R.drawable.hotel_default_640)
+                }
+                NewEventActivity.Companion.TYPE.TICKET -> {
+                    rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ticket))
+                    rootView.imageView_photo.setImageResource(R.drawable.ticket_default_640)
+                }
+            }
         }
 
         companion object {
@@ -73,16 +116,18 @@ class EventDetailActivity : BaseActivity() {
              * The fragment argument representing the section number for this
              * fragment.
              */
-            private val ARG_SECTION_NUMBER = "section_number"
+            private val BUNDLE_KEY_SECTION_NUMBER = "BUNDLE_KEY_SECTION_NUMBER"
+            private val BUNDLE_KEY_EVENT = "BUNDLE_KEY_EVENT"
 
             /**
              * Returns a new instance of this fragment for the given section
              * number.
              */
-            fun newInstance(sectionNumber: Int): PlaceholderFragment {
+            fun newInstance(sectionNumber: Int, event: Event?): PlaceholderFragment {
                 val fragment = PlaceholderFragment()
                 val args = Bundle()
-                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
+                args.putInt(BUNDLE_KEY_SECTION_NUMBER, sectionNumber)
+                args.putParcelable(BUNDLE_KEY_EVENT, event)
                 fragment.arguments = args
                 return fragment
             }
@@ -98,21 +143,15 @@ class EventDetailActivity : BaseActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1)
+            return PlaceholderFragment.newInstance(position + 1, mEvents?.get(position))
         }
 
         override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
+            return mEvents?.size ?: 0
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            when (position) {
-                0 -> return "SECTION 1"
-                1 -> return "SECTION 2"
-                2 -> return "SECTION 3"
-            }
-            return null
+            return mEvents?.get(position)?.title ?: ""
         }
     }
 }

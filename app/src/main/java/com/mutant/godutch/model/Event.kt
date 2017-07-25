@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.firebase.client.ServerValue
 import com.google.firebase.database.Exclude
-import com.mutant.godutch.NewEventActivity
 import com.mutant.godutch.NewEventActivity.Companion.TYPE
 
 /**
@@ -23,7 +22,7 @@ class Event : Parcelable {
     var total: Int = 0
     var friendsShared: List<Friend> = arrayListOf()
     var friendWhoPaidFirst: Friend = Friend()
-    val timestamp: HashMap<String, Any> = hashMapOf()
+    var timestamp: HashMap<String, Any> = hashMapOf()
     var timestampCreated: Long = 0
         @Exclude
         get() = timestamp["timestamp"] as Long? ?: 0
@@ -43,8 +42,9 @@ class Event : Parcelable {
         this.timestamp.put("timestamp", ServerValue.TIMESTAMP)
     }
 
-    constructor(photoUrl: String, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, timestampCreated: Long) {
+    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, timestamp: HashMap<String, Any>) {
         this.photoUrl = photoUrl
+        this.type = type
         this.title = title
         this.description = description
         this.subtotal = subtotal
@@ -52,7 +52,7 @@ class Event : Parcelable {
         this.total = total
         this.friendsShared = friendsShared
         this.friendWhoPaidFirst = friendWhoPaidFirst
-        this.timestampCreated = timestampCreated
+        this.timestamp = timestamp
     }
 
     companion object {
@@ -64,6 +64,7 @@ class Event : Parcelable {
 
     constructor(source: Parcel) : this(
             source.readString(),
+            source.readSerializable() as TYPE,
             source.readString(),
             source.readString(),
             source.readInt(),
@@ -71,13 +72,14 @@ class Event : Parcelable {
             source.readInt(),
             source.readArrayList(Friend.javaClass.classLoader) as ArrayList<Friend>,
             source.readParcelable(Friend.javaClass.classLoader),
-            source.readLong()
+            source.readSerializable() as HashMap<String, Any>
     )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(photoUrl)
+        dest.writeSerializable(type)
         dest.writeString(title)
         dest.writeString(description)
         dest.writeInt(subtotal)
@@ -85,6 +87,6 @@ class Event : Parcelable {
         dest.writeInt(total)
         dest.writeList(friendsShared)
         dest.writeParcelable(friendWhoPaidFirst, flags)
-        dest.writeLong(timestampCreated)
+        dest.writeSerializable(timestamp)
     }
 }

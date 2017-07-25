@@ -47,7 +47,7 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
         holder.itemView.setOnClickListener {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, it,
                     activity.resources.getString(R.string.events_image_photo))
-            ActivityCompat.startActivity(activity, EventDetailActivity.getIntent(activity), options.toBundle())
+            ActivityCompat.startActivity(activity, EventDetailActivity.getIntent(activity, events), options.toBundle())
         }
         holder.itemView.setOnLongClickListener {
             removeEvent(event)
