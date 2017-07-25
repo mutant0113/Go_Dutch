@@ -19,8 +19,6 @@ import com.mutant.godutch.utils.Utility
 import java.util.*
 
 
-
-
 /**
  * Created by evanfang102 on 2017/7/24.
  */
@@ -49,8 +47,7 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
         holder.itemView.setOnClickListener {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, it,
                     activity.resources.getString(R.string.events_image_photo))
-            ActivityCompat.startActivity(activity, NewEventActivity.getIntent(
-                    activity, groupId, groupName, NewEventActivity.Companion.TYPE.FOOD), options.toBundle())
+            ActivityCompat.startActivity(activity, EventDetailActivity.getIntent(activity), options.toBundle())
         }
         holder.itemView.setOnLongClickListener {
             removeEvent(event)

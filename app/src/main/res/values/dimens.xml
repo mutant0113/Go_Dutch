@@ -30,5 +30,7 @@
     <dimen name="font_size_body">14sp</dimen>
     <dimen name="font_size_caption">12sp</dimen>
     <dimen name="font_size_button">14sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 
 </resources>

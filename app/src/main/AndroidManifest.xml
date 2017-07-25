@@ -10,6 +10,10 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -17,20 +21,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".NewEventActivity"
             android:screenOrientation="portrait" />
@@ -39,29 +41,32 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".EventsActivity"
-            android:label="@string/label_events"
+            android:label="@string/label_activity_events"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".NewFriendActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".CheckActivity"
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".EventDetailActivity"
+            android:label="@string/label_activity_event_detail" />
+
+        <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -71,7 +76,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".MyFcmListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -81,15 +85,10 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="89f26ac9b1ab3631eb7f6e704a30a7d54b679f37" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
     </application>
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
 
 </manifest>
