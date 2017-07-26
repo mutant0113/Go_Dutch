@@ -36,11 +36,11 @@ abstract class BaseActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-//    internal fun setupToolbar(rootView: View) {
-//        setSupportActionBar(rootView.findViewById(R.id.tool_bar) as Toolbar?)
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        supportActionBar?.setDisplayShowHomeEnabled(true)
-//    }
+    internal fun setupToolbar(rootView: View) {
+        setSupportActionBar(rootView.findViewById(R.id.tool_bar) as Toolbar?)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
 
     protected fun setOrientationLand() {
         if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -67,7 +67,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     mePhotoUrl = firebaseUser.photoUrl!!.toString()
                 }
 
-                return Friend(firebaseUser.uid, "Me", mePhotoUrl)
+                return Friend(firebaseUser.uid, firebaseUser.displayName!!, mePhotoUrl)
             }
             return Friend()
         }

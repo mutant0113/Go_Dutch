@@ -324,12 +324,7 @@ class NewEventActivity : BaseActivity() {
         }
 
         private fun sharedPaid() {
-            var isSelectedCount = 0
-            for (i in isSelected.indices) {
-                if (isSelected[i]) {
-                    isSelectedCount++
-                }
-            }
+            val isSelectedCount = isSelected.indices.count { isSelected[it] }
 
             var sharedSubtotal = 0
             var remainder = 0
@@ -360,12 +355,7 @@ class NewEventActivity : BaseActivity() {
 
         val friendsFilterBySelected: List<Friend>
             get() {
-                val friendsFliterBySelected = ArrayList<Friend>()
-                for (i in friends.indices) {
-                    if (isSelected[i]) {
-                        friendsFliterBySelected.add(friends[i])
-                    }
-                }
+                val friendsFliterBySelected = friends.indices.filter { isSelected[it] }.map { friends[it] }
                 return friendsFliterBySelected
             }
     }
