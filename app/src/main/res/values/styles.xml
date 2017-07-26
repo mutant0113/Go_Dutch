@@ -17,4 +17,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="collapsingToolbarLayoutTitle.expanded" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">@dimen/font_size_display_1</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="collapsingToolbarLayoutTitle.collapsed" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">@dimen/font_size_headline</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

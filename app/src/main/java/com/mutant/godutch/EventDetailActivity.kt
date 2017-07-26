@@ -40,7 +40,7 @@ class EventDetailActivity : BaseActivity() {
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         // Set up the ViewPager with the sections adapter.
         container!!.adapter = mSectionsPagerAdapter
-        setupAppbarOffsestChanged()
+        setupAppbarOffsetChanged()
     }
 
     private var state: CollapsingToolbarLayoutState? = null
@@ -48,29 +48,29 @@ class EventDetailActivity : BaseActivity() {
     private enum class CollapsingToolbarLayoutState {
         EXPANDED,
         COLLAPSED,
-        INTERNEDIATE
+        INTERMEDIATE
     }
 
-    private fun setupAppbarOffsestChanged() {
+    private fun setupAppbarOffsetChanged() {
         app_bar_layout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (verticalOffset == 0) {
                 if (state != CollapsingToolbarLayoutState.EXPANDED) {
                     state = CollapsingToolbarLayoutState.EXPANDED
-                    title = "EXPANDED"
+//                    collapsing_toolbar.title = "EXPANDED"
                 }
-            } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+            } else if (Math.abs(verticalOffset) >= appBarLayout.totalScrollRange) {
                 if (state != CollapsingToolbarLayoutState.COLLAPSED) {
-                    title = ""
+//                    collapsing_toolbar.title = ""
 //                    playButton.setVisibility(View.VISIBLE)
                     state = CollapsingToolbarLayoutState.COLLAPSED
                 }
             } else {
-                if (state != CollapsingToolbarLayoutState.INTERNEDIATE) {
+                if (state != CollapsingToolbarLayoutState.INTERMEDIATE) {
 //                    if(state == CollapsingToolbarLayoutState.COLLAPSED){
 //                        playButton.setVisibility(View.GONE);//由折叠变为中间状态时隐藏播放按钮
 //                    }
-                    title = "INTERNEDIATE"
-                    state = CollapsingToolbarLayoutState.INTERNEDIATE
+//                    collapsing_toolbar.title = "INTERMEDIATE"
+                    state = CollapsingToolbarLayoutState.INTERMEDIATE
                 }
             }
         }
@@ -111,10 +111,10 @@ class EventDetailActivity : BaseActivity() {
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater!!.inflate(R.layout.fragment_event_detail, container, false)
-            setupToolbar(rootView)
+            setupToolbar()
             setupFabType(mEvent.type)
-            if(!TextUtils.isEmpty(mEvent.photoUrl)) {
-                Glide.with(context).load(mEvent.photoUrl).error(R.drawable.food_default_640).into(imageView_photo)
+            if (!TextUtils.isEmpty(mEvent.photoUrl)) {
+                Glide.with(context).load(mEvent.photoUrl).error(R.drawable.food_default_640).into(activity.imageView_photo)
             }
             rootView.textView_date.text = Utility.getRelativeTimeSpanDate(mEvent.timestampCreated)
             rootView.textView_description.text = mEvent.description
@@ -123,8 +123,8 @@ class EventDetailActivity : BaseActivity() {
             return rootView
         }
 
-        private fun  setupToolbar(rootView: View) {
-            activity.title = mEvent.title
+        private fun setupToolbar() {
+            activity.collapsing_toolbar_layout.title = mEvent.title
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
