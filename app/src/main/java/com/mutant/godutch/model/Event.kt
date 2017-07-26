@@ -55,6 +55,19 @@ class Event : Parcelable {
         this.timestamp = timestamp
     }
 
+    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, timestampCreated: Long) {
+        this.photoUrl = photoUrl
+        this.type = type
+        this.title = title
+        this.description = description
+        this.subtotal = subtotal
+        this.tax = tax
+        this.total = total
+        this.friendsShared = friendsShared
+        this.friendWhoPaidFirst = friendWhoPaidFirst
+        this.timestampCreated = timestampCreated
+    }
+
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<Event> = object : Parcelable.Creator<Event> {
             override fun createFromParcel(source: Parcel): Event = Event(source)
