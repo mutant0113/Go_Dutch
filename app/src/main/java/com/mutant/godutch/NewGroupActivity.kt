@@ -47,6 +47,7 @@ class NewGroupActivity : BaseActivity() {
     override fun setup() {
         setupFriends()
         setupFireBase()
+        setupPhotoOnClickListener()
     }
 
     private fun setupFriends() {
@@ -76,17 +77,19 @@ class NewGroupActivity : BaseActivity() {
         }
     }
 
-    fun onClickTakeAPhoto(view: View) {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(packageManager) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+    fun setupPhotoOnClickListener() {
+        imageView_photo.setOnClickListener {
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (takePictureIntent.resolveActivity(packageManager) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            val extras = data.extras
-            val imageBitmap = extras.get("data") as Bitmap
+            val extras = data?.extras
+            val imageBitmap = extras?.get("data") as Bitmap
             imageView_photo.setImageBitmap(imageBitmap)
             isTakePhoto = true
         }

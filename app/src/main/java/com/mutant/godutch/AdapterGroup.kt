@@ -28,7 +28,8 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
         holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(group.timestampCreated)
         holder.mTextViewTitle.text = group.title
         holder.mTextViewDescription.text = group.description
-        holder.mTextViewTotalPay.text = "$" + group.subtotal.toString()
+        holder.mTextViewTotalPay.text = "TWD $" + group.subtotal.toString()
+        holder.mLinearLayoutFriends.removeAllViews()
         for (friend in group.friends) {
             val imageViewFriendPhoto = ImageView(activity)
             Glide.with(activity).load(friend.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)

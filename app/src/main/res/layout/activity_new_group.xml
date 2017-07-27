@@ -36,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="250dp"
-                android:onClick="onClickTakeAPhoto"
                 android:scaleType="centerCrop"
                 android:src="@drawable/travel_default_640"
                 android:transitionName="@string/events_image_photo"
