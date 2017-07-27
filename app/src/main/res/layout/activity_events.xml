@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout_parent"
     android:layout_width="match_parent"
@@ -38,58 +38,14 @@
         </ViewFlipper>
     </RelativeLayout>
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_new_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:elevation="6dp"
-        fab:fab_colorNormal="@color/colorAccent"
-        fab:fab_colorPressed="@color/colorAccent_light"
-        fab:fab_labelStyle="@style/menu_labels_style"
-        fab:pressedTranslationZ="12dp">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_food"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccent_light"
-            fab:fab_icon="@drawable/food_fork_drink"
-            fab:fab_size="mini"
-            fab:fab_title="吃吃喝喝" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_shopping"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccent_light"
-            fab:fab_icon="@drawable/ic_shopping_cart_white_24dp"
-            fab:fab_size="mini"
-            fab:fab_title="大買特買" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_hotel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccent_light"
-            fab:fab_icon="@drawable/ic_local_hotel_white_24dp"
-            fab:fab_size="mini"
-            fab:fab_title="住宿" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_ticket"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccent_light"
-            fab:fab_icon="@drawable/ticket"
-            fab:fab_size="mini"
-            fab:fab_title="票券" />
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        android:src="@drawable/ic_add_circle_outline_white"
+        app:pressedTranslationZ="12dp" />
 
 </android.support.design.widget.CoordinatorLayout>

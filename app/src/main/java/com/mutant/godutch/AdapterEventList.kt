@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide
 import com.google.firebase.database.DatabaseReference
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.utils.Utility
+import com.mutant.godutch.widget.EventTypeWidget.TYPE
 import java.util.*
-
 
 /**
  * Created by evanfang102 on 2017/7/24.
@@ -58,16 +58,16 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setupFabType(holder: ViewHolderEventList, event: Event) {
         when (event.type) {
-            NewEventActivity.Companion.TYPE.FOOD -> {
+            TYPE.FOOD -> {
                 holder.mTextViewType.text = activity.getString(R.string.event_type_food)
             }
-            NewEventActivity.Companion.TYPE.SHOPPING -> {
+            TYPE.SHOPPING -> {
                 holder.mTextViewType.text = activity.getString(R.string.event_type_shopping)
             }
-            NewEventActivity.Companion.TYPE.HOTEL -> {
+            TYPE.HOTEL -> {
                 holder.mTextViewType.text = activity.getString(R.string.event_type_hotel)
             }
-            NewEventActivity.Companion.TYPE.TICKET -> {
+            TYPE.TICKET -> {
                 holder.mTextViewType.text = activity.getString(R.string.event_type_ticket)
             }
         }
@@ -76,10 +76,10 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
     private fun setupPhoto(holder: ViewHolderEventList, event: Event) {
         if (TextUtils.isEmpty(event.photoUrl)) {
             when (event.type) {
-                NewEventActivity.Companion.TYPE.FOOD -> holder.mImageViewPhoto.setImageResource(R.drawable.food_default_640)
-                NewEventActivity.Companion.TYPE.SHOPPING -> holder.mImageViewPhoto.setImageResource(R.drawable.shopping_default_640)
-                NewEventActivity.Companion.TYPE.HOTEL -> holder.mImageViewPhoto.setImageResource(R.drawable.hotel_default_640)
-                NewEventActivity.Companion.TYPE.TICKET -> holder.mImageViewPhoto.setImageResource(R.drawable.ticket_default_640)
+                TYPE.FOOD -> holder.mImageViewPhoto.setImageResource(R.drawable.food_default_640)
+                TYPE.SHOPPING -> holder.mImageViewPhoto.setImageResource(R.drawable.shopping_default_640)
+                TYPE.HOTEL -> holder.mImageViewPhoto.setImageResource(R.drawable.hotel_default_640)
+                TYPE.TICKET -> holder.mImageViewPhoto.setImageResource(R.drawable.ticket_default_640)
             }
         } else {
             Glide.with(activity).load(event.photoUrl).error(R.drawable.take_a_photo).into(holder.mImageViewPhoto)

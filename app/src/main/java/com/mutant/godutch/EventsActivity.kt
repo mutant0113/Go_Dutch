@@ -9,10 +9,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.database.*
-import com.mutant.godutch.NewEventActivity.Companion.TYPE
 import com.mutant.godutch.model.Event
+import com.mutant.godutch.widget.EventTypeWidget.TYPE
 import kotlinx.android.synthetic.main.activity_events.*
-
 
 class EventsActivity : BaseActivity() {
 
@@ -73,21 +72,10 @@ class EventsActivity : BaseActivity() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
         mGroupName = intent.getStringExtra(BUNDLE_KEY_GROUP_NAME)
         title = mGroupName
-        collapseFabMenuWhenClickingOutside()
         setupFireBase()
         setupEventsCard()
         setupEventsList()
         setupFabNewEvent()
-    }
-
-    fun collapseFabMenuWhenClickingOutside() {
-        coordinatorLayout_parent.setOnTouchListener { _, _ ->
-            if (fab_new_event.isExpanded) {
-                fab_new_event.collapse()
-                true
-            }
-            false
-        }
     }
 
     private fun setupFireBase() {
@@ -121,26 +109,6 @@ class EventsActivity : BaseActivity() {
         }
     }
 
-    private fun setupFabNewEvent() {
-        fab_food.setOnClickListener {
-            intentToNewEvent(TYPE.FOOD)
-        }
-        fab_shopping.setOnClickListener {
-            intentToNewEvent(TYPE.SHOPPING)
-        }
-        fab_hotel.setOnClickListener {
-            intentToNewEvent(TYPE.HOTEL)
-        }
-        fab_ticket.setOnClickListener {
-            intentToNewEvent(TYPE.TICKET)
-        }
-    }
-
-    fun intentToNewEvent(type: TYPE) {
-        startActivity(NewEventActivity.getIntent(this@EventsActivity, mGroupId, mGroupName, type))
-        fab_new_event.collapse()
-    }
-
     private fun setupEventsCard() {
         mAdapterEventCardView = AdapterEventCard(this@EventsActivity, ArrayList<Event>(), mGroupId, mGroupName, mDatabaseEvents)
         val MyLayoutManager = LinearLayoutManager(this)
@@ -157,6 +125,10 @@ class EventsActivity : BaseActivity() {
         val dividerItemDecoration = DividerItemDecoration(this@EventsActivity, MyLayoutManager.orientation)
         recycler_view_event_list.addItemDecoration(dividerItemDecoration)
         recycler_view_event_list.layoutManager = MyLayoutManager
+    }
+
+    private fun setupFabNewEvent() {
+        fab_new_event.setOnClickListener { startActivity(NewEventActivity.getIntent(this@EventsActivity, mGroupId, mGroupName)) }
     }
 
 }

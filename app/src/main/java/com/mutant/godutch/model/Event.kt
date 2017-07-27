@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.firebase.client.ServerValue
 import com.google.firebase.database.Exclude
-import com.mutant.godutch.NewEventActivity.Companion.TYPE
+import com.mutant.godutch.widget.EventTypeWidget.TYPE
 
 /**
  * Created by evanfang102 on 2017/5/26.

@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.Utility
+import com.mutant.godutch.widget.EventTypeWidget.TYPE
 import kotlinx.android.synthetic.main.activity_event_detail.*
 import kotlinx.android.synthetic.main.fragment_event_detail.view.*
 
@@ -151,21 +152,21 @@ class EventDetailActivity : BaseActivity() {
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        private fun setupFabType(rootView: View, type: NewEventActivity.Companion.TYPE?) {
+        private fun setupFabType(rootView: View, type: TYPE?) {
             when (type) {
-                NewEventActivity.Companion.TYPE.FOOD -> {
+                TYPE.FOOD -> {
                     rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.food_fork_drink))
                     rootView.imageView_photo.setImageResource(R.drawable.food_default_640)
                 }
-                NewEventActivity.Companion.TYPE.SHOPPING -> {
+                TYPE.SHOPPING -> {
                     rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ic_shopping_cart_white_24dp))
                     rootView.imageView_photo.setImageResource(R.drawable.shopping_default_640)
                 }
-                NewEventActivity.Companion.TYPE.HOTEL -> {
+                TYPE.HOTEL -> {
                     rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ic_local_hotel_white_24dp))
                     rootView.imageView_photo.setImageResource(R.drawable.hotel_default_640)
                 }
-                NewEventActivity.Companion.TYPE.TICKET -> {
+                TYPE.TICKET -> {
                     rootView.fab_event_type.setImageDrawable(activity.getDrawable(R.drawable.ticket))
                     rootView.imageView_photo.setImageResource(R.drawable.ticket_default_640)
                 }

@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.Utility
+import com.mutant.godutch.widget.EventTypeWidget.TYPE
 import java.util.*
 
 /**
@@ -21,7 +22,7 @@ import java.util.*
  */
 
 class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var groupId: String,
-                              var groupName: String, var databaseEvents: DatabaseReference?) : RecyclerView.Adapter<ViewHolderEventCard>() {
+                       var groupName: String, var databaseEvents: DatabaseReference?) : RecyclerView.Adapter<ViewHolderEventCard>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderEventCard {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_event, parent, false)
@@ -43,8 +44,7 @@ class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var
         holder.mRecycleViewFriendsShared.layoutManager = GridLayoutManager(activity, 2)
         // TODO fetch from firebase
         holder.itemView.setOnClickListener {
-            activity.startActivity(NewEventActivity.getIntent(
-                    activity, groupId, groupName, NewEventActivity.Companion.TYPE.FOOD))
+            activity.startActivity(NewEventActivity.getIntent(activity, groupId, groupName))
         }
         holder.itemView.setOnLongClickListener {
             removeEvent(event)
@@ -55,16 +55,16 @@ class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setupFabType(holder: ViewHolderEventCard, event: Event) {
         when (event.type) {
-            NewEventActivity.Companion.TYPE.FOOD -> {
+            TYPE.FOOD -> {
                 holder.mFabType.setImageDrawable(activity.getDrawable(R.drawable.food_fork_drink))
             }
-            NewEventActivity.Companion.TYPE.SHOPPING -> {
+            TYPE.SHOPPING -> {
                 holder.mFabType.setImageDrawable(activity.getDrawable(R.drawable.ic_shopping_cart_white_24dp))
             }
-            NewEventActivity.Companion.TYPE.HOTEL -> {
+            TYPE.HOTEL -> {
                 holder.mFabType.setImageDrawable(activity.getDrawable(R.drawable.ic_local_hotel_white_24dp))
             }
-            NewEventActivity.Companion.TYPE.TICKET -> {
+            TYPE.TICKET -> {
                 holder.mFabType.setImageDrawable(activity.getDrawable(R.drawable.ticket))
             }
         }
@@ -73,10 +73,10 @@ class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var
     private fun setupPhoto(holder: ViewHolderEventCard, event: Event) {
         if (TextUtils.isEmpty(event.photoUrl)) {
             when (event.type) {
-                NewEventActivity.Companion.TYPE.FOOD -> holder.mImageViewPhoto.setImageResource(R.drawable.food_default_640)
-                NewEventActivity.Companion.TYPE.SHOPPING -> holder.mImageViewPhoto.setImageResource(R.drawable.shopping_default_640)
-                NewEventActivity.Companion.TYPE.HOTEL -> holder.mImageViewPhoto.setImageResource(R.drawable.hotel_default_640)
-                NewEventActivity.Companion.TYPE.TICKET -> holder.mImageViewPhoto.setImageResource(R.drawable.ticket_default_640)
+                TYPE.FOOD -> holder.mImageViewPhoto.setImageResource(R.drawable.food_default_640)
+                TYPE.SHOPPING -> holder.mImageViewPhoto.setImageResource(R.drawable.shopping_default_640)
+                TYPE.HOTEL -> holder.mImageViewPhoto.setImageResource(R.drawable.hotel_default_640)
+                TYPE.TICKET -> holder.mImageViewPhoto.setImageResource(R.drawable.ticket_default_640)
             }
         } else {
             Glide.with(activity).load(event.photoUrl).error(R.drawable.take_a_photo).into(holder.mImageViewPhoto)

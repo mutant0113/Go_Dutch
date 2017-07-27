@@ -65,7 +65,7 @@ class NewGroupActivity : BaseActivity() {
                     while (iterator.hasNext()) {
                         friends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
                     }
-                    friends.add(0, meInFriend)
+                    friends.add(0, me)
                     mAdapterFriends = RecycleViewAdapterFriends(this@NewGroupActivity, friends)
                     recycler_view_friends_shared.adapter = mAdapterFriends
                 }

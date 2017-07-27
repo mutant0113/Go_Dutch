@@ -58,7 +58,7 @@ abstract class BaseActivity : AppCompatActivity() {
         overridePendingTransition(0, 0)
     }
 
-    protected val meInFriend: Friend
+    val me: Friend
         get() {
             val firebaseUser = FirebaseAuth.getInstance().currentUser
             if (firebaseUser != null) {
