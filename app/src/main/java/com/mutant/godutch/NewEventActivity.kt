@@ -7,7 +7,7 @@ import android.os.Build
 import com.mutant.godutch.fragment.NewEventStep1Fragment
 import com.mutant.godutch.fragment.NewEventStep2Fragment
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
-import kotlinx.android.synthetic.main.activity_new_event.*
+
 
 class NewEventActivity : BaseActivity() {
 
@@ -40,7 +40,7 @@ class NewEventActivity : BaseActivity() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun setup() {
         setupBundle()
-        setupViewPager()
+        setupFragments()
     }
 
     fun setupBundle() {
@@ -48,10 +48,23 @@ class NewEventActivity : BaseActivity() {
         mGroupName = intent.getStringExtra(EventsActivity.BUNDLE_KEY_GROUP_NAME)
     }
 
-    fun setupViewPager() {
-        val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-        viewPagerAdapter.addFragment(mNewEventStep1Fragment)
-        viewPagerAdapter.addFragment(mNewEventStep2Fragment)
-        viewPager.adapter = viewPagerAdapter
+    fun setupFragments() {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.linearLayout_container, mNewEventStep1Fragment)
+        ft.commit()
+    }
+
+    fun nextStep() {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+        ft.replace(R.id.linearLayout_container, mNewEventStep2Fragment)
+        ft.commit()
+    }
+
+    fun preStep() {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+        ft.replace(R.id.linearLayout_container, mNewEventStep1Fragment)
+        ft.commit()
     }
 }

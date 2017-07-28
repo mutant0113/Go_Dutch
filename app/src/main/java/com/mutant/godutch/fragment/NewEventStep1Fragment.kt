@@ -16,7 +16,6 @@ import com.mutant.godutch.NewGroupActivity
 import com.mutant.godutch.R
 import com.mutant.godutch.widget.EventTypeWidget
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
-import kotlinx.android.synthetic.main.activity_new_event.*
 import kotlinx.android.synthetic.main.fragment_new_event_step_1.*
 import kotlinx.android.synthetic.main.fragment_new_event_step_1.view.*
 
@@ -77,7 +76,8 @@ class NewEventStep1Fragment : Fragment(), EventTypeWidget.Companion.OnSelectionC
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     fun setupFabNextStep() {
         fab_next_step.setOnClickListener {
-            mActivity.viewPager.currentItem = NewEventActivity.VIEWPAGER_STEP_2
+            mActivity.nextStep()
         }
     }
+
 }

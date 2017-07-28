@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
@@ -36,7 +35,6 @@ import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.NotificationHelper
 import com.mutant.godutch.utils.Utility
-import kotlinx.android.synthetic.main.activity_new_event.*
 import kotlinx.android.synthetic.main.card_view_item_friend.view.*
 import kotlinx.android.synthetic.main.fragment_new_event_step_1.*
 import kotlinx.android.synthetic.main.fragment_new_event_step_2.*
@@ -159,9 +157,9 @@ class NewEventStep2Fragment : Fragment() {
             val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
             Utility.uploadImage(filePath, bitmap, OnFailureListener { exception ->
                 exception.printStackTrace()
-                Snackbar.make(mActivity.coordinatorLayout_parent, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
+                Toast.makeText(activity, R.string.upload_image_failed, Toast.LENGTH_LONG).show()
             }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
-                Snackbar.make(mActivity.coordinatorLayout_parent, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
+                Toast.makeText(activity, R.string.upload_image_successfully, Toast.LENGTH_LONG).show()
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 createNewEvent(taskSnapshot?.downloadUrl)
             })
@@ -198,7 +196,7 @@ class NewEventStep2Fragment : Fragment() {
                         NotificationHelper.sendNotificationToUser(fcmToken!!, title, content)
                     }
                 } else {
-                    Snackbar.make(mActivity.coordinatorLayout_parent, "此ID不存在", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "此ID不存在", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -308,4 +306,5 @@ class NewEventStep2Fragment : Fragment() {
         var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
         var mTextViewInvitationState: AppCompatTextView = itemView.textView_invitation_state
     }
+
 }
