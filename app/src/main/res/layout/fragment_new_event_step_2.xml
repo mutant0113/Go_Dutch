@@ -16,20 +16,37 @@
         android:paddingLeft="@dimen/screen_edge_left_and_right_padding"
         android:paddingRight="@dimen/screen_edge_left_and_right_padding">
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/editText_subtotal"
-                android:layout_width="match_parent"
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_currency"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="小計"
-                android:inputType="number">
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/frameLayout_pro_pic"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:text="$"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            </android.support.v7.widget.AppCompatEditText>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/editText_subtotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="小計"
+                    android:inputType="number">
+
+                </android.support.v7.widget.AppCompatEditText>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,15 +71,13 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <com.gc.materialdesign.views.Slider
-                android:id="@+id/slider_tax"
+            <SeekBar
+                android:id="@+id/seekBar_tax"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:tickMark="@drawable/tickmark"
-                materialdesign:max="100"
-                materialdesign:min="0"
-                materialdesign:showNumberIndicator="true" />
+                android:max="5" />
 
         </LinearLayout>
 

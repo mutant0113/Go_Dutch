@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import android.widget.SeekBar
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.crashlytics.android.Crashlytics
@@ -94,15 +95,28 @@ class NewEventStep2Fragment : Fragment() {
     }
 
     private fun setupButtonTax10Listener() {
-        slider_tax.setOnValueChangedListener {
-            val subtotalText = editText_subtotal.text.toString()
-            if (!TextUtils.isEmpty(subtotalText)) {
-                val subtotal = Integer.valueOf(subtotalText)!!
-                val tax = Math.round(subtotal * (it.toDouble() / 100))
-                editText_tax.setText(tax.toString())
-                editText_total.setText((subtotal + tax).toString())
+        seekBar_tax.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val subtotalText = editText_subtotal.text.toString()
+                if (!TextUtils.isEmpty(subtotalText)) {
+//                    val subtotal = Integer.valueOf(subtotalText)!!
+//                    val tax = Math.round(subtotal * (progress.toDouble() / 100))
+//                    editText_tax.setText(tax.toString())
+//                    editText_total.setText((subtotal + tax).toString())
+                    editText_tax.setText((progress * 5).toString() + "%")
+                    val subtotal = Integer.valueOf(subtotalText)!!
+                    val tax = (subtotal * seekBar_tax.progress * 0.05).toInt()
+                    editText_total.setText((subtotal + tax).toString())
+                }
             }
-        }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+        })
     }
 
     private fun setupSubtotalTextChangedListener() {
@@ -113,7 +127,7 @@ class NewEventStep2Fragment : Fragment() {
 
             @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                slider_tax.value = 0
+                seekBar_tax.progress = 0
             }
 
             override fun afterTextChanged(s: Editable) {
@@ -172,7 +186,7 @@ class NewEventStep2Fragment : Fragment() {
         val title = mActivity.mNewEventStep1Fragment.editText_title.text.toString()
         val description = mActivity.mNewEventStep1Fragment.editText_description.text.toString()
         val subtotal = Integer.parseInt(editText_subtotal.text.toString())
-        val tax = Integer.parseInt(editText_tax.text.toString())
+        val tax = (seekBar_tax.progress * 0.05).toInt()
         val total = Integer.parseInt(editText_total.text.toString())
         val friendsShared = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
         val friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst
