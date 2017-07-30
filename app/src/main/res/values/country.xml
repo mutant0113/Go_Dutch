@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="countries">
-        <item>USDTWD</item>
-        <item>USDJPY</item>
-        <item>USDCNY</item>
-        <item>USDHKD</item>
-        <item>USDMOP</item>
+    <string-array name="countries_json_key">
+        <item>TWD</item>
+        <item>JPY</item>
+        <item>CNY</item>
+        <item>HKD</item>
+        <item>MOP</item>
     </string-array>
 
-    <string-array name="countries_chinese">
+    <string-array name="countries_name">
         <item>新臺幣</item>
         <item>日　幣</item>
         <item>人民幣</item>

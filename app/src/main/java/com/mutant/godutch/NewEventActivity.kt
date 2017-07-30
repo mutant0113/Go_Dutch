@@ -20,11 +20,11 @@ class NewEventActivity : BaseActivity() {
     val mNewEventStep2Fragment = NewEventStep2Fragment()
 
     companion object {
-        val VIEWPAGER_STEP_1 = 0
-        val VIEWPAGER_STEP_2 = 1
 
         val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
         val BUNDLE_KEY_GROUP_NAME = "BUNDLE_KEY_GROUP_NAME"
+        val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
+        val REQUEST_CODE_EXCHANGE_RATE = 1
 
         fun getIntent(activity: Activity, groupId: String, groupName: String): Intent {
             val intent = Intent(activity, NewEventActivity::class.java)
@@ -67,4 +67,5 @@ class NewEventActivity : BaseActivity() {
         ft.replace(R.id.linearLayout_container, mNewEventStep1Fragment)
         ft.commit()
     }
+
 }

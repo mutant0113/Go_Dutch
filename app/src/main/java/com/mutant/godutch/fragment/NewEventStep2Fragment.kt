@@ -1,6 +1,7 @@
 package com.mutant.godutch.fragment
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -33,8 +34,10 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.UploadTask
 import com.mutant.godutch.ExchangeRateActivity
 import com.mutant.godutch.NewEventActivity
+import com.mutant.godutch.NewEventActivity.Companion.REQUEST_CODE_EXCHANGE_RATE
 import com.mutant.godutch.R
 import com.mutant.godutch.model.Event
+import com.mutant.godutch.model.ExchangeRate
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.NotificationHelper
 import com.mutant.godutch.utils.Utility
@@ -53,6 +56,19 @@ class NewEventStep2Fragment : Fragment() {
     lateinit var mAdapterFriendsShared: RecycleViewAdapterFriendsShared
     internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     internal var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
+    var mExchangeRate: ExchangeRate? = null // TODO default init
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == REQUEST_CODE_EXCHANGE_RATE && resultCode == Activity.RESULT_OK) {
+            changeExchangeRate(data?.getParcelableExtra(NewEventActivity.BUNDLE_KEY_EXCHANGE_RATE))
+        }
+    }
+
+    fun changeExchangeRate(exchangeRate: ExchangeRate?) {
+        button_currency.text = exchangeRate?.country
+        mExchangeRate = exchangeRate
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mActivity = (activity as NewEventActivity)
@@ -63,7 +79,7 @@ class NewEventStep2Fragment : Fragment() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupFriendsShard()
+        setupFriendsShared()
         setupFireBase()
         setupCurrencyListener()
         setupSeekbarTaxListener()
@@ -74,12 +90,12 @@ class NewEventStep2Fragment : Fragment() {
 
     private fun setupCurrencyListener() {
         button_currency.setOnClickListener {
-            activity.startActivity(Intent(activity, ExchangeRateActivity::class.java))
+            startActivityForResult(Intent(activity,  ExchangeRateActivity::class.java), REQUEST_CODE_EXCHANGE_RATE)
         }
     }
 
-    private fun setupFriendsShard() {
-        recycler_view_friends_shared.layoutManager = GridLayoutManager(activity, 2)
+    private fun setupFriendsShared() {
+        recycler_view_friends_shared.layoutManager = GridLayoutManager(mActivity, 2) as RecyclerView.LayoutManager?
     }
 
     private fun setupFireBase() {
@@ -180,9 +196,9 @@ class NewEventStep2Fragment : Fragment() {
             val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
             Utility.uploadImage(filePath, bitmap, OnFailureListener { exception ->
                 exception.printStackTrace()
-                Toast.makeText(activity, R.string.upload_image_failed, Toast.LENGTH_LONG).show()
+                Toast.makeText(mActivity, R.string.upload_image_failed, Toast.LENGTH_LONG).show()
             }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
-                Toast.makeText(activity, R.string.upload_image_successfully, Toast.LENGTH_LONG).show()
+                Toast.makeText(mActivity, R.string.upload_image_successfully, Toast.LENGTH_LONG).show()
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 createNewEvent(taskSnapshot?.downloadUrl)
             })
@@ -219,7 +235,7 @@ class NewEventStep2Fragment : Fragment() {
                         NotificationHelper.sendNotificationToUser(fcmToken!!, title, content)
                     }
                 } else {
-                    Toast.makeText(activity, "此ID不存在", Toast.LENGTH_LONG).show()
+                    Toast.makeText(mActivity, "此ID不存在", Toast.LENGTH_LONG).show()
                 }
             }
 
