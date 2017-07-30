@@ -51,10 +51,11 @@
         <activity
             android:name=".CheckActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".EventDetailActivity"
             android:label="@string/label_activity_event_detail" />
+
+        <activity android:name=".ExchangeRateActivity" />
 
         <activity
             android:name="com.facebook.FacebookActivity"

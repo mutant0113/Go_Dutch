@@ -2,6 +2,7 @@ package com.mutant.godutch.fragment
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -30,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.UploadTask
+import com.mutant.godutch.ExchangeRateActivity
 import com.mutant.godutch.NewEventActivity
 import com.mutant.godutch.R
 import com.mutant.godutch.model.Event
@@ -63,10 +65,17 @@ class NewEventStep2Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupFriendsShard()
         setupFireBase()
-        setupButtonTax10Listener()
+        setupCurrencyListener()
+        setupSeekbarTaxListener()
         setupSubtotalTextChangedListener()
         setupTotalTextChangedListener()
         setupFabDone()
+    }
+
+    private fun setupCurrencyListener() {
+        button_currency.setOnClickListener {
+            activity.startActivity(Intent(activity, ExchangeRateActivity::class.java))
+        }
     }
 
     private fun setupFriendsShard() {
@@ -94,7 +103,7 @@ class NewEventStep2Fragment : Fragment() {
         }
     }
 
-    private fun setupButtonTax10Listener() {
+    private fun setupSeekbarTaxListener() {
         seekBar_tax.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val subtotalText = editText_subtotal.text.toString()

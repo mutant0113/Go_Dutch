@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="countries">
+        <item>USDTWD</item>
+        <item>USDJPY</item>
+        <item>USDCNY</item>
+        <item>USDHKD</item>
+        <item>USDMOP</item>
+    </string-array>
+
+    <string-array name="countries_chinese">
+        <item>新臺幣</item>
+        <item>日　幣</item>
+        <item>人民幣</item>
+        <item>港　幣</item>
+        <item>澳門幣</item>
+    </string-array>
+
+</resources>

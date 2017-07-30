@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.mutant.godutch.LoginActivity
 import com.mutant.godutch.R
+import com.mutant.godutch.server.WebAgent
+import com.mutant.godutch.utils.Utility.Companion.calculateExchangeRate
 import kotlinx.android.synthetic.main.fragment_settings.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
-import org.json.JSONObject
-import com.mutant.godutch.server.WebAgent
 import java.io.IOException
 
 /**
@@ -51,24 +51,12 @@ class SettingsFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call, e: IOException) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    // TODO
                 }
 
             })
         }
     }
 
-    /**
-     * TODO 先以台幣為主，之後再做各國家
-     */
-    fun calculateExchangeRate(json: String, fromWhichCountry: String): Double {
-        var erJson = JSONObject(json)
-        var fromSell = erJson.getJSONObject(fromWhichCountry).optDouble("Exrate")
-        var TWDSell = erJson.getJSONObject("USDTWD").optDouble("Exrate")
-        if(fromSell != 0.0) {
-            return TWDSell / fromSell
-        } else {
-            return -1.0
-        }
-    }
+
 }

@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 
 /**
@@ -50,6 +51,20 @@ class Utility {
             val uploadTask = firebaseStorage?.putBytes(data)
             if(uploadTask != null) {
                 uploadTask.addOnFailureListener(onFailureListener).addOnSuccessListener(onSuccessListener)
+            }
+        }
+
+        /**
+         * TODO 先以台幣為主，之後再做各國家
+         */
+        fun calculateExchangeRate(json: String, fromWhichCountry: String): Double {
+            var erJson = JSONObject(json)
+            var fromSell = erJson.getJSONObject(fromWhichCountry).optDouble("Exrate")
+            var TWDSell = erJson.getJSONObject("USDTWD").optDouble("Exrate")
+            if(fromSell != 0.0) {
+                return Math.round((TWDSell / fromSell) * 10000).toDouble() / 10000
+            } else {
+                return -1.0
             }
         }
 
