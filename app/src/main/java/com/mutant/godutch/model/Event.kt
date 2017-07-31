@@ -20,6 +20,7 @@ class Event : Parcelable {
     var subtotal: Int = 0
     var tax: Int = 0
     var total: Int = 0
+    lateinit var exchangeRate: ExchangeRate
     var friendsShared: List<Friend> = arrayListOf()
     var friendWhoPaidFirst: Friend = Friend()
     var timestamp: HashMap<String, Any> = hashMapOf()
@@ -29,7 +30,8 @@ class Event : Parcelable {
 
     constructor()
 
-    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: List<Friend>, friendWhoPaidFirst: Friend) {
+    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int,
+                tax: Int, total: Int, exchangeRate: ExchangeRate, friendsShared: List<Friend>, friendWhoPaidFirst: Friend) {
         this.photoUrl = photoUrl
         this.type = type
         this.title = title
@@ -37,12 +39,15 @@ class Event : Parcelable {
         this.subtotal = subtotal
         this.tax = tax
         this.total = total
+        this.exchangeRate = exchangeRate
         this.friendsShared = friendsShared
         this.friendWhoPaidFirst = friendWhoPaidFirst
         this.timestamp.put("timestamp", ServerValue.TIMESTAMP)
     }
 
-    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, timestamp: HashMap<String, Any>) {
+    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int,
+                tax: Int, total: Int, exchangeRate: ExchangeRate, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend,
+                timestamp: HashMap<String, Any>) {
         this.photoUrl = photoUrl
         this.type = type
         this.title = title
@@ -50,12 +55,14 @@ class Event : Parcelable {
         this.subtotal = subtotal
         this.tax = tax
         this.total = total
+        this.exchangeRate = exchangeRate
         this.friendsShared = friendsShared
         this.friendWhoPaidFirst = friendWhoPaidFirst
         this.timestamp = timestamp
     }
 
-    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int, tax: Int, total: Int, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, timestampCreated: Long) {
+    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int,
+                tax: Int, total: Int, exchangeRate: ExchangeRate, friendsShared: ArrayList<Friend>, friendWhoPaidFirst: Friend, timestampCreated: Long) {
         this.photoUrl = photoUrl
         this.type = type
         this.title = title
@@ -63,6 +70,7 @@ class Event : Parcelable {
         this.subtotal = subtotal
         this.tax = tax
         this.total = total
+        this.exchangeRate = exchangeRate
         this.friendsShared = friendsShared
         this.friendWhoPaidFirst = friendWhoPaidFirst
         this.timestampCreated = timestampCreated
@@ -83,6 +91,7 @@ class Event : Parcelable {
             source.readInt(),
             source.readInt(),
             source.readInt(),
+            source.readParcelable(ExchangeRate.javaClass.classLoader),
             source.readArrayList(Friend.javaClass.classLoader) as ArrayList<Friend>,
             source.readParcelable(Friend.javaClass.classLoader),
             source.readSerializable() as HashMap<String, Any>
@@ -98,6 +107,7 @@ class Event : Parcelable {
         dest.writeInt(subtotal)
         dest.writeInt(tax)
         dest.writeInt(total)
+        dest.writeParcelable(exchangeRate, flags)
         dest.writeList(friendsShared)
         dest.writeParcelable(friendWhoPaidFirst, flags)
         dest.writeSerializable(timestamp)
