@@ -26,10 +26,12 @@ import kotlinx.android.synthetic.main.fragment_new_event_step_1.view.*
 class NewEventStep1Fragment : Fragment(), EventTypeWidget.Companion.OnSelectionChanged {
 
     lateinit var mActivity: NewEventActivity
+    lateinit var rootView: View
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mActivity = (activity as NewEventActivity)
-        return inflater!!.inflate(R.layout.fragment_new_event_step_1, container, false)
+        rootView = inflater!!.inflate(R.layout.fragment_new_event_step_1, container, false)
+        return rootView
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

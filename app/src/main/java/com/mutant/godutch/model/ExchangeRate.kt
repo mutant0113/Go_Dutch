@@ -8,13 +8,15 @@ import android.os.Parcelable
  */
 
 class ExchangeRate : Parcelable {
-    var jsonKey: String
+    var jsonKey: String = ""
 
-    var rate: Double
+    var rate: Double = 0.0
 
     var lastUpdated: String = ""
 
     var country: String = ""
+
+    constructor()
 
     constructor(jsonKey: String, rate: Double, lastUpdated: String, country: String) {
         this.jsonKey = jsonKey

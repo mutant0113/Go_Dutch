@@ -20,7 +20,7 @@ class Event : Parcelable {
     var subtotal: Int = 0
     var tax: Int = 0
     var total: Int = 0
-    lateinit var exchangeRate: ExchangeRate
+    var exchangeRate: ExchangeRate? = null
     var friendsShared: List<Friend> = arrayListOf()
     var friendWhoPaidFirst: Friend = Friend()
     var timestamp: HashMap<String, Any> = hashMapOf()

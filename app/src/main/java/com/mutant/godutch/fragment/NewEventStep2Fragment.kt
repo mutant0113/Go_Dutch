@@ -21,9 +21,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
-import android.widget.SeekBar
-import android.widget.Toast
+import android.widget.*
 import com.bumptech.glide.Glide
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.tasks.OnFailureListener
@@ -42,7 +40,6 @@ import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.NotificationHelper
 import com.mutant.godutch.utils.Utility
 import kotlinx.android.synthetic.main.card_view_item_friend.view.*
-import kotlinx.android.synthetic.main.fragment_new_event_step_1.*
 import kotlinx.android.synthetic.main.fragment_new_event_step_2.*
 import java.util.*
 
@@ -56,16 +53,25 @@ class NewEventStep2Fragment : Fragment() {
     lateinit var mAdapterFriendsShared: RecycleViewAdapterFriendsShared
     internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     internal var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
-    var mExchangeRate: ExchangeRate? = null // TODO default init
+    var mExchangeRate: ExchangeRate
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    init {
+        // TODO depend on country
+        val jsonKey = "TWD"
+        val rate: Double = 1.0
+        val lastUpdated = ""
+        val country = "新台幣"
+        mExchangeRate = ExchangeRate(jsonKey, rate, lastUpdated, country)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == REQUEST_CODE_EXCHANGE_RATE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_EXCHANGE_RATE && resultCode == Activity.RESULT_OK) {
             changeExchangeRate(data?.getParcelableExtra(NewEventActivity.BUNDLE_KEY_EXCHANGE_RATE))
         }
     }
 
-    fun changeExchangeRate(exchangeRate: ExchangeRate?) {
+    fun changeExchangeRate(exchangeRate: ExchangeRate) {
         button_currency.text = exchangeRate?.country
         mExchangeRate = exchangeRate
     }
@@ -90,7 +96,7 @@ class NewEventStep2Fragment : Fragment() {
 
     private fun setupCurrencyListener() {
         button_currency.setOnClickListener {
-            startActivityForResult(Intent(activity,  ExchangeRateActivity::class.java), REQUEST_CODE_EXCHANGE_RATE)
+            startActivityForResult(Intent(activity, ExchangeRateActivity::class.java), REQUEST_CODE_EXCHANGE_RATE)
         }
     }
 
@@ -192,7 +198,7 @@ class NewEventStep2Fragment : Fragment() {
 
     fun createNewEvent() {
         if (mActivity.isTakePhoto) {
-            val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
+            val bitmap = ((mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.imageView_photo) as ImageView).drawable as BitmapDrawable).bitmap
             val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
             Utility.uploadImage(filePath, bitmap, OnFailureListener { exception ->
                 exception.printStackTrace()
@@ -208,14 +214,15 @@ class NewEventStep2Fragment : Fragment() {
     }
 
     fun createNewEvent(imageDownloadUrl: Uri?) {
-        val title = mActivity.mNewEventStep1Fragment.editText_title.text.toString()
-        val description = mActivity.mNewEventStep1Fragment.editText_description.text.toString()
+        val title = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_title) as TextView).text.toString()
+        val description = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_description) as TextView).text.toString()
         val subtotal = Integer.parseInt(editText_subtotal.text.toString())
         val tax = (seekBar_tax.progress * 0.05).toInt()
         val total = Integer.parseInt(editText_total.text.toString())
         val friendsShared = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
         val friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst
-        val event = Event(imageDownloadUrl?.toString() ?: "", mActivity.mType, title, description, subtotal, tax, total, friendsShared, friendWhoPaidFirst)
+        val event = Event(imageDownloadUrl?.toString() ?: "", mActivity.mType, title, description,
+                subtotal, tax, total, mExchangeRate, friendsShared, friendWhoPaidFirst)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroupId).push()
         databaseReference.setValue(event).addOnSuccessListener {
             val notiyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroupName)

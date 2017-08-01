@@ -93,6 +93,14 @@ class EventDetailActivity : BaseActivity() {
             }
             rootView.textView_date.text = Utility.getRelativeTimeSpanDate(mEvent.timestampCreated)
             rootView.textView_description.text = mEvent.description
+            val exchangeRate = mEvent.exchangeRate
+            // TODO use setting country
+            if(exchangeRate?.jsonKey.equals("TWD")) {
+                rootView.textView_total.text = exchangeRate?.jsonKey + " $" + mEvent.total
+            } else {
+                rootView.textView_total.text = exchangeRate?.jsonKey + " $" + mEvent.total + " -> " +
+                        " TWD $" + Math.round(mEvent.total!! * exchangeRate?.rate!!)
+            }
             setupFriendsWhoPaidFirst(rootView)
             setupFriendsShared(rootView)
             return rootView

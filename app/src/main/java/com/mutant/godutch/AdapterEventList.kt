@@ -40,7 +40,7 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
         holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(event.timestampCreated)
         holder.mTextViewDescription.text = event.description
         // TODO 轉換幣別
-        holder.mTextViewTotal.text = "TWD $" + event.subtotal
+        holder.mTextViewTotal.text = event.exchangeRate?.jsonKey + " $" + event.subtotal
         // TODO fetch from firebase
         holder.itemView.setOnClickListener {
             // TODO makeSceneTransitionAnimation bug
