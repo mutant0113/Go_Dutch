@@ -13,13 +13,17 @@ import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
 import kotlinx.android.synthetic.main.activity_checkout.*
 import kotlinx.android.synthetic.main.card_view_item_friend.view.*
-import java.util.*
+
+
+
 
 /**
  * Created by Mutant on 2017/6/11.
  */
 
 class CheckActivity : BaseActivity() {
+
+    lateinit var mEvents: ArrayList<Event>
 
     companion object {
         private val BUNDLE_KEY_LIST_EVENTS = "BUNDLE_KEY_LIST_EVENTS"
@@ -35,13 +39,38 @@ class CheckActivity : BaseActivity() {
         get() = R.layout.activity_checkout
 
     override fun setup() {
+        mEvents = intent.getParcelableArrayListExtra<Event>(BUNDLE_KEY_LIST_EVENTS)
+        setupTotal()
         setupCheckout()
     }
 
+    private fun setupTotal() {
+        var totalMap: HashMap<String, Int> = hashMapOf()
+//        for(event in mEvents) {
+//            val exchangeRate = event.exchangeRate
+//            val v = totalMap[exchangeRate!!.jsonKey]
+//            if(v == null) {
+//                totalMap.put(exchangeRate!!.jsonKey, event.total)
+//            } else {
+//                totalMap.put(exchangeRate!!.jsonKey, v + event.total)
+//            }
+//        }
+        mEvents.forEach {
+            val exchangeRate = it.exchangeRate
+            val v = totalMap[exchangeRate!!.jsonKey]
+            if(v == null) {
+                totalMap.put(exchangeRate!!.jsonKey, it.total)
+            } else {
+                totalMap.put(exchangeRate!!.jsonKey, v + it.total)
+            }
+        }
+
+        totalMap.forEach { (k, v) -> textView_total.append("$k $$v\n") }
+    }
+
     private fun setupCheckout() {
-        val events = intent.getParcelableArrayListExtra<Event>(BUNDLE_KEY_LIST_EVENTS)
         val friendsShared = ArrayList<Friend>()
-        for (event in events) {
+        for (event in mEvents) {
             for (friendInEvent in event.friendsShared) {
                 var isExists = false
                 for (friendInShared in friendsShared) {
@@ -58,8 +87,8 @@ class CheckActivity : BaseActivity() {
             }
         }
 
-        recycler_view_checkout.adapter = RecycleViewAdapterFriendsShared(friendsShared)
-        recycler_view_checkout.layoutManager = GridLayoutManager(this, 2)
+        recycler_view_friends_who_paid_first.adapter = RecycleViewAdapterFriendsShared(friendsShared)
+        recycler_view_friends_who_paid_first.layoutManager = GridLayoutManager(this, 2)
     }
 
     internal inner class RecycleViewAdapterFriendsShared(var friendShared: List<Friend>) : RecyclerView.Adapter<ViewHolderFriendShared>() {

@@ -140,8 +140,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_friends_who_paid_first"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/friends_who_shared" />
+                        android:layout_height="wrap_content" />
                 </android.support.v7.widget.LinearLayoutCompat>
 
                 <android.support.v7.widget.LinearLayoutCompat
@@ -162,8 +161,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_friends_shared"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/friends_who_shared" />
+                        android:layout_height="wrap_content" />
                 </android.support.v7.widget.LinearLayoutCompat>
             </RelativeLayout>
         </LinearLayout>

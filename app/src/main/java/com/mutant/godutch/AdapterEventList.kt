@@ -87,6 +87,7 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
     }
 
     private fun setupFriendsSharedProPic(holder: ViewHolderEventList, event: Event) {
+        holder.mLinearLayoutFriendsShared.removeAllViews();
         for (friend in event.friendsShared) {
             val imageViewFriendPhoto = ImageView(activity)
             val proPicSize = activity.resources.getDimension(R.dimen.pro_pic_size).toInt()

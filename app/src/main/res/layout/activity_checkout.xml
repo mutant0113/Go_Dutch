@@ -3,9 +3,61 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_checkout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView_photo"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/activity_horizontal_margin">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textView_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayoutCompat_title"
+            android:layout_marginLeft="@dimen/space_between_content_areas"
+            android:layout_marginRight="@dimen/screen_edge_left_and_right_padding" />
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/linearLayout_friend_who_paid_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_total"
+            android:layout_marginTop="@dimen/space_between_content_areas"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_50"
+                android:padding="@dimen/space_between_content_areas"
+                android:text="@string/friend_who_paid_first" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_friends_who_paid_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/linearLayout_friends_who_shared"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout_friend_who_paid_first"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_50"
+                android:padding="@dimen/space_between_content_areas"
+                android:text="@string/friends_who_shared" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_friends_shared"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.LinearLayoutCompat>
+    </RelativeLayout>
 </LinearLayout>
