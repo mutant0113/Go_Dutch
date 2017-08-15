@@ -143,7 +143,7 @@ class LoginActivity : AppCompatActivity() {
             val password = editTextPassword.text.toString()
             mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnFailureListener { e -> e.printStackTrace() }
                     .addOnCompleteListener {
-                        // TODO com.google.firebase.FirebaseNetworkException
+                        // TODO com.google.database.FirebaseNetworkException
                         // TODO password failed
                         onLoginComplete(it)
                     }
@@ -197,7 +197,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun createUser(email: String, password: String) {
         mFirebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            // TODO com.google.firebase.FirebaseNetworkException
+            // TODO com.google.database.FirebaseNetworkException
             val message = if (task.isSuccessful) "註冊成功" else "註冊失敗"
             AlertDialog.Builder(this@LoginActivity).setMessage(message)
                     .setPositiveButton("OK", null).show()

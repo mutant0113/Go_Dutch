@@ -6,8 +6,10 @@ import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.google.firebase.database.DatabaseReference
 import com.mutant.godutch.model.Friend
 
 
@@ -15,7 +17,7 @@ import com.mutant.godutch.model.Friend
  * Created by evanfang102 on 2017/7/26.
  */
 
-class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>) :
+class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>, var database: DatabaseReference?) :
         RecyclerView.Adapter<ViewHolderPaidCheck>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPaidCheck {
@@ -29,7 +31,23 @@ class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>) :
         val friend = friends[position]
         setupProPic(holder, friend.photoUrl)
         holder.mTextViewName.text = friend.name
-        holder.mTextViewPaidCheck.text = "0 / " + friend.needToPay
+        holder.mTextViewPaidCheck.text = if(friend.settleUp) Math.abs(friend.debt).toString() else {"0"} + " / " + Math.abs(friend.debt)
+
+        if(database == null) {
+            holder.mButtonRemind.visibility = View.GONE
+            holder.mButtonSettleUp.visibility = View.GONE
+        }
+
+        // TODO send notification
+        holder.mButtonRemind.setOnClickListener { }
+        holder.mButtonSettleUp.setOnClickListener {
+            holder.mTextViewPaidCheck.text = Math.abs(friend.debt).toString() + " / " + Math.abs(friend.debt)
+            // TODO database
+            // TODO send notification
+            // TODO friend paid check add
+            friend.settleUp = true
+            database?.setValue(friends)
+        }
     }
 
     private fun setupProPic(holder: ViewHolderPaidCheck, photoUrl: String) {

@@ -42,7 +42,7 @@ class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var
         holder.mTextViewTotal.text = "TWD $" + event.subtotal
         holder.mRecycleViewFriendsShared.adapter = RecycleViewAdapterFriendsShared(activity, event.friendsShared)
         holder.mRecycleViewFriendsShared.layoutManager = GridLayoutManager(activity, 2)
-        // TODO fetch from firebase
+        // TODO fetch from database
         holder.itemView.setOnClickListener {
             activity.startActivity(NewEventActivity.getIntent(activity, groupId, groupName))
         }
@@ -114,7 +114,7 @@ class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var
             holder.mTextViewName.text = friendShared.name
             Glide.with(activity).load(friendShared.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
                     .fitCenter().animate(R.anim.design_fab_in).into(holder.mImageViewPhotoUrl)
-            holder.mTextViewNeedToPay.text = friendShared.needToPay.toString()
+            holder.mTextViewDebt.text = friendShared.debt.toString()
         }
 
         override fun getItemCount(): Int {

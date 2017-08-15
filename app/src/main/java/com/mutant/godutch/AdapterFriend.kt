@@ -33,7 +33,7 @@ class AdapterFriend(private val activity: Activity, private val friends: Mutable
                     .error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
             holder.mTextViewName.text = friend.name
             setupFriendState(holder, friend)
-            holder.mTextViewNeedToPay.visibility = View.INVISIBLE
+            holder.mTextViewDebt.visibility = View.INVISIBLE
             //        holder.itemView.setOnClickListener(new View.OnClickListener() {
             //            @Override
             //            public void onClick(View v) {

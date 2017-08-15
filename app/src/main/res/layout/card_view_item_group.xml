@@ -26,7 +26,7 @@
             android:transitionName="@string/events_image_photo" />
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/textView_need_to_pay"
+            android:id="@+id/textView_debt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView_photo"

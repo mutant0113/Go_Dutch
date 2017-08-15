@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.*
 import com.bumptech.glide.Glide
+import com.google.firebase.database.FirebaseDatabase
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.Utility
@@ -22,16 +23,19 @@ import kotlinx.android.synthetic.main.fragment_event_detail.view.*
 class EventDetailActivity : BaseActivity() {
 
     private lateinit var mSectionsPagerAdapter: SectionsPagerAdapter
+    private lateinit var mGroupId: String
     private lateinit var mEvents: ArrayList<Event>
     private var mInitPos: Int = 0
 
     companion object {
 
+        private val BUNDLE_KEY_GROUD_ID = "BUNDLE_KEY_GROUP_ID"
         private val BUNDLE_KEY_EVENTS = "BUNDLE_KEY_EVENTS"
         private val BUNDLE_KEY_INIT_POS = "BUNDLE_KEY_INIT_POS"
 
-        fun getIntent(activity: Activity, events: ArrayList<Event>, initPos: Int): Intent {
+        fun getIntent(activity: Activity, groupId: String, events: ArrayList<Event>, initPos: Int): Intent {
             val intent = Intent(activity, EventDetailActivity::class.java)
+            intent.putExtra(BUNDLE_KEY_GROUD_ID, groupId)
             intent.putExtra(BUNDLE_KEY_EVENTS, events)
             intent.putExtra(BUNDLE_KEY_INIT_POS, initPos)
             return intent
@@ -42,6 +46,7 @@ class EventDetailActivity : BaseActivity() {
         get() = R.layout.activity_event_detail
 
     override fun setup() {
+        mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUD_ID)
         mEvents = intent.getParcelableArrayListExtra<Event>(BUNDLE_KEY_EVENTS)
         mInitPos = intent.getIntExtra(BUNDLE_KEY_INIT_POS, 0)
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
@@ -74,10 +79,12 @@ class EventDetailActivity : BaseActivity() {
      */
     class PlaceholderFragment : Fragment() {
 
+        lateinit var mGroupId: String
         lateinit var mEvent: Event
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+            mGroupId = arguments.getString(BUNDLE_KEY_GROUD_ID)
             mEvent = arguments.getParcelable(BUNDLE_KEY_EVENT)
         }
 
@@ -96,10 +103,10 @@ class EventDetailActivity : BaseActivity() {
             val exchangeRate = mEvent.exchangeRate
             // TODO use setting country
             if(exchangeRate?.jsonKey.equals("TWD")) {
-                rootView.textView_total.text = exchangeRate?.jsonKey + " $" + mEvent.total
+                rootView.textView_total.text = "總共花費\n" + exchangeRate?.jsonKey + " $" + mEvent.total
             } else {
-                rootView.textView_total.text = exchangeRate?.jsonKey + " $" + mEvent.total + " -> " +
-                        " TWD $" + Math.round(mEvent.total!! * exchangeRate?.rate!!)
+                rootView.textView_total.text = "總共花費\n" + exchangeRate?.jsonKey + " $" + mEvent.total + " -> \n" +
+                        "TWD $" + Math.round(mEvent.total!! * exchangeRate?.rate!!)
             }
             setupFriendsWhoPaidFirst(rootView)
             setupFriendsShared(rootView)
@@ -107,17 +114,16 @@ class EventDetailActivity : BaseActivity() {
         }
 
         private fun setupFriendsWhoPaidFirst(rootView: View) {
-            val MyLayoutManager = LinearLayoutManager(activity)
-            rootView.recycler_view_friends_who_paid_first.adapter = AdapterPaidCheck(activity, arrayListOf(mEvent.friendWhoPaidFirst))
-            rootView.recycler_view_friends_who_paid_first.layoutManager = MyLayoutManager
+            rootView.recycler_view_friend_paid.adapter = AdapterPaidCheck(activity, arrayListOf(mEvent.friendPaid), null)
+            rootView.recycler_view_friend_paid.layoutManager = LinearLayoutManager(activity)
         }
 
         private fun setupFriendsShared(rootView: View) {
-            val MyLayoutManager = LinearLayoutManager(activity)
+            val mDatabaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).child(mEvent.key).child("friendsShared")
             var friendsFilter: ArrayList<Friend> = arrayListOf()
-            mEvent.friendsShared.filterTo(friendsFilter) { it.needToPay > 0 }
-            rootView.recycler_view_friends_shared.adapter = AdapterPaidCheck(activity, friendsFilter)
-            rootView.recycler_view_friends_shared.layoutManager = MyLayoutManager
+            mEvent.friendsShared.filterTo(friendsFilter) { it.debt > 0 }
+            rootView.recycler_view_friends_shared.adapter = AdapterPaidCheck(activity, friendsFilter, mDatabaseEvents)
+            rootView.recycler_view_friends_shared.layoutManager = LinearLayoutManager(activity)
         }
 
         private var state: CollapsingToolbarLayoutState? = null
@@ -193,10 +199,11 @@ class EventDetailActivity : BaseActivity() {
              * Returns a new instance of this fragment for the given section
              * number.
              */
-            fun newInstance(sectionNumber: Int, event: Event?): PlaceholderFragment {
+            fun newInstance(sectionNumber: Int, groupId: String, event: Event?): PlaceholderFragment {
                 val fragment = PlaceholderFragment()
                 val args = Bundle()
                 args.putInt(BUNDLE_KEY_SECTION_NUMBER, sectionNumber)
+                args.putString(BUNDLE_KEY_GROUD_ID, groupId)
                 args.putParcelable(BUNDLE_KEY_EVENT, event)
                 fragment.arguments = args
                 return fragment
@@ -213,7 +220,7 @@ class EventDetailActivity : BaseActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position, mEvents?.get(position))
+            return PlaceholderFragment.newInstance(position, mGroupId, mEvents?.get(position))
         }
 
         override fun getCount(): Int {

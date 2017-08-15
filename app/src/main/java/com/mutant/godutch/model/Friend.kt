@@ -13,11 +13,13 @@ class Friend : Parcelable {
     var uid: String = ""
     var name: String = ""
     var photoUrl: String = ""
-    var needToPay: Int = 0
+    var debt: Int = 0
+    var remind: Boolean = false
+    var settleUp: Boolean = false
     var state: Int = STATE_ACCEPTED
         @State set
 
-    constructor() {}
+    constructor()
 
     constructor(uid: String, name: String, photoUrl: String) {
         this.uid = uid
@@ -25,11 +27,13 @@ class Friend : Parcelable {
         this.photoUrl = photoUrl
     }
 
-    constructor(uid: String, name: String, photoUrl: String, needToPay: Int, @State state: Int) {
+    constructor(uid: String, name: String, photoUrl: String, debt: Int, remind: Boolean, settleUp: Boolean, @State state: Int) {
         this.uid = uid
         this.name = name
         this.photoUrl = photoUrl
-        this.needToPay = needToPay
+        this.debt = debt
+        this.remind = remind
+        this.settleUp = settleUp
         this.state = state
     }
 
@@ -52,6 +56,8 @@ class Friend : Parcelable {
             source.readString(),
             source.readString(),
             source.readInt(),
+            source.readByte().toInt() != 0,
+            source.readByte().toInt() != 0,
             source.readInt()
     )
 
@@ -61,7 +67,9 @@ class Friend : Parcelable {
         dest.writeString(uid)
         dest.writeString(name)
         dest.writeString(photoUrl)
-        dest.writeInt(needToPay)
+        dest.writeInt(debt)
+        dest.writeByte((if (remind) 1 else 0).toByte())
+        dest.writeByte((if (settleUp) 1 else 0).toByte())
         dest.writeInt(state)
     }
 }

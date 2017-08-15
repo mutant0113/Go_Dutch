@@ -13,5 +13,5 @@ import kotlinx.android.synthetic.main.card_view_item_friend_shared.view.*
 class ViewHolderFriendShared(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
     var mTextViewName: AppCompatTextView = itemView.textView_name
-    var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
+    var mTextViewDebt: AppCompatTextView = itemView.textView_debt
 }

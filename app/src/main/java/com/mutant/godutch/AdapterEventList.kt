@@ -41,13 +41,13 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
         holder.mTextViewDescription.text = event.description
         // TODO 轉換幣別
         holder.mTextViewTotal.text = event.exchangeRate?.jsonKey + " $" + event.subtotal
-        // TODO fetch from firebase
+        // TODO fetch from database
         holder.itemView.setOnClickListener {
             // TODO makeSceneTransitionAnimation bug
 //            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, it,
 //                    activity.resources.getString(R.string.events_image_photo))
 //            ActivityCompat.startActivity(activity, EventDetailActivity.getIntent(activity, event, position), options.toBundle())
-            activity.startActivity(EventDetailActivity.getIntent(activity, events, position))
+            activity.startActivity(EventDetailActivity.getIntent(activity, groupId, events, position))
         }
         holder.itemView.setOnLongClickListener {
             removeEvent(event)

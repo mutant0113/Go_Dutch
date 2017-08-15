@@ -41,7 +41,10 @@
     <string name="event_type_ticket">票券</string>
     <string name="action_settings">Settings</string>
 
-    <string name="friend_who_paid_first">誰先墊錢</string>
-    <string name="friends_who_shared">誰要拆帳</string>
+    <string name="friend_paid">誰先墊錢</string>
+    <string name="friends_shared">誰要拆帳</string>
+
+    <string name="settle_up">已付清</string>
+    <string name="remind">提醒</string>
 
 </resources>

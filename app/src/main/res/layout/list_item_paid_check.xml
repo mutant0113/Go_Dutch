@@ -13,6 +13,7 @@
         android:padding="@dimen/activity_horizontal_margin">
 
         <RelativeLayout
+            android:id="@+id/relativeLayout_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -44,6 +45,26 @@
                 android:textSize="@dimen/font_size_headline" />
 
         </RelativeLayout>
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/relativeLayout_main">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_remind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remind" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_settle_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settle_up" />
+
+        </android.support.v7.widget.LinearLayoutCompat>
 
     </RelativeLayout>
 

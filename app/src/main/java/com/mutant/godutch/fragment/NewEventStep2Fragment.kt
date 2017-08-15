@@ -220,9 +220,9 @@ class NewEventStep2Fragment : Fragment() {
         val tax = (seekBar_tax.progress * 0.05).toInt()
         val total = Integer.parseInt(editText_total.text.toString())
         val friendsShared = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
-        val friendWhoPaidFirst = mAdapterFriendsShared?.friendWhoPaidFirst
+        val friendPaid = mAdapterFriendsShared?.friendPaid
         val event = Event(imageDownloadUrl?.toString() ?: "", mActivity.mType, title, description,
-                subtotal, tax, total, mExchangeRate, friendsShared, friendWhoPaidFirst)
+                subtotal, tax, total, mExchangeRate, friendsShared, friendPaid)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroupId).push()
         databaseReference.setValue(event).addOnSuccessListener {
             val notiyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroupName)
@@ -253,7 +253,7 @@ class NewEventStep2Fragment : Fragment() {
 
     inner class RecycleViewAdapterFriendsShared(internal var context: Context, internal var total: Int, internal var friends: List<Friend>) : RecyclerView.Adapter<ViewHolderShared>() {
         internal var isSelected: BooleanArray
-        var friendWhoPaidFirst = Friend()
+        var friendPaid = Friend()
             internal set
 
         init {
@@ -289,13 +289,13 @@ class NewEventStep2Fragment : Fragment() {
 
             itemView.setOnLongClickListener {
                 // TODO bug if user modifies total.
-                friend.needToPay = friend.needToPay - total
-                friendWhoPaidFirst = friend
+                friend.debt = friend.debt - total
+                friendPaid = friend
                 itemView.setBackgroundColor(Color.RED)
                 true
             }
 
-            holder.mTextViewNeedToPay.text = friend.needToPay.toString()
+            holder.mTextViewDebt.text = friend.debt.toString()
             holder.mTextViewInvitationState.visibility = View.GONE
         }
 
@@ -329,9 +329,9 @@ class NewEventStep2Fragment : Fragment() {
                 for (i in friends.indices) {
                     val friend = friends[i]
                     if (isSelected[i]) {
-                        friend.needToPay = if (remainder-- > 0) sharedSubtotal + 1 else sharedSubtotal
+                        friend.debt = if (remainder-- > 0) sharedSubtotal + 1 else sharedSubtotal
                     } else {
-                        friend.needToPay = 0
+                        friend.debt = 0
                     }
                 }
                 notifyDataSetChanged()
@@ -349,7 +349,7 @@ class NewEventStep2Fragment : Fragment() {
         var mRelativeLayoutCompat: RelativeLayout = itemView.relativeLayout_friend
         var mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
         var mTextViewName: AppCompatTextView = itemView.textView_name
-        var mTextViewNeedToPay: AppCompatTextView = itemView.textView_need_to_pay
+        var mTextViewDebt: AppCompatTextView = itemView.textView_debt
         var mTextViewInvitationState: AppCompatTextView = itemView.textView_invitation_state
     }
 
