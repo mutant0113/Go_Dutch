@@ -22,8 +22,7 @@ class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>, var da
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPaidCheck {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_paid_check, parent, false)
-        val holder = ViewHolderPaidCheck(view)
-        return holder
+        return ViewHolderPaidCheck(view)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
