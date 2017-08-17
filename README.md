@@ -1,4 +1,4 @@
-## GoDutch [![CircleCI](https://circleci.com/gh/mutant0113/Go_Dutch/tree/master.svg?style=svg&circle-token=df4e2d39d475be68cb20db3d76184f8b017d29a7)](https://circleci.com/gh/mutant0113/Go_Dutch/tree/master)
+## GoDutch [![CircleCI](https://circleci.com/gh/mutant0113/Go_Dutch/tree/master.svg?style=shield&circle-token=df4e2d39d475be68cb20db3d76184f8b017d29a7)](https://circleci.com/gh/mutant0113/Go_Dutch/tree/master)
 # Concepts
 An app For multiple members, like couples, friendsShared and so on, to share payments simplier.
 # Functions
