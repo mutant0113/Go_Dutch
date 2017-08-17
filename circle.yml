@@ -5,3 +5,7 @@ machine:
 dependencies:
   override:
     - chmod +x gradlew
+
+checkout:
+  post:
+    - cp -r licenses/. $ANDROID_HOME/licenses
