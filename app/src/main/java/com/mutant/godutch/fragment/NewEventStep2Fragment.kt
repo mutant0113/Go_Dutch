@@ -30,8 +30,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.UploadTask
-import com.mutant.godutch.ExchangeRateActivity
-import com.mutant.godutch.NewEventActivity
+import com.mutant.godutch.*
 import com.mutant.godutch.NewEventActivity.Companion.REQUEST_CODE_EXCHANGE_RATE
 import com.mutant.godutch.R
 import com.mutant.godutch.model.Event
@@ -85,13 +84,14 @@ class NewEventStep2Fragment : Fragment() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupFriendsShared()
         setupFireBase()
         setupCurrencyListener()
         setupSeekbarTaxListener()
         setupSubtotalTextChangedListener()
         setupTotalTextChangedListener()
         setupFabDone()
+        setupPaidFirst()
+        setupFriendsShared()
     }
 
     private fun setupCurrencyListener() {
@@ -100,7 +100,13 @@ class NewEventStep2Fragment : Fragment() {
         }
     }
 
+    private fun setupPaidFirst() {
+        linearLayout_friend_who_paid_first.setOnClickListener({ startActivity(Intent(activity, PaidFirstActivity::class.java)) })
+    }
+
     private fun setupFriendsShared() {
+        linearLayout_friends_who_shared.setOnClickListener({ startActivity(Intent(activity, SharedActivity::class.java)) })
+
         recycler_view_friends_shared.layoutManager = GridLayoutManager(mActivity, 2) as RecyclerView.LayoutManager?
     }
 

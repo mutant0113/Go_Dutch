@@ -54,9 +54,7 @@
         <activity
             android:name=".EventDetailActivity"
             android:label="@string/label_activity_event_detail" />
-
         <activity android:name=".ExchangeRateActivity" />
-
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -92,6 +90,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
+        <activity android:name=".PaidFirstActivity" />
+        <activity android:name=".SharedActivity"></activity>
     </application>
 
 </manifest>

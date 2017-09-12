@@ -35,11 +35,11 @@ import java.util.*
 class NewGroupActivity : BaseActivity() {
 
     internal var mAdapterFriends: RecycleViewAdapterFriends? = null
-    internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    internal var mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+    private var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private var mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
     internal var mStorage: StorageReference? = null
 
-    var isTakePhoto: Boolean = false
+    private var isTakePhoto: Boolean = false
 
     override val layoutId: Int
         get() = R.layout.activity_new_group
@@ -57,7 +57,7 @@ class NewGroupActivity : BaseActivity() {
     private fun setupFireBase() {
         mFirebaseUser = FirebaseAuth.getInstance().currentUser
         if (mFirebaseUser != null) {
-            mDatabase.child("friends").child(mFirebaseUser!!.uid).orderByChild("name").addValueEventListener(object : ValueEventListener {
+            mDatabase.child("friends").child(mFirebaseUser!!.uid).orderByChild("uid").addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val friends = ArrayList<Friend>()
@@ -77,7 +77,7 @@ class NewGroupActivity : BaseActivity() {
         }
     }
 
-    fun setupPhotoOnClickListener() {
+    private fun setupPhotoOnClickListener() {
         imageView_photo.setOnClickListener {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (takePictureIntent.resolveActivity(packageManager) != null) {

@@ -35,12 +35,13 @@
                 android:layout_toRightOf="@+id/imageView_photo_url"
                 android:text="名字" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/textView_paid_check"
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_paid_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:background="@drawable/shape_button_frame"
                 android:text="0/100"
                 android:textSize="@dimen/font_size_headline" />
 

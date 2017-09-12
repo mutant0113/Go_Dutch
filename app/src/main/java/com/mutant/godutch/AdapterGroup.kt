@@ -34,7 +34,8 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
             val imageViewFriendPhoto = ImageView(activity)
             Glide.with(activity).load(friend.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
                     .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
-            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val proPicSize = activity.resources.getDimension(R.dimen.pro_pic_size).toInt()
+            val params = LinearLayout.LayoutParams(proPicSize, proPicSize)
             params.rightMargin = activity.resources.getDimension(R.dimen.activity_vertical_margin).toInt()
             holder.mLinearLayoutFriends.addView(imageViewFriendPhoto, params)
         }
