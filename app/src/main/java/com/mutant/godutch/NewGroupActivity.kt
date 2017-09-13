@@ -9,7 +9,10 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.*
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.tasks.OnFailureListener
@@ -25,6 +28,7 @@ import com.mutant.godutch.utils.Utility.Companion.uploadImage
 import kotlinx.android.synthetic.main.activity_new_group.*
 import kotlinx.android.synthetic.main.list_view_item_friend_tick.view.*
 import java.util.*
+
 
 class NewGroupActivity : BaseActivity() {
 
@@ -44,26 +48,20 @@ class NewGroupActivity : BaseActivity() {
     }
 
     override fun setup() {
+        title = ""
         setupMenu()
-        setupFriends()
         setupFireBase()
     }
 
     private fun setupMenu() {
         mToolbar?.inflateMenu(R.menu.menu_new_group)
-        mToolbar?.setOnMenuItemClickListener(object : Toolbar.OnMenuItemClickListener {
-            override fun onMenuItemClick(p0: MenuItem?): Boolean {
-                when (p0?.itemId) {
-                    R.id.action_take_a_photo -> takeAPhoto()
-                    R.id.action_done -> uploadPhotoBeforeCreateNewGroup()
-                }
-                return true
+        mToolbar?.setOnMenuItemClickListener { p0 ->
+            when (p0?.itemId) {
+                R.id.action_take_a_photo -> takeAPhoto()
+                R.id.action_done -> uploadPhotoBeforeCreateNewGroup()
             }
-        })
-
-    }
-
-    private fun setupFriends() {
+            true
+        }
 
     }
 
@@ -79,6 +77,10 @@ class NewGroupActivity : BaseActivity() {
                         friends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
                     }
                     friends.add(0, me)
+                    setupRecycleView(friends)
+                }
+
+                private fun setupRecycleView(friends: List<Friend>) {
                     recycler_view_friends_shared.layoutManager = LinearLayoutManager(this@NewGroupActivity)
                     recycler_view_friends_shared.adapter = RecycleViewAdapterFriends(this@NewGroupActivity, friends)
                 }
@@ -106,7 +108,7 @@ class NewGroupActivity : BaseActivity() {
         }
     }
 
-    fun uploadPhotoBeforeCreateNewGroup() {
+    @Synchronized fun uploadPhotoBeforeCreateNewGroup() {
         if (isTakePhoto) {
             val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
             val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
@@ -115,7 +117,6 @@ class NewGroupActivity : BaseActivity() {
                 Snackbar.make(coordinatorLayout_parent_new_group, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
             }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
                 Snackbar.make(coordinatorLayout_parent_new_group, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 createNewGroup(taskSnapshot?.downloadUrl)
             })
         } else {
@@ -125,28 +126,32 @@ class NewGroupActivity : BaseActivity() {
 
     private fun createNewGroup(imageDownloadUrl: Uri?) {
         val title = editText_title.text.toString()
-        val friendsChecked = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriends).friendsChecked
+        val friendsChecked = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriends).mFriendsChecked
         val group = Group(title, imageDownloadUrl?.toString() ?: "", 0, friendsChecked)
         if (mFirebaseUser != null) {
-            val userUid = mFirebaseUser!!.uid
-            for (friend in friendsChecked) {
-                mDatabase.child("groups").child(friend.uid).push().setValue(group)
+            val databaseReference = mDatabase.child("groups").push()
+            databaseReference.setValue(group).addOnSuccessListener {
+                saveUserUidMappingToGroups(friendsChecked, databaseReference.key)
+                finish()
             }
-            val databaseReference = mDatabase.child("groups").child(userUid).push()
-            databaseReference.setValue(group).addOnSuccessListener { finish() }
         } else {
             try {
                 Crashlytics.logException(NullPointerException())
             } catch (e: IllegalThreadStateException) {
                 e.printStackTrace()
             }
+        }
+    }
 
+    private fun saveUserUidMappingToGroups(friendsUid: List<String>, groupKey: String) {
+        for (uid in friendsUid) {
+            mDatabase.child("groups_mapping").child(uid).push().setValue(groupKey)
         }
     }
 
     inner class RecycleViewAdapterFriends(internal var context: Context, private var friends: List<Friend>) : RecyclerView.Adapter<ViewHolder>() {
 
-        private var mFriendsChecked: MutableList<Friend> = mutableListOf()
+        var mFriendsChecked: MutableList<String> = mutableListOf()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.list_view_item_friend_tick, parent, false)
@@ -161,9 +166,9 @@ class NewGroupActivity : BaseActivity() {
             holder.itemView.setOnClickListener({
                 holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
                 if (holder.mCheckBox.isChecked) {
-                    mFriendsChecked.add(friend)
+                    mFriendsChecked.add(friend.uid)
                 } else {
-                    mFriendsChecked.remove(friend)
+                    mFriendsChecked.remove(friend.uid)
                 }
             })
         }
@@ -172,10 +177,6 @@ class NewGroupActivity : BaseActivity() {
             return friends.size
         }
 
-        val friendsChecked: List<Friend>
-            get() {
-                return mFriendsChecked
-            }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

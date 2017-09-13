@@ -23,7 +23,6 @@ class GroupsFragment : Fragment() {
 
     var mAdapterGroup: AdapterGroup? = null
     var firebaseUser = FirebaseAuth.getInstance().currentUser
-    var mDatabaseGroup: DatabaseReference? = FirebaseDatabase.getInstance().reference.child("groups").child(firebaseUser?.uid)
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_groups, container, false)
@@ -31,8 +30,8 @@ class GroupsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupGroups()
         setupFirebase()
-        setupGroups(view)
         setupFabNewGroup(view)
     }
 
@@ -40,8 +39,8 @@ class GroupsFragment : Fragment() {
         view.findViewById(R.id.fab_new_group).setOnClickListener { startActivity(NewGroupActivity.getIntent(activity)) }
     }
 
-    private fun setupGroups(view: View) {
-        mAdapterGroup = AdapterGroup(activity, ArrayList<Group>(), mDatabaseGroup!!.key)
+    private fun setupGroups() {
+        mAdapterGroup = AdapterGroup(activity, ArrayList<Group>())
         val MyLayoutManager = LinearLayoutManager(activity)
         MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recycler_view_groups.adapter = mAdapterGroup
@@ -49,26 +48,41 @@ class GroupsFragment : Fragment() {
     }
 
     private fun setupFirebase() {
-        mDatabaseGroup?.orderByKey()?.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                mAdapterGroup?.addItem(dataSnapshot.getValue(Group::class.java))
+        val databaseGroupsMapping: DatabaseReference? = FirebaseDatabase.getInstance().reference.
+                child("groups_mapping").child(firebaseUser?.uid)
+        databaseGroupsMapping?.addChildEventListener(object : ChildEventListener {
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+            }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
+                // TODO
+            }
+
+            override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
+                fetchGroupsData((dataSnapshot?.value as String))
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot?) {
+            }
+
+            override fun onCancelled(dataSnapshot: DatabaseError?) {
+            }
+
+        })
+    }
+
+    private fun fetchGroupsData(groupsKey: String) {
+        val databaseGroups: DatabaseReference? = FirebaseDatabase.getInstance().reference.
+                child("groups").child(groupsKey)
+        databaseGroups?.orderByKey()?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var group = dataSnapshot.getValue(Group::class.java)
+                group.key = groupsKey
+                mAdapterGroup?.addItem(group)
                 recycler_view_groups.scrollToPosition(0)
             }
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-                // TODO
-            }
-
-            override fun onChildRemoved(dataSnapshot: com.google.firebase.database.DataSnapshot) {
-                // TODO
-            }
-
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
-                // TODO
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-
+            override fun onCancelled(p0: DatabaseError?) {
             }
         })
     }
