@@ -17,6 +17,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     abstract fun setup()
 
+    internal var mToolbar: Toolbar? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
@@ -31,13 +33,15 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(findViewById(R.id.tool_bar) as Toolbar?)
+        mToolbar = findViewById(R.id.tool_bar) as Toolbar?
+        setSupportActionBar(mToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     internal fun setupToolbar(rootView: View) {
-        setSupportActionBar(rootView.findViewById(R.id.tool_bar) as Toolbar?)
+        mToolbar = rootView.findViewById(R.id.tool_bar) as Toolbar?
+        setSupportActionBar(mToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tool"
     xmlns:tools2="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout_parent"
+    android:id="@+id/coordinatorLayout_parent_new_group"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -13,23 +13,14 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/tool_bar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/imageView_photo"
@@ -41,6 +32,13 @@
                 android:transitionName="@string/events_image_photo"
                 app:layout_collapseMode="parallax"
                 tools2:targetApi="lollipop" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -66,23 +64,7 @@
                     android:id="@+id/editText_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="主題">
-
-                </android.support.v7.widget.AppCompatEditText>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/editText_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="詳細敘述">
-
-                </android.support.v7.widget.AppCompatEditText>
+                    android:hint="標題" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -90,13 +72,8 @@
                 android:id="@+id/recycler_view_friends_shared"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:scrollbars="vertical" />
-
-            <android.support.v7.widget.AppCompatButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClickCreateNewGroup"
-                android:text="新增群組" />
 
         </LinearLayout>
 

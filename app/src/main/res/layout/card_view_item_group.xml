@@ -26,15 +26,26 @@
             android:transitionName="@string/events_image_photo" />
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/textView_debt"
+            android:id="@+id/textView_my_total"
+            android:layout_above="@+id/textView_my_debt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/gray_50"
+            android:padding="@dimen/space_between_content_areas"
+            android:text="你花費\nTWD $550"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/white" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textView_my_debt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView_photo"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:background="@color/gray_50"
             android:padding="@dimen/space_between_content_areas"
-            android:text="TWD $550"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="應付\nTWD $550"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white" />
 
         <RelativeLayout

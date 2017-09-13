@@ -10,17 +10,16 @@ import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.database.*
 import com.mutant.godutch.model.Event
-import com.mutant.godutch.widget.EventTypeWidget.TYPE
 import kotlinx.android.synthetic.main.activity_events.*
 
 class EventsActivity : BaseActivity() {
 
-    internal var mGroupId: String = ""
-    internal var mGroupName: String = ""
+    private var mGroupId: String = ""
+    private var mGroupName: String = ""
 
     internal var mAdapterEventCardView: AdapterEventCard? = null
     internal var mAdapterEventList: AdapterEventList? = null
-    internal var mDatabaseEvents: DatabaseReference? = null
+    private var mDatabaseEvents: DatabaseReference? = null
 
     companion object {
 
@@ -40,8 +39,8 @@ class EventsActivity : BaseActivity() {
         return true
     }
 
-    val VIEW_FLIPPER_LIST = 0
-    val VIEW_FLIPPER_CARD_VIEW = 1
+    private val VIEW_FLIPPER_LIST = 0
+    private val VIEW_FLIPPER_CARD_VIEW = 1
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

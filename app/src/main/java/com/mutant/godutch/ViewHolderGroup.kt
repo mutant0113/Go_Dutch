@@ -16,8 +16,8 @@ class ViewHolderGroup(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var mImageViewPhoto: AppCompatImageView = itemView.imageView_photo
     var mTextViewDate: AppCompatTextView = itemView.textView_date
     var mTextViewTitle: AppCompatTextView = itemView.textView_title
-    var mTextViewDescription: AppCompatTextView = itemView.textView_description
-    var mTextViewTotalPay: AppCompatTextView = itemView.textView_debt
+    var mTextViewTotal: AppCompatTextView = itemView.textView_my_total
+    var mTextViewDebt: AppCompatTextView = itemView.textView_my_debt
     var mLinearLayoutFriends: LinearLayoutCompat = itemView.linearLayout_friends
 
 }

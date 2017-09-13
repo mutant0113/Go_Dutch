@@ -10,7 +10,6 @@ import com.google.firebase.database.Exclude
 class Group {
 
     var title: String = ""
-    var description: String = ""
     var photoUrl: String = ""
     var subtotal: Int = 0
     var friends: List<Friend> = arrayListOf()
@@ -21,9 +20,8 @@ class Group {
 
     constructor() {}
 
-    constructor(title: String, description: String, photoUrl: String, subtotal: Int, friends: List<Friend>) {
+    constructor(title: String, photoUrl: String, subtotal: Int, friends: List<Friend>) {
         this.title = title
-        this.description = description
         this.photoUrl = photoUrl
         this.subtotal = subtotal
         this.friends = friends

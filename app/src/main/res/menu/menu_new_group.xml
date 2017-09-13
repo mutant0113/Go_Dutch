@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mutant.godutch.EventDetailActivity">
     <item
-        android:id="@+id/action_list"
+        android:id="@+id/action_take_a_photo"
         android:icon="@drawable/ic_camera_enhance_white_24dp"
-        android:orderInCategory="200"
-        android:title="Search"
-        app:showAsAction="ifRoom"></item>
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_list"
-        android:icon="@drawable/ic_camera_enhance_white_24dp"
+        android:id="@+id/action_done"
+        android:icon="@drawable/ic_done_white_24dp"
         android:orderInCategory="200"
-        android:title="Search"
+        android:title="done"
         app:showAsAction="ifRoom"></item>
 </menu>
