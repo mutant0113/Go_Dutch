@@ -238,7 +238,7 @@ class NewEventStep2Fragment : Fragment() {
         }
     }
 
-    fun sendNewEventNotificationToFriends(userUid: String, title: String, content: String) {
+    private fun sendNewEventNotificationToFriends(userUid: String, title: String, content: String) {
         FirebaseDatabase.getInstance().reference.child("users").child(userUid).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -258,7 +258,7 @@ class NewEventStep2Fragment : Fragment() {
     }
 
     inner class RecycleViewAdapterFriendsShared(internal var context: Context, internal var total: Int, internal var friends: List<Friend>) : RecyclerView.Adapter<ViewHolderShared>() {
-        internal var isSelected: BooleanArray
+        var isSelected: BooleanArray
         var friendPaid = Friend()
             internal set
 

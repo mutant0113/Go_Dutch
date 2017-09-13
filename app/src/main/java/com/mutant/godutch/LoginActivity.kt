@@ -35,9 +35,9 @@ class LoginActivity : AppCompatActivity() {
         val TAG = LoginActivity::class.java.simpleName
     }
 
-    internal var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    internal var mGoogleApiClient: GoogleApiClient? = null
-    internal var mCallbackManager: CallbackManager = CallbackManager.Factory.create()
+    private var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var mGoogleApiClient: GoogleApiClient? = null
+    private var mCallbackManager: CallbackManager = CallbackManager.Factory.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

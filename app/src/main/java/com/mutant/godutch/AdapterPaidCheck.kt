@@ -31,15 +31,15 @@ class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>, val ex
         val friend = friends[position]
         setupProPic(holder, friend.photoUrl)
         holder.mTextViewName.text = friend.name
-        holder.mButtonPaidCheck.text = if(friend.settleUp) Math.abs(friend.debt).toString() else {"0"} + " / " + Math.abs(friend.debt)
+        holder.mButtonPaidCheck.text = Math.abs(friend.debt).toString()
         var isClickPaidCheck = false
         holder.mButtonPaidCheck.setOnClickListener {
             isClickPaidCheck = !isClickPaidCheck
             if(isClickPaidCheck) {
                 val afterExchange = Math.round(Math.abs(friend.debt) * exchangeRate?.rate!!)
-                holder.mButtonPaidCheck.text = if (friend.settleUp) afterExchange.toString() else {"0"} + " / " + afterExchange
+                holder.mButtonPaidCheck.text = afterExchange.toString()
             } else {
-                holder.mButtonPaidCheck.text = if(friend.settleUp) Math.abs(friend.debt).toString() else {"0"} + " / " + Math.abs(friend.debt)
+                holder.mButtonPaidCheck.text = Math.abs(friend.debt).toString()
             }
         }
 
@@ -51,11 +51,11 @@ class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>, val ex
         // TODO send notification
         holder.mButtonRemind.setOnClickListener { }
         holder.mButtonSettleUp.setOnClickListener {
-            holder.mButtonPaidCheck.text = Math.abs(friend.debt).toString() + " / " + Math.abs(friend.debt)
+            holder.mButtonPaidCheck.text = Math.abs(friend.debt).toString()
             // TODO database
             // TODO send notification
             // TODO friend paid check add
-            friend.settleUp = true
+            // TODO send settle up firebase
             database?.setValue(friends)
         }
     }
