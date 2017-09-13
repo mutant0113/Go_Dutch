@@ -60,6 +60,7 @@ class NewGroupActivity : BaseActivity() {
                 return true
             }
         })
+
     }
 
     private fun setupFriends() {
