@@ -17,9 +17,9 @@ class Group {
     var timestampCreated: Long = 0
         @Exclude
         get() = timestamp["timestamp"] as Long? ?: 0
+
+    @Exclude
     var key: String = ""
-        @Exclude
-        get() = key
 
     constructor() {}
 
