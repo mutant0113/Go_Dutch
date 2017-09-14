@@ -7,12 +7,12 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.MediaStore
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.*
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.tasks.OnFailureListener
@@ -26,6 +26,7 @@ import com.mutant.godutch.utils.Utility.Companion.uploadImage
 import kotlinx.android.synthetic.main.activity_new_group.*
 import kotlinx.android.synthetic.main.list_item_friend_tick.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class NewGroupActivity : BaseActivity() {
@@ -72,6 +73,7 @@ class NewGroupActivity : BaseActivity() {
                     friends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
                 }
                 friends.add(0, me)
+                Collections.sort(friends) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
                 setupRecycleView(friends)
             }
 
@@ -109,9 +111,9 @@ class NewGroupActivity : BaseActivity() {
             val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
             uploadImage(filePath, bitmap, OnFailureListener { exception ->
                 exception.printStackTrace()
-                Snackbar.make(coordinatorLayout_parent_new_group, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
+                Toast.makeText(this@NewGroupActivity, R.string.upload_image_failed, Toast.LENGTH_LONG).show()
             }, OnSuccessListener { taskSnapshot ->
-                Snackbar.make(coordinatorLayout_parent_new_group, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
+                Toast.makeText(this@NewGroupActivity, R.string.upload_image_successfully, Toast.LENGTH_LONG).show()
                 createNewGroup(taskSnapshot?.downloadUrl)
             })
         } else {
@@ -122,6 +124,7 @@ class NewGroupActivity : BaseActivity() {
     private fun createNewGroup(imageDownloadUrl: Uri?) {
         val title = editText_title.text.toString()
         val friendsChecked = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriends).mFriendsChecked
+        Collections.sort(friendsChecked)
         val group = Group(title, imageDownloadUrl?.toString() ?: "", 0, friendsChecked)
         if (mFirebaseUser != null) {
             val databaseReference = mDatabase.child("groups").push()
@@ -146,7 +149,7 @@ class NewGroupActivity : BaseActivity() {
 
     inner class RecycleViewAdapterFriends(internal var context: Context, private var friends: List<Friend>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        var mFriendsChecked: MutableList<String> = mutableListOf()
+        var mFriendsChecked: ArrayList<String> = arrayListOf()
         private val FOOTER_VIEW = 1
 
         override fun getItemViewType(position: Int): Int {
