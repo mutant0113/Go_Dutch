@@ -1,5 +1,6 @@
 <resources>
     <string name="label_activity_events">帳目記錄</string>
     <string name="label_activity_event_detail">帳目詳細內容</string>
+    <string name="label_activity_invite_new_friends">新增好友</string>
 
 </resources>

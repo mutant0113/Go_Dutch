@@ -49,9 +49,7 @@ class Utility {
 
             val firebaseStorage = FirebaseStorage.getInstance().reference.child(filePath)
             val uploadTask = firebaseStorage?.putBytes(data)
-            if(uploadTask != null) {
-                uploadTask.addOnFailureListener(onFailureListener).addOnSuccessListener(onSuccessListener)
-            }
+            uploadTask?.addOnFailureListener(onFailureListener)?.addOnSuccessListener(onSuccessListener)
         }
 
         /**

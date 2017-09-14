@@ -20,13 +20,11 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.model.Group
 import com.mutant.godutch.utils.Utility.Companion.uploadImage
 import kotlinx.android.synthetic.main.activity_new_group.*
-import kotlinx.android.synthetic.main.list_view_item_friend_tick.view.*
+import kotlinx.android.synthetic.main.list_item_friend_tick.view.*
 import java.util.*
 
 
@@ -34,7 +32,6 @@ class NewGroupActivity : BaseActivity() {
 
     private var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
-    internal var mStorage: StorageReference? = null
 
     private var isTakePhoto: Boolean = false
 
@@ -62,34 +59,31 @@ class NewGroupActivity : BaseActivity() {
             }
             true
         }
-
     }
 
     private fun setupFireBase() {
         mFirebaseUser = FirebaseAuth.getInstance().currentUser
-        if (mFirebaseUser != null) {
-            mDatabase.child("friends").child(mFirebaseUser!!.uid).orderByChild("uid").addValueEventListener(object : ValueEventListener {
+        mDatabase.child("friends").child(mFirebaseUser?.uid).orderByChild("uid").addValueEventListener(object : ValueEventListener {
 
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val friends = ArrayList<Friend>()
-                    val iterator = dataSnapshot.children.iterator()
-                    while (iterator.hasNext()) {
-                        friends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
-                    }
-                    friends.add(0, me)
-                    setupRecycleView(friends)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val friends = ArrayList<Friend>()
+                val iterator = dataSnapshot.children.iterator()
+                while (iterator.hasNext()) {
+                    friends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
                 }
+                friends.add(0, me)
+                setupRecycleView(friends)
+            }
 
-                private fun setupRecycleView(friends: List<Friend>) {
-                    recycler_view_friends_shared.layoutManager = LinearLayoutManager(this@NewGroupActivity)
-                    recycler_view_friends_shared.adapter = RecycleViewAdapterFriends(this@NewGroupActivity, friends)
-                }
+            private fun setupRecycleView(friends: List<Friend>) {
+                recycler_view_friends_shared.layoutManager = LinearLayoutManager(this@NewGroupActivity)
+                recycler_view_friends_shared.adapter = RecycleViewAdapterFriends(this@NewGroupActivity, friends)
+            }
 
-                override fun onCancelled(databaseError: DatabaseError) {
+            override fun onCancelled(databaseError: DatabaseError) {
 
-                }
-            })
-        }
+            }
+        })
     }
 
     private fun takeAPhoto() {
@@ -108,14 +102,15 @@ class NewGroupActivity : BaseActivity() {
         }
     }
 
-    @Synchronized fun uploadPhotoBeforeCreateNewGroup() {
+    @Synchronized
+    private fun uploadPhotoBeforeCreateNewGroup() {
         if (isTakePhoto) {
             val bitmap = (imageView_photo.drawable as BitmapDrawable).bitmap
             val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
             uploadImage(filePath, bitmap, OnFailureListener { exception ->
                 exception.printStackTrace()
                 Snackbar.make(coordinatorLayout_parent_new_group, R.string.upload_image_failed, Snackbar.LENGTH_LONG).show()
-            }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
+            }, OnSuccessListener { taskSnapshot ->
                 Snackbar.make(coordinatorLayout_parent_new_group, R.string.upload_image_successfully, Snackbar.LENGTH_LONG).show()
                 createNewGroup(taskSnapshot?.downloadUrl)
             })
@@ -149,42 +144,54 @@ class NewGroupActivity : BaseActivity() {
         }
     }
 
-    inner class RecycleViewAdapterFriends(internal var context: Context, private var friends: List<Friend>) : RecyclerView.Adapter<ViewHolder>() {
+    inner class RecycleViewAdapterFriends(internal var context: Context, private var friends: List<Friend>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         var mFriendsChecked: MutableList<String> = mutableListOf()
+        private val FOOTER_VIEW = 1
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.list_view_item_friend_tick, parent, false)
-            return ViewHolder(view)
+        override fun getItemViewType(position: Int): Int {
+            return if (position == friends.size) FOOTER_VIEW else super.getItemViewType(position)
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val friend = friends[position]
-            Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
-            holder.mTextViewName.text = friend.name
+        override fun getItemCount(): Int = if(friends.isEmpty()) 1 else friends.size + 1
 
-            holder.itemView.setOnClickListener({
-                holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
-                if (holder.mCheckBox.isChecked) {
-                    mFriendsChecked.add(friend.uid)
-                } else {
-                    mFriendsChecked.remove(friend.uid)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            return if (viewType == FOOTER_VIEW) {
+                FooterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_invite, parent, false))
+            } else {
+                ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
+            }
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            if(holder is ViewHolder) {
+                val friend = friends[position]
+                Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
+                holder.mTextViewName.text = friend.name
+
+                holder.itemView.setOnClickListener({
+                    holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
+                    if (holder.mCheckBox.isChecked) {
+                        mFriendsChecked.add(friend.uid)
+                    } else {
+                        mFriendsChecked.remove(friend.uid)
+                    }
+                })
+            } else if(holder is FooterViewHolder) {
+                holder.itemView.setOnClickListener {
+                    context.startActivity(Intent(context, InviteNewFriendsActivity::class.java))
                 }
-            })
+            }
         }
-
-        override fun getItemCount(): Int {
-            return friends.size
-        }
-
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
         val mTextViewName: AppCompatTextView = itemView.textView_name
-        val mTextViewDebt: AppCompatTextView = itemView.textView_debt
         val mCheckBox: AppCompatCheckBox = itemView.checkBox
     }
+
+    inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     companion object {
 

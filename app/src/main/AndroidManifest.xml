@@ -91,7 +91,10 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".PaidFirstActivity" />
-        <activity android:name=".SharedActivity"></activity>
+        <activity android:name=".SharedActivity" />
+        <activity
+            android:name=".InviteNewFriendsActivity"
+            android:label="@string/label_activity_invite_new_friends"></activity>
     </application>
 
 </manifest>
