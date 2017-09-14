@@ -72,12 +72,11 @@ class NewGroupActivity : BaseActivity() {
                 while (iterator.hasNext()) {
                     friends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
                 }
-                friends.add(0, me)
-                Collections.sort(friends) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
+//                friends.add(0, me)
                 setupRecycleView(friends)
             }
 
-            private fun setupRecycleView(friends: List<Friend>) {
+            private fun setupRecycleView(friends: ArrayList<Friend>) {
                 recycler_view_friends_shared.layoutManager = LinearLayoutManager(this@NewGroupActivity)
                 recycler_view_friends_shared.adapter = RecycleViewAdapterFriends(this@NewGroupActivity, friends)
             }
@@ -147,41 +146,59 @@ class NewGroupActivity : BaseActivity() {
         }
     }
 
-    inner class RecycleViewAdapterFriends(internal var context: Context, private var friends: List<Friend>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class RecycleViewAdapterFriends(internal var context: Context, private var friends: ArrayList<Friend>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         var mFriendsChecked: ArrayList<String> = arrayListOf()
-        private val FOOTER_VIEW = 1
+        private val HEADER_VIEW = 1
+        private val FOOTER_VIEW = 2
 
-        override fun getItemViewType(position: Int): Int {
-            return if (position == friends.size) FOOTER_VIEW else super.getItemViewType(position)
+        init {
+            Collections.sort(friends) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
+            // 把使用者加進去，做為Group預設的人
+            friends.add(0, me)
         }
 
-        override fun getItemCount(): Int = if(friends.isEmpty()) 1 else friends.size + 1
+        override fun getItemViewType(position: Int): Int {
+            return when (position) {
+                0 -> HEADER_VIEW
+                friends.size -> FOOTER_VIEW
+                else -> super.getItemViewType(position)
+            }
+        }
+
+        override fun getItemCount(): Int = if (friends.isEmpty()) 1 else friends.size + 1
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return if (viewType == FOOTER_VIEW) {
-                FooterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_invite, parent, false))
-            } else {
-                ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
+            return when (viewType) {
+                HEADER_VIEW -> HeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
+                FOOTER_VIEW -> FooterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_invite, parent, false))
+                else -> ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
             }
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            if(holder is ViewHolder) {
-                val friend = friends[position]
-                Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
-                holder.mTextViewName.text = friend.name
+            when (holder) {
+                is HeaderViewHolder -> {
+                    val friend = friends[position]
+                    Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
+                    holder.mTextViewName.text = friend.name
+                    holder.mCheckBox.visibility = View.INVISIBLE
+                }
+                is ViewHolder -> {
+                    val friend = friends[position]
+                    Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
+                    holder.mTextViewName.text = friend.name
 
-                holder.itemView.setOnClickListener({
-                    holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
-                    if (holder.mCheckBox.isChecked) {
-                        mFriendsChecked.add(friend.uid)
-                    } else {
-                        mFriendsChecked.remove(friend.uid)
-                    }
-                })
-            } else if(holder is FooterViewHolder) {
-                holder.itemView.setOnClickListener {
+                    holder.itemView.setOnClickListener({
+                        holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
+                        if (holder.mCheckBox.isChecked) {
+                            mFriendsChecked.add(friend.uid)
+                        } else {
+                            mFriendsChecked.remove(friend.uid)
+                        }
+                    })
+                }
+                is FooterViewHolder -> holder.itemView.setOnClickListener {
                     context.startActivity(Intent(context, InviteNewFriendsActivity::class.java))
                 }
             }
@@ -189,6 +206,12 @@ class NewGroupActivity : BaseActivity() {
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
+        val mTextViewName: AppCompatTextView = itemView.textView_name
+        val mCheckBox: AppCompatCheckBox = itemView.checkBox
+    }
+
+    inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
         val mTextViewName: AppCompatTextView = itemView.textView_name
         val mCheckBox: AppCompatCheckBox = itemView.checkBox

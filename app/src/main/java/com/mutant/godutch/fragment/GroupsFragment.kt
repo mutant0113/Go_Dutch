@@ -40,7 +40,7 @@ class GroupsFragment : Fragment() {
     }
 
     private fun setupGroups() {
-        mAdapterGroup = AdapterGroup(activity, ArrayList<Group>())
+        mAdapterGroup = AdapterGroup(activity, ArrayList())
         val MyLayoutManager = LinearLayoutManager(activity)
         MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recycler_view_groups.adapter = mAdapterGroup
@@ -55,7 +55,7 @@ class GroupsFragment : Fragment() {
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
-                // TODO
+                // TODO 如果events增加，group最後修改時間以及排序要改變
             }
 
             override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
@@ -72,14 +72,13 @@ class GroupsFragment : Fragment() {
     }
 
     private fun fetchGroupsData(groupsKey: String) {
-        val databaseGroups: DatabaseReference? = FirebaseDatabase.getInstance().reference.
-                child("groups").child(groupsKey)
-        databaseGroups?.orderByKey()?.addListenerForSingleValueEvent(object : ValueEventListener {
+        FirebaseDatabase.getInstance().reference.child("groups").child(groupsKey).orderByKey()?.
+                addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var group = dataSnapshot.getValue(Group::class.java)
                 group.key = groupsKey
                 mAdapterGroup?.addItem(group)
-                recycler_view_groups.scrollToPosition(0)
+//                recycler_view_groups.scrollToPosition(0)
             }
 
             override fun onCancelled(p0: DatabaseError?) {
