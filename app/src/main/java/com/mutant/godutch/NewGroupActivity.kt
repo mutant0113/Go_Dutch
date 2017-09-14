@@ -47,6 +47,7 @@ class NewGroupActivity : BaseActivity() {
 
     override fun setup() {
         title = ""
+//        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         setupMenu()
         setupFireBase()
     }
@@ -156,6 +157,7 @@ class NewGroupActivity : BaseActivity() {
             Collections.sort(friends) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
             // 把使用者加進去，做為Group預設的人
             friends.add(0, me)
+            mFriendsChecked.add(me.uid)
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -182,7 +184,8 @@ class NewGroupActivity : BaseActivity() {
                     val friend = friends[position]
                     Glide.with(context).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
                     holder.mTextViewName.text = friend.name
-                    holder.mCheckBox.visibility = View.INVISIBLE
+                    holder.mCheckBox.isChecked = true
+                    holder.mCheckBox.isClickable = false
                 }
                 is ViewHolder -> {
                     val friend = friends[position]
@@ -222,8 +225,7 @@ class NewGroupActivity : BaseActivity() {
     companion object {
 
         fun getIntent(activity: Activity): Intent {
-            val intent = Intent(activity, NewGroupActivity::class.java)
-            return intent
+            return Intent(activity, NewGroupActivity::class.java)
         }
 
         internal val REQUEST_IMAGE_CAPTURE = 1

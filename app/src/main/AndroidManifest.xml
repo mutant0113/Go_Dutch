@@ -40,7 +40,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".NewGroupActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysVisible" />
         <activity
             android:name=".EventsActivity"
             android:label="@string/label_activity_events"
