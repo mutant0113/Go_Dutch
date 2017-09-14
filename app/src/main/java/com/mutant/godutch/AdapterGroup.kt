@@ -1,11 +1,12 @@
 package com.mutant.godutch
 
 import android.app.Activity
+import android.os.Build
+import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -44,7 +45,10 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
                     Glide.with(activity).load(friend?.photoUrl).placeholder(R.drawable.ic_account_circle_black_48dp)
                             .fitCenter().animate(R.anim.design_fab_in).into(imageViewFriendPhoto)
                     val proPicSize = activity.resources.getDimension(R.dimen.pro_pic_size).toInt()
-                    val params = LinearLayout.LayoutParams(proPicSize, proPicSize)
+                    val params = LinearLayoutCompat.LayoutParams(proPicSize, proPicSize)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        params.marginEnd = activity.resources.getDimension(R.dimen.activity_vertical_margin).toInt()
+                    }
                     params.rightMargin = activity.resources.getDimension(R.dimen.activity_vertical_margin).toInt()
                     holder.mLinearLayoutFriends.addView(imageViewFriendPhoto, params)
                 }
