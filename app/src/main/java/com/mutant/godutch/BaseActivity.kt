@@ -32,7 +32,7 @@ abstract class BaseActivity : AppCompatActivity() {
         findViewById(R.id.tool_bar)?.visibility = View.GONE
     }
 
-    private fun setupToolbar() {
+    internal fun setupToolbar() {
         mToolbar = findViewById(R.id.tool_bar) as Toolbar?
         setSupportActionBar(mToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

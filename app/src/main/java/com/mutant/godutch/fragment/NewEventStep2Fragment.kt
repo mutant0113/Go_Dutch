@@ -109,8 +109,7 @@ class NewEventStep2Fragment : Fragment() {
 
     private fun setupFriendsShared() {
         linearLayout_friends_who_shared.setOnClickListener({ startActivity(Intent(activity, SharedActivity::class.java)) })
-
-        recycler_view_friends_shared.layoutManager = GridLayoutManager(mActivity, 2) as RecyclerView.LayoutManager?
+        recycler_view_friends_shared.layoutManager = GridLayoutManager(mActivity, 2)
     }
 
     private fun setupFireBase() {

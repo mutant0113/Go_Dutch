@@ -51,30 +51,43 @@ class NewEventActivity : BaseActivity() {
     override fun setup() {
         setupBundle()
         setupFragments()
+        setupMenu()
     }
 
-    fun setupBundle() {
+    private fun setupMenu() {
+        setupToolbar()
+        mToolbar?.inflateMenu(R.menu.menu_next)
+        mToolbar?.setOnMenuItemClickListener { item ->
+            when(item?.itemId) {
+                R.id.action_next -> nextStep()
+                R.id.action_done -> mNewEventStep2Fragment.createNewEvent()
+            }
+            true
+        }
+    }
+
+    private fun setupBundle() {
         mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
         mGroupName = intent.getStringExtra(EventsActivity.BUNDLE_KEY_GROUP_NAME)
     }
 
-    fun setupFragments() {
+    private fun setupFragments() {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.linearLayout_container, mNewEventStep1Fragment)
+        ft.replace(R.id.coordinatorLayout_container, mNewEventStep1Fragment)
         ft.commit()
     }
 
-    fun nextStep() {
+    private fun nextStep() {
         val ft = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
-        ft.replace(R.id.linearLayout_container, mNewEventStep2Fragment)
+        ft.replace(R.id.coordinatorLayout_container, mNewEventStep2Fragment)
         ft.commit()
     }
 
     fun preStep() {
         val ft = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
-        ft.replace(R.id.linearLayout_container, mNewEventStep1Fragment)
+        ft.replace(R.id.coordinatorLayout_container, mNewEventStep1Fragment)
         ft.commit()
     }
 

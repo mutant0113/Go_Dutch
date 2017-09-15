@@ -42,7 +42,6 @@ class NewEventStep1Fragment : Fragment(), EventTypeWidget.Companion.OnSelectionC
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupPhotoOnClickListener(view)
-        setupFabNextStep()
         setupEventTypeWidget()
     }
 
@@ -76,13 +75,6 @@ class NewEventStep1Fragment : Fragment(), EventTypeWidget.Companion.OnSelectionC
             val imageBitmap = extras?.get("data") as Bitmap
             imageView_photo.setImageBitmap(imageBitmap)
             mActivity.isTakePhoto = true
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    fun setupFabNextStep() {
-        fab_next_step.setOnClickListener {
-            mActivity.nextStep()
         }
     }
 

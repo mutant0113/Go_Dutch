@@ -41,13 +41,11 @@ class NewGroupActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.menu_new_group, menu)//将toolbar中的菜单添加上来
+        menuInflater.inflate(R.menu.menu_new_group, menu)
         return true
     }
 
     override fun setup() {
-        title = ""
-//        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         setupMenu()
         setupFireBase()
     }
