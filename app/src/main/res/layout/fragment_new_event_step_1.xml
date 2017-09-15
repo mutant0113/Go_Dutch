@@ -8,6 +8,16 @@
     android:fitsSystemWindows="true"
     tools:context="com.mutant.godutch.NewEventActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_next_step"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:elevation="6dp"
+        android:src="@drawable/ic_arrow_forward_white_24dp"
+        app:pressedTranslationZ="12dp" />
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
@@ -58,34 +68,10 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/editText_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="詳細敘述">
-
-                    </android.support.v7.widget.AppCompatEditText>
-
-                </android.support.design.widget.TextInputLayout>
-
             </LinearLayout>
 
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_next_step"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:elevation="6dp"
-        android:src="@drawable/ic_arrow_forward_white_24dp"
-        app:pressedTranslationZ="12dp" />
 
 </android.support.design.widget.CoordinatorLayout>

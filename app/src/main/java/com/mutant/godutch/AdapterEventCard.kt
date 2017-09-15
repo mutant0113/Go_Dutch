@@ -37,7 +37,6 @@ class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var
         setupFabType(holder, event)
         holder.mTextViewTitle.text = event.title
         holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(event.timestampCreated)
-        holder.mTextViewDescription.text = event.description
         // TODO 轉換幣別
         holder.mTextViewTotal.text = "TWD $" + event.subtotal
         holder.mRecycleViewFriendsShared.adapter = RecycleViewAdapterFriendsShared(activity, event.friendsShared)

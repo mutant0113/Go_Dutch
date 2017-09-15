@@ -16,7 +16,6 @@ class Event : Parcelable {
     var photoUrl: String = ""
     var type: TYPE = TYPE.FOOD
     var title: String = ""
-    var description: String = ""
     var subtotal: Int = 0
     var tax: Int = 0
     var total: Int = 0
@@ -30,12 +29,11 @@ class Event : Parcelable {
 
     constructor()
 
-    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int,
-                tax: Int, total: Int, exchangeRate: ExchangeRate, friendsShared: List<Friend>, friendPaid: Friend) {
+    constructor(photoUrl: String, type: TYPE, title: String, subtotal: Int, tax: Int, total: Int,
+                exchangeRate: ExchangeRate, friendsShared: List<Friend>, friendPaid: Friend) {
         this.photoUrl = photoUrl
         this.type = type
         this.title = title
-        this.description = description
         this.subtotal = subtotal
         this.tax = tax
         this.total = total
@@ -45,13 +43,12 @@ class Event : Parcelable {
         this.timestamp.put("timestamp", ServerValue.TIMESTAMP)
     }
 
-    constructor(photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int,
-                tax: Int, total: Int, exchangeRate: ExchangeRate, friendsShared: ArrayList<Friend>, friendPaid: Friend,
+    constructor(photoUrl: String, type: TYPE, title: String, subtotal: Int, tax: Int, total: Int,
+                exchangeRate: ExchangeRate, friendsShared: ArrayList<Friend>, friendPaid: Friend,
                 timestamp: HashMap<String, Any>) {
         this.photoUrl = photoUrl
         this.type = type
         this.title = title
-        this.description = description
         this.subtotal = subtotal
         this.tax = tax
         this.total = total
@@ -61,14 +58,15 @@ class Event : Parcelable {
         this.timestamp = timestamp
     }
 
-    constructor(key: String, photoUrl: String, type: TYPE, title: String, description: String, subtotal: Int,
+    constructor(key: String, photoUrl: String, type: TYPE, title: String, subtotal: Int,
                 tax: Int, total: Int, exchangeRate: ExchangeRate, friendsShared: ArrayList<Friend>, friendPaid: Friend, timestamp: HashMap<String, Any>)
-            : this(photoUrl, type, title, description, subtotal, tax, total, exchangeRate, friendsShared, friendPaid, timestamp) {
+            : this(photoUrl, type, title, subtotal, tax, total, exchangeRate, friendsShared, friendPaid, timestamp) {
         this.key = key
     }
 
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<Event> = object : Parcelable.Creator<Event> {
+        @JvmField
+        val CREATOR: Parcelable.Creator<Event> = object : Parcelable.Creator<Event> {
             override fun createFromParcel(source: Parcel): Event = Event(source)
             override fun newArray(size: Int): Array<Event?> = arrayOfNulls(size)
         }
@@ -78,7 +76,6 @@ class Event : Parcelable {
             source.readString(),
             source.readString(),
             source.readSerializable() as TYPE,
-            source.readString(),
             source.readString(),
             source.readInt(),
             source.readInt(),
@@ -96,7 +93,6 @@ class Event : Parcelable {
         dest.writeString(photoUrl)
         dest.writeSerializable(type)
         dest.writeString(title)
-        dest.writeString(description)
         dest.writeInt(subtotal)
         dest.writeInt(tax)
         dest.writeInt(total)

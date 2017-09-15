@@ -99,7 +99,6 @@ class EventDetailActivity : BaseActivity() {
                 Glide.with(context).load(mEvent.photoUrl).error(R.drawable.food_default_640).into(rootView.imageView_photo)
             }
             rootView.textView_date.text = Utility.getRelativeTimeSpanDate(mEvent.timestampCreated)
-            rootView.textView_description.text = mEvent.description
             val exchangeRate = mEvent.exchangeRate
             // TODO use setting country
             if(exchangeRate?.jsonKey.equals("TWD")) {

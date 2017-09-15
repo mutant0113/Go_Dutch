@@ -16,7 +16,6 @@ class ViewHolderEventCard(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var mFabType: FloatingActionButton = itemView.fab_event_type
     var mTextViewTitle: AppCompatTextView = itemView.textView_title
     var mTextViewDate: AppCompatTextView = itemView.textView_date
-    var mTextViewDescription: AppCompatTextView = itemView.textView_description
     var mTextViewTotal: AppCompatTextView = itemView.textView_total
     var mRecycleViewFriendsShared: RecyclerView = itemView.recycler_view_friends_shared
 }
