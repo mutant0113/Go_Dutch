@@ -8,9 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.mutant.godutch.NewEventActivity
 import com.mutant.godutch.NewGroupActivity
 import com.mutant.godutch.R
@@ -28,7 +26,13 @@ class NewEventStep1Fragment : Fragment(), EventTypeWidget.Companion.OnSelectionC
     lateinit var mActivity: NewEventActivity
     lateinit var rootView: View
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_next, menu)
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         mActivity = (activity as NewEventActivity)
         rootView = inflater!!.inflate(R.layout.fragment_new_event_step_1, container, false)
         return rootView

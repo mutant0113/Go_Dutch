@@ -78,7 +78,7 @@ class GroupsFragment : Fragment() {
                 var group = dataSnapshot.getValue(Group::class.java)
                 group.key = groupsKey
                 mAdapterGroup?.addItem(group)
-//                recycler_view_groups.scrollToPosition(0)
+                recycler_view_groups.scrollToPosition(0)
             }
 
             override fun onCancelled(p0: DatabaseError?) {

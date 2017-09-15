@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_next"
+        android:icon="@drawable/ic_arrow_forward_white_24dp"
+        android:orderInCategory="200"
+        android:title="next"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
+import android.view.MenuItem
 import com.mutant.godutch.fragment.NewEventStep1Fragment
 import com.mutant.godutch.fragment.NewEventStep2Fragment
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
@@ -36,6 +37,15 @@ class NewEventActivity : BaseActivity() {
 
     override val layoutId: Int
         get() = R.layout.activity_new_event
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.action_next -> nextStep()
+            R.id.action_done -> mNewEventStep2Fragment.createNewEvent()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun setup() {

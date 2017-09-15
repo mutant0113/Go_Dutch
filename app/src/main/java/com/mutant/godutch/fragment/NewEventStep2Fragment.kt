@@ -18,9 +18,7 @@ import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.crashlytics.android.Crashlytics
@@ -70,12 +68,18 @@ class NewEventStep2Fragment : Fragment() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_done, menu)
+    }
+
     fun changeExchangeRate(exchangeRate: ExchangeRate) {
         button_currency.text = exchangeRate?.country
         mExchangeRate = exchangeRate
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         mActivity = (activity as NewEventActivity)
         mAdapterFriendsShared = RecycleViewAdapterFriendsShared(activity, 0, arrayListOf())
         return inflater!!.inflate(R.layout.fragment_new_event_step_2, container, false)
@@ -89,7 +93,6 @@ class NewEventStep2Fragment : Fragment() {
         setupSeekbarTaxListener()
         setupSubtotalTextChangedListener()
         setupTotalTextChangedListener()
-        setupFabDone()
         setupPaidFirst()
         setupFriendsShared()
     }
@@ -195,11 +198,6 @@ class NewEventStep2Fragment : Fragment() {
 
             }
         })
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setupFabDone() {
-        fab_done.setOnClickListener { createNewEvent() }
     }
 
     fun createNewEvent() {
