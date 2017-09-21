@@ -72,7 +72,7 @@ class ExchangeRateActivity : AppCompatActivity() {
         recycler_view_exchange_rate.layoutManager = MyLayoutManager
     }
 
-    class Adapter(val activity: Activity, val exchangeRates: List<ExchangeRate>) : RecyclerView.Adapter<ViewHolderRate>() {
+    class Adapter(val activity: Activity, private val exchangeRates: List<ExchangeRate>) : RecyclerView.Adapter<ViewHolderRate>() {
 
         var selectedPos: Int = 0
 
@@ -91,18 +91,12 @@ class ExchangeRateActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolderRate {
             val view = LayoutInflater.from(activity).inflate(R.layout.list_item_exchange_rate, parent, false)
-            val holder = ViewHolderRate(view)
-            return holder
+            return ViewHolderRate(view)
         }
 
-        override fun getItemCount(): Int {
-            return exchangeRates.size
-        }
+        override fun getItemCount() = exchangeRates.size
 
-        fun getSelectedItem(): ExchangeRate {
-            return exchangeRates[selectedPos]
-        }
-
+        fun getSelectedItem() = exchangeRates[selectedPos]
     }
 
     class ViewHolderRate(itemView: View) : RecyclerView.ViewHolder(itemView) {

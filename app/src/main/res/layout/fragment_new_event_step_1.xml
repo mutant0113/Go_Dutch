@@ -89,41 +89,17 @@
                     android:tag="0"
                     android:text="0%" />
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/button_tax_5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/space_between_content_areas"
-                    android:layout_marginStart="@dimen/space_between_content_areas"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_button"
-                    android:onClick="onTaxButtonClicked"
-                    android:tag="5"
-                    android:text="5%" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/button_tax_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/space_between_content_areas"
-                    android:layout_marginStart="@dimen/space_between_content_areas"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button"
                     android:onClick="onTaxButtonClicked"
                     android:tag="10"
                     android:text="10%" />
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/button_tax_15"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/space_between_content_areas"
-                    android:layout_marginStart="@dimen/space_between_content_areas"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_button"
-                    android:onClick="onTaxButtonClicked"
-                    android:tag="15"
-                    android:text="15%" />
 
             </android.support.v7.widget.LinearLayoutCompat>
 
