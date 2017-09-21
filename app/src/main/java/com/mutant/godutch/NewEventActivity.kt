@@ -5,10 +5,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.view.MenuItem
+import android.view.View
 import com.mutant.godutch.fragment.NewEventStep1Fragment
 import com.mutant.godutch.fragment.NewEventStep2Fragment
+import com.mutant.godutch.fragment.NewEventStep3Fragment
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
-
 
 class NewEventActivity : BaseActivity() {
 
@@ -19,6 +20,7 @@ class NewEventActivity : BaseActivity() {
 
     val mNewEventStep1Fragment = NewEventStep1Fragment()
     val mNewEventStep2Fragment = NewEventStep2Fragment()
+    val mNewEventStep3Fragment = NewEventStep3Fragment()
 
     companion object {
 
@@ -77,6 +79,12 @@ class NewEventActivity : BaseActivity() {
         ft.commit()
     }
 
+//    private fun setupFragments() {
+//        val ft = supportFragmentManager.beginTransaction()
+//        ft.replace(R.id.coordinatorLayout_container, mNewEventStep3Fragment)
+//        ft.commit()
+//    }
+
     private fun nextStep() {
         val ft = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -87,8 +95,12 @@ class NewEventActivity : BaseActivity() {
     fun preStep() {
         val ft = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
-        ft.replace(R.id.coordinatorLayout_container, mNewEventStep1Fragment)
+        ft.replace(R.id.coordinatorLayout_container, mNewEventStep3Fragment)
         ft.commit()
+    }
+
+    fun onTaxButtonClicked(view: View) {
+        mNewEventStep1Fragment.onTaxButtonClicked(view)
     }
 
 }

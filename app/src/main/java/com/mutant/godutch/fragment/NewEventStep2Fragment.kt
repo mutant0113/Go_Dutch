@@ -1,7 +1,6 @@
 package com.mutant.godutch.fragment
 
 import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -9,17 +8,17 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.*
-import android.widget.*
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.tasks.OnFailureListener
@@ -27,16 +26,15 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.storage.UploadTask
 import com.mutant.godutch.*
 import com.mutant.godutch.NewEventActivity.Companion.REQUEST_CODE_EXCHANGE_RATE
 import com.mutant.godutch.R
 import com.mutant.godutch.model.Event
-import com.mutant.godutch.model.ExchangeRate
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.NotificationHelper
 import com.mutant.godutch.utils.Utility
 import kotlinx.android.synthetic.main.card_view_item_friend.view.*
+import kotlinx.android.synthetic.main.fragment_new_event_step_1.*
 import kotlinx.android.synthetic.main.fragment_new_event_step_2.*
 import java.util.*
 
@@ -48,34 +46,12 @@ class NewEventStep2Fragment : Fragment() {
 
     lateinit var mActivity: NewEventActivity
     lateinit var mAdapterFriendsShared: RecycleViewAdapterFriendsShared
-    internal var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    internal var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
-    var mExchangeRate: ExchangeRate
-
-    init {
-        // TODO depend on country
-        val jsonKey = "TWD"
-        val rate: Double = 1.0
-        val lastUpdated = ""
-        val country = "新台幣"
-        mExchangeRate = ExchangeRate(jsonKey, rate, lastUpdated, country)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_EXCHANGE_RATE && resultCode == Activity.RESULT_OK) {
-            changeExchangeRate(data?.getParcelableExtra(NewEventActivity.BUNDLE_KEY_EXCHANGE_RATE))
-        }
-    }
+    private var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_done, menu)
-    }
-
-    fun changeExchangeRate(exchangeRate: ExchangeRate) {
-        button_currency.text = exchangeRate?.country
-        mExchangeRate = exchangeRate
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -90,9 +66,6 @@ class NewEventStep2Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupFireBase()
         setupCurrencyListener()
-        setupSeekbarTaxListener()
-        setupSubtotalTextChangedListener()
-        setupTotalTextChangedListener()
         setupPaidFirst()
         setupFriendsShared()
     }
@@ -133,80 +106,14 @@ class NewEventStep2Fragment : Fragment() {
         }
     }
 
-    private fun setupSeekbarTaxListener() {
-        seekBar_tax.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val subtotalText = editText_subtotal.text.toString()
-                if (!TextUtils.isEmpty(subtotalText)) {
-//                    val subtotal = Integer.valueOf(subtotalText)!!
-//                    val tax = Math.round(subtotal * (progress.toDouble() / 100))
-//                    editText_tax.setText(tax.toString())
-//                    editText_total.setText((subtotal + tax).toString())
-                    editText_tax.setText((progress * 5).toString() + "%")
-                    val subtotal = Integer.valueOf(subtotalText)!!
-                    val tax = (subtotal * seekBar_tax.progress * 0.05).toInt()
-                    editText_total.setText((subtotal + tax).toString())
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-
-        })
-    }
-
-    private fun setupSubtotalTextChangedListener() {
-        editText_subtotal.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                seekBar_tax.progress = 0
-            }
-
-            override fun afterTextChanged(s: Editable) {
-
-            }
-        })
-    }
-
-    private fun setupTotalTextChangedListener() {
-        editText_total.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                try {
-                    mAdapterFriendsShared?.modifyTotal(if (TextUtils.isEmpty(s)) 0 else Integer.parseInt(s.toString()))
-                } catch (e: NumberFormatException) {
-                    try {
-                        Crashlytics.logException(e)
-                    } catch (ie: IllegalThreadStateException) {
-                        ie.printStackTrace()
-                    }
-                }
-            }
-
-            override fun afterTextChanged(s: Editable) {
-
-            }
-        })
-    }
-
     fun createNewEvent() {
         if (mActivity.isTakePhoto) {
-            val bitmap = ((mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.imageView_photo) as ImageView).drawable as BitmapDrawable).bitmap
+            val bitmap = ((mActivity.mNewEventStep3Fragment.rootView.findViewById(R.id.imageView_photo) as ImageView).drawable as BitmapDrawable).bitmap
             val filePath = mFirebaseUser!!.uid + "/" + System.currentTimeMillis() + ".png"
             Utility.uploadImage(filePath, bitmap, OnFailureListener { exception ->
                 exception.printStackTrace()
                 Toast.makeText(mActivity, R.string.upload_image_failed, Toast.LENGTH_LONG).show()
-            }, OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
+            }, OnSuccessListener { taskSnapshot ->
                 Toast.makeText(mActivity, R.string.upload_image_successfully, Toast.LENGTH_LONG).show()
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 createNewEvent(taskSnapshot?.downloadUrl)
@@ -216,15 +123,15 @@ class NewEventStep2Fragment : Fragment() {
         }
     }
 
-    fun createNewEvent(imageDownloadUrl: Uri?) {
-        val title = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_title) as TextView).text.toString()
+    private fun createNewEvent(imageDownloadUrl: Uri?) {
+        val title = (mActivity.mNewEventStep3Fragment.rootView.findViewById(R.id.editText_title) as TextView).text.toString()
         val subtotal = Integer.parseInt(editText_subtotal.text.toString())
-        val tax = (seekBar_tax.progress * 0.05).toInt()
-        val total = Integer.parseInt(editText_total.text.toString())
+        val tax = mActivity.mNewEventStep1Fragment.mTax
+        val total = mActivity.mNewEventStep1Fragment.mTotal
         val friendsShared = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriendsShared).friendsFilterBySelected
         val friendPaid = mAdapterFriendsShared?.friendPaid
         val event = Event(imageDownloadUrl?.toString() ?: "", mActivity.mType, title, subtotal, tax,
-                total, mExchangeRate, friendsShared, friendPaid)
+                total, mActivity.mNewEventStep1Fragment.mExchangeRate, friendsShared, friendPaid)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroupId).push()
         databaseReference.setValue(event).addOnSuccessListener {
             val notiyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroupName)
