@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <item
         android:id="@+id/action_take_a_photo"
         android:icon="@drawable/ic_camera_enhance_white_24dp"
@@ -9,9 +10,9 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_done"
-        android:icon="@drawable/ic_done_white_24dp"
+        android:id="@+id/action_next"
+        android:icon="@drawable/ic_arrow_forward_white_24dp"
         android:orderInCategory="200"
-        android:title="done"
-        app:showAsAction="ifRoom"></item>
+        android:title="next"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -118,12 +118,12 @@ class EventsActivity : BaseActivity() {
 
     private fun setupEventsList() {
         mAdapterEventList = AdapterEventList(this@EventsActivity, ArrayList<Event>(), mGroupId, mGroupName, mDatabaseEvents)
-        val MyLayoutManager = LinearLayoutManager(this)
-        MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        val myLayoutManager = LinearLayoutManager(this)
+        myLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        recycler_view_event_list.layoutManager = myLayoutManager
         recycler_view_event_list.adapter = mAdapterEventList
-        val dividerItemDecoration = DividerItemDecoration(this@EventsActivity, MyLayoutManager.orientation)
+        val dividerItemDecoration = DividerItemDecoration(this@EventsActivity, myLayoutManager.orientation)
         recycler_view_event_list.addItemDecoration(dividerItemDecoration)
-        recycler_view_event_list.layoutManager = MyLayoutManager
     }
 
     private fun setupFabNewEvent() {
