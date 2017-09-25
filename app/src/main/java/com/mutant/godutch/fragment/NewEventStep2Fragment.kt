@@ -11,8 +11,8 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.*
+import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -26,7 +26,6 @@ import com.mutant.godutch.model.ExchangeRate
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.NotificationHelper
 import com.mutant.godutch.utils.Utility
-import kotlinx.android.synthetic.main.fragment_new_event_step_1.*
 import kotlinx.android.synthetic.main.fragment_new_event_step_2.*
 import java.util.*
 
@@ -129,8 +128,8 @@ class NewEventStep2Fragment : Fragment() {
     }
 
     private fun createNewEvent(imageDownloadUrl: Uri?) {
-        val title = (mActivity.mNewEventStep3Fragment.rootView.findViewById(R.id.editText_title) as TextView).text.toString()
-        val subtotal = Integer.parseInt(editText_subtotal.text.toString())
+        val title = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_title) as EditText).text.toString()
+        val subtotal = Integer.parseInt((mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_subtotal) as EditText).text.toString())
         val tax = mActivity.mNewEventStep1Fragment.mTax
         val friendsShared = (recycler_view_shared.adapter as AdapterPaidCheck).getFriends()
         val friendPaid = (recycler_view_paid.adapter as AdapterPaidCheck).getFriends()
