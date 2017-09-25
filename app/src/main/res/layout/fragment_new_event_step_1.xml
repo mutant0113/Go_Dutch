@@ -55,7 +55,7 @@
                         android:id="@+id/editText_subtotal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="服務費"
+                        android:hint="小計"
                         android:inputType="numberDecimal">
 
                     </android.support.v7.widget.AppCompatEditText>
@@ -73,6 +73,11 @@
                     android:text="新台幣" />
 
             </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="服務費:" />
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
