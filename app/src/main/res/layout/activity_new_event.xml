@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tool"
-    android:id="@+id/coordinatorLayout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="com.mutant.godutch.NewEventActivity">
 
-</android.support.design.widget.CoordinatorLayout>
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar" />
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/linearLayout_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/tool_bar"
+        app:layout_constraintRight_toRightOf="@+id/tool_bar"
+        app:layout_constraintTop_toBottomOf="@+id/tool_bar" />
+
+
+</android.support.constraint.ConstraintLayout>

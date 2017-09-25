@@ -9,12 +9,14 @@ import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import com.mutant.godutch.ExchangeRateActivity
 import com.mutant.godutch.NewEventActivity
 import com.mutant.godutch.R
 import com.mutant.godutch.model.ExchangeRate
 import kotlinx.android.synthetic.main.fragment_new_event_step_1.*
 import java.text.DecimalFormat
+
 
 /**
  * Created by evanfang102 on 2017/9/20.
@@ -45,14 +47,28 @@ class NewEventStep1Fragment : Fragment() {
         setHasOptionsMenu(true)
         mActivity = (activity as NewEventActivity)
         rootView = inflater!!.inflate(R.layout.fragment_new_event_step_1, container, false)
-        mActivity.setupToolbar(rootView)
+//        mActivity.setupToolbar(rootView)
         return rootView
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mActivity.mToolbar?.title = "[${mActivity.mGroupName}]輸入帳目"
 
+        showKeyboard()
+        updateUiBySubTotal()
+        selectCurrency()
+    }
+
+    private fun selectCurrency() {
+        button_currency.setOnClickListener({
+            startActivityForResult(Intent(activity, ExchangeRateActivity::class.java),
+                    NewEventActivity.REQUEST_CODE_EXCHANGE_RATE)
+        })
+    }
+
+    private fun updateUiBySubTotal() {
         editText_subtotal.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -61,17 +77,17 @@ class NewEventStep1Fragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(mTax == -1) run {
+                if (mTax == -1) run {
                     button_tax_0.isSelected = true
                 }
                 updateTotal()
             }
         })
+    }
 
-        button_currency.setOnClickListener({
-            startActivityForResult(Intent(activity, ExchangeRateActivity::class.java),
-                    NewEventActivity.REQUEST_CODE_EXCHANGE_RATE)
-        })
+    private fun showKeyboard() {
+        val imm = mActivity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editText_subtotal, InputMethodManager.SHOW_IMPLICIT)
     }
 
     fun onTaxButtonClicked(view: View) {

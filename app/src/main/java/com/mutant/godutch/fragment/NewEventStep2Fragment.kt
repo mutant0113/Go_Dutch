@@ -1,6 +1,7 @@
 package com.mutant.godutch.fragment
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -41,6 +42,11 @@ class NewEventStep2Fragment : Fragment() {
     var mTotal: Int = 0
     lateinit var mExchangeRate: ExchangeRate
 
+    companion object {
+        val REQUEST_PAID_FIRST = 1
+        val REQUEST_SHARED = 2
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_done, menu)
@@ -57,22 +63,23 @@ class NewEventStep2Fragment : Fragment() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mActivity.mToolbar?.title = "[${mActivity.mGroupName}]分攤花費"
+
         setupFireBase()
         val me = mActivity.me
         me.debt = mTotal
         setupPaidFirst(arrayListOf(me))
-        setupFriendsShared()
+        setupShared()
     }
 
     // 先假設都是自己付錢
     private fun setupPaidFirst(friends: ArrayList<Friend>) {
-        linearLayout_paid.setOnClickListener { startActivity(Intent(activity, PaidFirstActivity::class.java)) }
+        linearLayout_paid.setOnClickListener { startActivityForResult(PaidFirstActivity.getIntent(activity, mTotal, mExchangeRate, friends), REQUEST_PAID_FIRST) }
         recycler_view_paid.layoutManager = LinearLayoutManager(mActivity)
         recycler_view_paid.adapter = AdapterPaidCheck(mActivity, friends, mExchangeRate, null)
     }
 
-    private fun setupFriendsShared() {
-        linearLayout_friends_who_shared.setOnClickListener { startActivity(Intent(activity, SharedActivity::class.java)) }
+    private fun setupShared() {
         recycler_view_shared.layoutManager = LinearLayoutManager(mActivity)
     }
 
@@ -93,6 +100,8 @@ class NewEventStep2Fragment : Fragment() {
                         friend.debt = debtAverage
                     }
 
+                    // TODO not good design, should consider no network situation
+                    linearLayout_friends_who_shared.setOnClickListener { startActivityForResult(SharedActivity.getIntent(activity, mTotal, mExchangeRate, friends), REQUEST_SHARED) }
                     val adapterFriendsShared = AdapterPaidCheck(mActivity, friends, mExchangeRate, null)
                     recycler_view_shared.adapter = adapterFriendsShared
                 }
@@ -153,6 +162,17 @@ class NewEventStep2Fragment : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_PAID_FIRST) {
+                // TODO
+            } else if (requestCode == REQUEST_SHARED) {
+                // TODO
+            }
+        }
     }
 
 }
