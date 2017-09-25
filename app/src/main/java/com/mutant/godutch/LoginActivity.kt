@@ -32,7 +32,7 @@ import java.util.*
 class LoginActivity : AppCompatActivity() {
 
     companion object {
-        val TAG = LoginActivity::class.java.simpleName
+        val TAG = LoginActivity::class.java.simpleName!!
     }
 
     private var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -52,11 +52,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupGoogleSignIn() {
         // Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).
-                requestEmail().build()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build()
         // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
         mGoogleApiClient = GoogleApiClient.Builder(this).enableAutoManage(this, {}).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build()
-        findViewById(R.id.sign_in_button_google).setOnClickListener {
+        sign_in_button_google.setOnClickListener {
             val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }

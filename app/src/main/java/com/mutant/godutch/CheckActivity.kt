@@ -81,10 +81,10 @@ class CheckActivity : BaseActivity() {
             }
         }
 
-        recycler_view_friend_paid.adapter = AdapterPaidCheck(this, friendsShared, mEvents[0].exchangeRate, null)
-        recycler_view_friend_paid.layoutManager = LinearLayoutManager(this)
-        recycler_view_friends_shared.adapter = AdapterPaidCheck(this, friendsShared, mEvents[0].exchangeRate, null)
-        recycler_view_friends_shared.layoutManager = LinearLayoutManager(this)
+        recycler_view_paid.adapter = AdapterPaidCheck(this, friendsShared, mEvents[0].exchangeRate, null)
+        recycler_view_paid.layoutManager = LinearLayoutManager(this)
+        recycler_view_shared.adapter = AdapterPaidCheck(this, friendsShared, mEvents[0].exchangeRate, null)
+        recycler_view_shared.layoutManager = LinearLayoutManager(this)
     }
 
 }

@@ -18,7 +18,8 @@ import com.mutant.godutch.model.Friend
  * Created by evanfang102 on 2017/7/26.
  */
 
-class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>, val exchangeRate: ExchangeRate?, var database: DatabaseReference?) :
+class AdapterPaidCheck(var activity: Activity, private var friends: List<Friend>,
+                       private val exchangeRate: ExchangeRate?, var database: DatabaseReference?) :
         RecyclerView.Adapter<ViewHolderPaidCheck>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPaidCheck {
@@ -31,17 +32,7 @@ class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>, val ex
         val friend = friends[position]
         setupProPic(holder, friend.photoUrl)
         holder.mTextViewName.text = friend.name
-        holder.mButtonPaidCheck.text = Math.abs(friend.debt).toString()
-        var isClickPaidCheck = false
-        holder.mButtonPaidCheck.setOnClickListener {
-            isClickPaidCheck = !isClickPaidCheck
-            if(isClickPaidCheck) {
-                val afterExchange = Math.round(Math.abs(friend.debt) * exchangeRate?.rate!!)
-                holder.mButtonPaidCheck.text = afterExchange.toString()
-            } else {
-                holder.mButtonPaidCheck.text = Math.abs(friend.debt).toString()
-            }
-        }
+        holder.mTextViewPaidCheck.text = Math.abs(friend.debt).toString()
 
         if(database == null) {
             holder.mButtonRemind.visibility = View.GONE
@@ -51,7 +42,7 @@ class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>, val ex
         // TODO send notification
         holder.mButtonRemind.setOnClickListener { }
         holder.mButtonSettleUp.setOnClickListener {
-            holder.mButtonPaidCheck.text = Math.abs(friend.debt).toString()
+            holder.mTextViewPaidCheck.text = Math.abs(friend.debt).toString()
             // TODO database
             // TODO send notification
             // TODO friend paid check add
@@ -68,6 +59,10 @@ class AdapterPaidCheck(var activity: Activity, var friends: List<Friend>, val ex
 
     override fun getItemCount(): Int {
         return friends.size
+    }
+
+    fun getFriends() : List<Friend> {
+        return friends
     }
 
 }

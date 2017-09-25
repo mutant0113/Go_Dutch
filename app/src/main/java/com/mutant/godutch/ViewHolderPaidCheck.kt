@@ -15,7 +15,7 @@ class ViewHolderPaidCheck(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var mImageViewPhoto: AppCompatImageView = itemView.imageView_photo_url
     var mTextViewName: AppCompatTextView = itemView.textView_name
-    var mButtonPaidCheck: AppCompatButton = itemView.button_paid_check
+    var mTextViewPaidCheck: AppCompatTextView = itemView.textView_paid_check
     var mButtonRemind: AppCompatButton = itemView.button_remind
     var mButtonSettleUp: AppCompatButton = itemView.button_settle_up
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tool"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,13 +9,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/screen_edge_left_and_right_padding"
-        android:paddingRight="@dimen/screen_edge_left_and_right_padding">
+        android:orientation="vertical">
 
         <android.support.v7.widget.LinearLayoutCompat
-            android:id="@+id/linearLayout_friend_who_paid_first"
+            android:id="@+id/linearLayout_paid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView_total"
@@ -31,16 +27,18 @@
                 android:text="@string/friend_paid" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_friend_paid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:id="@+id/recycler_view_paid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_between_content_areas" />
         </android.support.v7.widget.LinearLayoutCompat>
 
         <android.support.v7.widget.LinearLayoutCompat
             android:id="@+id/linearLayout_friends_who_shared"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout_friend_who_paid_first"
+            android:layout_below="@+id/linearLayout_paid"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
             <android.support.v7.widget.AppCompatTextView
@@ -51,9 +49,10 @@
                 android:text="@string/friends_shared" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_friends_shared"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:id="@+id/recycler_view_shared"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_between_content_areas" />
         </android.support.v7.widget.LinearLayoutCompat>
 
     </LinearLayout>

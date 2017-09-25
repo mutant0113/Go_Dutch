@@ -78,8 +78,8 @@ class FriendsFragment : Fragment() {
         val MyLayoutManager = LinearLayoutManager(activity)
         MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
         mAdapterFriend = AdapterFriend(activity, ArrayList<Friend>())
-        recycler_view_friends_shared.adapter = mAdapterFriend
-        recycler_view_friends_shared.layoutManager = MyLayoutManager
+        recycler_view_shared.adapter = mAdapterFriend
+        recycler_view_shared.layoutManager = MyLayoutManager
     }
 
     private fun setupFirebase() {
@@ -88,7 +88,7 @@ class FriendsFragment : Fragment() {
         mDatabaseFriend!!.orderByKey().addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 mAdapterFriend!!.addItem(dataSnapshot.getValue(Friend::class.java))
-                recycler_view_friends_shared.scrollToPosition(0)
+                recycler_view_shared.scrollToPosition(0)
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {

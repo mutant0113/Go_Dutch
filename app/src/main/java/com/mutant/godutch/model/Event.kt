@@ -6,6 +6,7 @@ import com.firebase.client.ServerValue
 import com.google.firebase.database.Exclude
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
 
+@Suppress("UNCHECKED_CAST")
 /**
  * Created by evanfang102 on 2017/5/26.
  */
@@ -21,7 +22,7 @@ class Event : Parcelable {
     var total: Int = 0
     var exchangeRate: ExchangeRate? = null
     var friendsShared: List<Friend> = arrayListOf()
-    var friendPaid: Friend = Friend() // TODO maybe multi people shared
+    var friendPaid: List<Friend> = arrayListOf()
     var timestamp: HashMap<String, Any> = hashMapOf()
     var timestampCreated: Long = 0
         @Exclude
@@ -30,7 +31,7 @@ class Event : Parcelable {
     constructor()
 
     constructor(photoUrl: String, type: TYPE, title: String, subtotal: Int, tax: Int, total: Int,
-                exchangeRate: ExchangeRate, friendsShared: List<Friend>, friendPaid: Friend) {
+                exchangeRate: ExchangeRate, friendPaid: List<Friend>, friendsShared: List<Friend>) {
         this.photoUrl = photoUrl
         this.type = type
         this.title = title
@@ -38,13 +39,13 @@ class Event : Parcelable {
         this.tax = tax
         this.total = total
         this.exchangeRate = exchangeRate
-        this.friendsShared = friendsShared
         this.friendPaid = friendPaid
+        this.friendsShared = friendsShared
         this.timestamp.put("timestamp", ServerValue.TIMESTAMP)
     }
 
     constructor(photoUrl: String, type: TYPE, title: String, subtotal: Int, tax: Int, total: Int,
-                exchangeRate: ExchangeRate, friendsShared: ArrayList<Friend>, friendPaid: Friend,
+                exchangeRate: ExchangeRate, friendPaid: List<Friend>, friendsShared: List<Friend>,
                 timestamp: HashMap<String, Any>) {
         this.photoUrl = photoUrl
         this.type = type
@@ -53,14 +54,14 @@ class Event : Parcelable {
         this.tax = tax
         this.total = total
         this.exchangeRate = exchangeRate
-        this.friendsShared = friendsShared
         this.friendPaid = friendPaid
+        this.friendsShared = friendsShared
         this.timestamp = timestamp
     }
 
     constructor(key: String, photoUrl: String, type: TYPE, title: String, subtotal: Int,
-                tax: Int, total: Int, exchangeRate: ExchangeRate, friendsShared: ArrayList<Friend>, friendPaid: Friend, timestamp: HashMap<String, Any>)
-            : this(photoUrl, type, title, subtotal, tax, total, exchangeRate, friendsShared, friendPaid, timestamp) {
+                tax: Int, total: Int, exchangeRate: ExchangeRate, friendPaid: List<Friend>, friendsShared: List<Friend>, timestamp: HashMap<String, Any>)
+            : this(photoUrl, type, title, subtotal, tax, total, exchangeRate, friendPaid, friendsShared, timestamp) {
         this.key = key
     }
 
@@ -82,7 +83,7 @@ class Event : Parcelable {
             source.readInt(),
             source.readParcelable(ExchangeRate.javaClass.classLoader),
             source.readArrayList(Friend.javaClass.classLoader) as ArrayList<Friend>,
-            source.readParcelable(Friend.javaClass.classLoader),
+            source.readArrayList(Friend.javaClass.classLoader) as ArrayList<Friend>,
             source.readSerializable() as HashMap<String, Any>
     )
 
@@ -98,7 +99,7 @@ class Event : Parcelable {
         dest.writeInt(total)
         dest.writeParcelable(exchangeRate, flags)
         dest.writeList(friendsShared)
-        dest.writeParcelable(friendPaid, flags)
+        dest.writeList(friendPaid)
         dest.writeSerializable(timestamp)
     }
 }

@@ -113,16 +113,16 @@ class EventDetailActivity : BaseActivity() {
         }
 
         private fun setupFriendsWhoPaidFirst(rootView: View) {
-            rootView.recycler_view_friend_paid.adapter = AdapterPaidCheck(activity, arrayListOf(mEvent.friendPaid), mEvent.exchangeRate, null)
-            rootView.recycler_view_friend_paid.layoutManager = LinearLayoutManager(activity)
+            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, mEvent.friendPaid, mEvent.exchangeRate, null)
+            rootView.recycler_view_paid.layoutManager = LinearLayoutManager(activity)
         }
 
         private fun setupFriendsShared(rootView: View) {
             val mDatabaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).child(mEvent.key).child("friendsShared")
             var friendsFilter: ArrayList<Friend> = arrayListOf()
             mEvent.friendsShared.filterTo(friendsFilter) { it.debt > 0 }
-            rootView.recycler_view_friends_shared.adapter = AdapterPaidCheck(activity, friendsFilter, mEvent.exchangeRate, mDatabaseEvents)
-            rootView.recycler_view_friends_shared.layoutManager = LinearLayoutManager(activity)
+            rootView.recycler_view_shared.adapter = AdapterPaidCheck(activity, friendsFilter, mEvent.exchangeRate, mDatabaseEvents)
+            rootView.recycler_view_shared.layoutManager = LinearLayoutManager(activity)
         }
 
         private var state: CollapsingToolbarLayoutState? = null

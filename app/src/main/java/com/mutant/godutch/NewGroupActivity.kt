@@ -76,8 +76,8 @@ class NewGroupActivity : BaseActivity() {
             }
 
             private fun setupRecycleView(friends: ArrayList<Friend>) {
-                recycler_view_friends_shared.layoutManager = LinearLayoutManager(this@NewGroupActivity)
-                recycler_view_friends_shared.adapter = RecycleViewAdapterFriends(this@NewGroupActivity, friends)
+                recycler_view_shared.layoutManager = LinearLayoutManager(this@NewGroupActivity)
+                recycler_view_shared.adapter = RecycleViewAdapterFriends(this@NewGroupActivity, friends)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -121,7 +121,7 @@ class NewGroupActivity : BaseActivity() {
 
     private fun createNewGroup(imageDownloadUrl: Uri?) {
         val title = editText_title.text.toString()
-        val friendsChecked = (recycler_view_friends_shared.adapter as RecycleViewAdapterFriends).mFriendsChecked
+        val friendsChecked = (recycler_view_shared.adapter as RecycleViewAdapterFriends).mFriendsChecked
         Collections.sort(friendsChecked)
         val group = Group(title, imageDownloadUrl?.toString() ?: "", 0, friendsChecked)
         if (mFirebaseUser != null) {

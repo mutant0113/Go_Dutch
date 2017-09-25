@@ -17,5 +17,5 @@ class ViewHolderEventCard(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var mTextViewTitle: AppCompatTextView = itemView.textView_title
     var mTextViewDate: AppCompatTextView = itemView.textView_date
     var mTextViewTotal: AppCompatTextView = itemView.textView_total
-    var mRecycleViewFriendsShared: RecyclerView = itemView.recycler_view_friends_shared
+    var mRecycleViewFriendsShared: RecyclerView = itemView.recycler_view_shared
 }

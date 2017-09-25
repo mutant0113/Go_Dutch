@@ -19,7 +19,7 @@
             android:layout_marginRight="@dimen/screen_edge_left_and_right_padding" />
 
         <android.support.v7.widget.LinearLayoutCompat
-            android:id="@+id/linearLayout_friend_who_paid_first"
+            android:id="@+id/linearLayout_paid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView_total"
@@ -34,7 +34,7 @@
                 android:text="@string/friend_paid" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_friend_paid"
+                android:id="@+id/recycler_view_paid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </android.support.v7.widget.LinearLayoutCompat>
@@ -43,7 +43,7 @@
             android:id="@+id/linearLayout_friends_who_shared"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout_friend_who_paid_first"
+            android:layout_below="@+id/linearLayout_paid"
             android:orientation="vertical">
 
             <android.support.v7.widget.AppCompatTextView
@@ -54,7 +54,7 @@
                 android:text="@string/friends_shared" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_friends_shared"
+                android:id="@+id/recycler_view_shared"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </android.support.v7.widget.LinearLayoutCompat>
