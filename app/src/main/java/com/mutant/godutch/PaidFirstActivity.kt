@@ -4,12 +4,15 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
-import android.support.v7.widget.LinearLayoutManager
-import android.view.Menu
-import android.view.MenuItem
+import android.support.v7.widget.*
+import android.view.*
+import android.widget.CompoundButton
+import com.bumptech.glide.Glide
 import com.mutant.godutch.model.ExchangeRate
 import com.mutant.godutch.model.Friend
 import kotlinx.android.synthetic.main.activity_paid_first.*
+import kotlinx.android.synthetic.main.list_item_friend_tick.view.*
+import java.util.*
 
 
 /**
@@ -18,21 +21,25 @@ import kotlinx.android.synthetic.main.activity_paid_first.*
  */
 class PaidFirstActivity : BaseActivity() {
 
-    var mTotal : Int = 0
-    lateinit var mExchangeRate: ExchangeRate
-    lateinit var mFriends: ArrayList<Friend>
+    private var mTotal: Double = 0.0
+    private lateinit var mExchangeRate: ExchangeRate
+    private lateinit var mFriends: ArrayList<Friend>
+    private lateinit var mFriendsPaid: ArrayList<Friend>
 
     companion object {
 
         private val BUNDLE_KEY_TOTAL = "BUNDLE_KEY_TOTAL"
         private val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
         private val BUNDLE_KEY_FRIENDS = "BUNDLE_KEY_FRIENDS"
+        private val BUNDLE_KEY_FRIENDS_PAID = "BUNDLE_KEY_FRIENDS_PAID"
 
-        fun getIntent(activity: Activity, total: Int, exchangeRate: ExchangeRate, friendsPaid: ArrayList<Friend>): Intent {
+        fun getIntent(activity: Activity, total: Double, exchangeRate: ExchangeRate, friends: ArrayList<Friend>,
+                      friendsPaid: ArrayList<Friend>): Intent {
             val intent = Intent(activity, PaidFirstActivity::class.java)
             intent.putExtra(BUNDLE_KEY_TOTAL, total)
             intent.putExtra(BUNDLE_KEY_EXCHANGE_RATE, exchangeRate)
-            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS, friendsPaid)
+            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS, friends)
+            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_PAID, friendsPaid)
             return intent
         }
     }
@@ -53,7 +60,7 @@ class PaidFirstActivity : BaseActivity() {
 
     private fun done() {
         var data = Intent()
-        data.putExtra(BUNDLE_KEY_FRIENDS, mFriends)
+        data.putExtra(BUNDLE_KEY_FRIENDS_PAID, mFriendsPaid)
         setResult(Activity.RESULT_OK)
         finish()
     }
@@ -67,14 +74,69 @@ class PaidFirstActivity : BaseActivity() {
     }
 
     private fun setupBundle() {
-        mTotal = intent.getIntExtra(BUNDLE_KEY_TOTAL, 0)
+        mTotal = intent.getDoubleExtra(BUNDLE_KEY_TOTAL, 0.0)
         mExchangeRate = intent.getParcelableExtra(BUNDLE_KEY_EXCHANGE_RATE)
         mFriends = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS)
+        mFriendsPaid = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_PAID)
     }
 
     private fun setupPaidFirst() {
         recyclerView_paid.layoutManager = LinearLayoutManager(this@PaidFirstActivity)
-        recyclerView_paid.adapter = AdapterPaidCheck(this@PaidFirstActivity, mFriends, mExchangeRate, null)
+        recyclerView_paid.adapter = AdapterFriendsTick()
+    }
+
+    inner class AdapterFriendsTick() : RecyclerView.Adapter<ViewHolder>() {
+
+        init {
+            // TODO 自己要拉到第一個
+            Collections.sort(mFriends) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
+            if(mFriends.remove(me)) {
+                mFriends.add(0, me)
+            }
+        }
+
+        override fun getItemCount(): Int = mFriends.size
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val friend = mFriends[position]
+            Glide.with(this@PaidFirstActivity).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
+            holder.mTextViewName.text = friend.name
+            holder.mEditTextDept.visibility = View.VISIBLE
+            holder.mEditTextDept.setText(if (friend.debt != 0.0) friend.debt.toString() else "")
+            holder.mCheckBox.isChecked = mFriendsPaid.contains(friend)
+
+            holder.itemView.setOnClickListener({
+                holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
+            })
+
+            holder.mCheckBox.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
+                if (isChecked) {
+                    mFriendsPaid.add(friend)
+                } else {
+                    mFriendsPaid.remove(friend)
+                }
+                evenlyShared()
+                notifyDataSetChanged()
+            }
+        }
+
+        private fun evenlyShared() {
+            val moneyShared = if (mFriendsPaid.size != 0) mTotal / mFriendsPaid.size else 0.0
+            mFriends.forEach {
+                it.debt = if (mFriendsPaid.contains(it)) moneyShared else 0.0
+            }
+        }
+    }
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
+        val mTextViewName: AppCompatTextView = itemView.textView_name
+        val mCheckBox: AppCompatCheckBox = itemView.checkBox
+        val mEditTextDept: AppCompatEditText = itemView.editText_debt
     }
 
 }

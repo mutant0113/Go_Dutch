@@ -17,9 +17,9 @@ class Event : Parcelable {
     var photoUrl: String = ""
     var type: TYPE = TYPE.FOOD
     var title: String = ""
-    var subtotal: Int = 0
-    var tax: Int = 0
-    var total: Int = 0
+    var subtotal: Double = 0.0
+    var tax: Double = 0.0
+    var total: Double = 0.0
     var exchangeRate: ExchangeRate? = null
     var friendsShared: List<Friend> = arrayListOf()
     var friendPaid: List<Friend> = arrayListOf()
@@ -30,7 +30,7 @@ class Event : Parcelable {
 
     constructor()
 
-    constructor(photoUrl: String, type: TYPE, title: String, subtotal: Int, tax: Int, total: Int,
+    constructor(photoUrl: String, type: TYPE, title: String, subtotal: Double, tax: Double, total: Double,
                 exchangeRate: ExchangeRate, friendPaid: List<Friend>, friendsShared: List<Friend>) {
         this.photoUrl = photoUrl
         this.type = type
@@ -44,7 +44,7 @@ class Event : Parcelable {
         this.timestamp.put("timestamp", ServerValue.TIMESTAMP)
     }
 
-    constructor(photoUrl: String, type: TYPE, title: String, subtotal: Int, tax: Int, total: Int,
+    constructor(photoUrl: String, type: TYPE, title: String, subtotal: Double, tax: Double, total: Double,
                 exchangeRate: ExchangeRate, friendPaid: List<Friend>, friendsShared: List<Friend>,
                 timestamp: HashMap<String, Any>) {
         this.photoUrl = photoUrl
@@ -59,8 +59,9 @@ class Event : Parcelable {
         this.timestamp = timestamp
     }
 
-    constructor(key: String, photoUrl: String, type: TYPE, title: String, subtotal: Int,
-                tax: Int, total: Int, exchangeRate: ExchangeRate, friendPaid: List<Friend>, friendsShared: List<Friend>, timestamp: HashMap<String, Any>)
+    constructor(key: String, photoUrl: String, type: TYPE, title: String, subtotal: Double,
+                tax: Double, total: Double, exchangeRate: ExchangeRate, friendPaid: List<Friend>,
+                friendsShared: List<Friend>, timestamp: HashMap<String, Any>)
             : this(photoUrl, type, title, subtotal, tax, total, exchangeRate, friendPaid, friendsShared, timestamp) {
         this.key = key
     }
@@ -78,9 +79,9 @@ class Event : Parcelable {
             source.readString(),
             source.readSerializable() as TYPE,
             source.readString(),
-            source.readInt(),
-            source.readInt(),
-            source.readInt(),
+            source.readDouble(),
+            source.readDouble(),
+            source.readDouble(),
             source.readParcelable(ExchangeRate.javaClass.classLoader),
             source.readArrayList(Friend.javaClass.classLoader) as ArrayList<Friend>,
             source.readArrayList(Friend.javaClass.classLoader) as ArrayList<Friend>,
@@ -94,9 +95,9 @@ class Event : Parcelable {
         dest.writeString(photoUrl)
         dest.writeSerializable(type)
         dest.writeString(title)
-        dest.writeInt(subtotal)
-        dest.writeInt(tax)
-        dest.writeInt(total)
+        dest.writeDouble(subtotal)
+        dest.writeDouble(tax)
+        dest.writeDouble(total)
         dest.writeParcelable(exchangeRate, flags)
         dest.writeList(friendsShared)
         dest.writeList(friendPaid)

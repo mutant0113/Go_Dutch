@@ -13,7 +13,7 @@ class Friend : Parcelable {
     var uid: String = ""
     var name: String = ""
     var photoUrl: String = ""
-    var debt: Int = 0
+    var debt: Double = 0.0
     var state: Int = STATE_ACCEPTED
         @State set
 
@@ -25,7 +25,7 @@ class Friend : Parcelable {
         this.photoUrl = photoUrl
     }
 
-    constructor(uid: String, name: String, photoUrl: String, debt: Int, @State state: Int) {
+    constructor(uid: String, name: String, photoUrl: String, debt: Double, @State state: Int) {
         this.uid = uid
         this.name = name
         this.photoUrl = photoUrl
@@ -51,7 +51,7 @@ class Friend : Parcelable {
             source.readString(),
             source.readString(),
             source.readString(),
-            source.readInt(),
+            source.readDouble(),
             source.readInt()
     )
 
@@ -61,7 +61,7 @@ class Friend : Parcelable {
         dest.writeString(uid)
         dest.writeString(name)
         dest.writeString(photoUrl)
-        dest.writeInt(debt)
+        dest.writeDouble(debt)
         dest.writeInt(state)
     }
 }

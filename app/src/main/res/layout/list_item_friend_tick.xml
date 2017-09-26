@@ -16,8 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="@dimen/space_between_content_areas"
             android:layout_marginLeft="@dimen/space_between_content_areas"
+            android:layout_marginRight="@dimen/space_between_content_areas"
             android:src="@drawable/tick" />
 
         <android.support.v7.widget.AppCompatImageView
@@ -36,15 +36,16 @@
 
     </android.support.v7.widget.LinearLayoutCompat>
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/textView_debt"
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/editText_debt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:text="xxx"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:hint="0.0"
         android:visibility="invisible" />
 
 </RelativeLayout>

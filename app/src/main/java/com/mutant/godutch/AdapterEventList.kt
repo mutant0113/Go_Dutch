@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DatabaseReference
 import com.mutant.godutch.model.Event
+import com.mutant.godutch.model.Group
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
 import java.util.*
 
@@ -20,8 +21,8 @@ import java.util.*
  * Created by evanfang102 on 2017/7/24.
  */
 
-class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var groupId: String,
-                       var groupName: String, var databaseEvents: DatabaseReference?) : RecyclerView.Adapter<ViewHolderEventList>() {
+class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var group: Group,
+                       var databaseEvents: DatabaseReference?) : RecyclerView.Adapter<ViewHolderEventList>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderEventList {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_event, parent, false)
@@ -43,7 +44,7 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
 //            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, it,
 //                    activity.resources.getString(R.string.events_image_photo))
 //            ActivityCompat.startActivity(activity, EventDetailActivity.getIntent(activity, event, position), options.toBundle())
-            activity.startActivity(EventDetailActivity.getIntent(activity, groupId, events, position))
+            activity.startActivity(EventDetailActivity.getIntent(activity, group, events, position))
         }
         holder.itemView.setOnLongClickListener {
             removeEvent(event)

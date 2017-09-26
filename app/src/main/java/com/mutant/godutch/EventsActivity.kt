@@ -10,12 +10,12 @@ import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.database.*
 import com.mutant.godutch.model.Event
+import com.mutant.godutch.model.Group
 import kotlinx.android.synthetic.main.activity_events.*
 
 class EventsActivity : BaseActivity() {
 
-    private var mGroupId: String = ""
-    private var mGroupName: String = ""
+    private lateinit var mGroup: Group
 
     internal var mAdapterEventCardView: AdapterEventCard? = null
     internal var mAdapterEventList: AdapterEventList? = null
@@ -23,13 +23,11 @@ class EventsActivity : BaseActivity() {
 
     companion object {
 
-        val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
-        val BUNDLE_KEY_GROUP_NAME = "BUNDLE_KEY_GROUP_NAME"
+        private val BUNDLE_KEY_GROUP = "BUNDLE_KEY_GROUP"
 
-        fun getIntent(activity: Activity, groupId: String, groupName: String): Intent {
+        fun getIntent(activity: Activity, group: Group): Intent {
             val intent = Intent(activity, EventsActivity::class.java)
-            intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId)
-            intent.putExtra(BUNDLE_KEY_GROUP_NAME, groupName)
+            intent.putExtra(BUNDLE_KEY_GROUP, group)
             return intent
         }
     }
@@ -63,14 +61,13 @@ class EventsActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_events
 
-    fun check() {
+    private fun check() {
         startActivity(CheckActivity.getIntent(this, mAdapterEventCardView?.getEvents))
     }
 
     override fun setup() {
-        mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
-        mGroupName = intent.getStringExtra(BUNDLE_KEY_GROUP_NAME)
-        title = mGroupName
+        mGroup = intent.getParcelableExtra(BUNDLE_KEY_GROUP)
+        title = mGroup.title
         setupFireBase()
         setupEventsCard()
         setupEventsList()
@@ -78,7 +75,7 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupFireBase() {
-        mDatabaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId)
+        mDatabaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(mGroup.key)
         if (mDatabaseEvents != null) {
             mDatabaseEvents?.orderByKey()?.addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
@@ -109,15 +106,15 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupEventsCard() {
-        mAdapterEventCardView = AdapterEventCard(this@EventsActivity, ArrayList<Event>(), mGroupId, mGroupName, mDatabaseEvents)
-        val MyLayoutManager = LinearLayoutManager(this)
-        MyLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        mAdapterEventCardView = AdapterEventCard(this@EventsActivity, ArrayList<Event>(), mGroup, mDatabaseEvents)
+        val myLayoutManager = LinearLayoutManager(this)
+        myLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recycler_view_event_card.adapter = mAdapterEventCardView
-        recycler_view_event_card.layoutManager = MyLayoutManager
+        recycler_view_event_card.layoutManager = myLayoutManager
     }
 
     private fun setupEventsList() {
-        mAdapterEventList = AdapterEventList(this@EventsActivity, ArrayList<Event>(), mGroupId, mGroupName, mDatabaseEvents)
+        mAdapterEventList = AdapterEventList(this@EventsActivity, ArrayList<Event>(), mGroup, mDatabaseEvents)
         val myLayoutManager = LinearLayoutManager(this)
         myLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recycler_view_event_list.layoutManager = myLayoutManager
@@ -127,7 +124,7 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupFabNewEvent() {
-        fab_new_event.setOnClickListener { startActivity(NewEventActivity.getIntent(this@EventsActivity, mGroupId, mGroupName)) }
+        fab_new_event.setOnClickListener { startActivity(NewEventActivity.getIntent(this@EventsActivity, mGroup)) }
     }
 
 }

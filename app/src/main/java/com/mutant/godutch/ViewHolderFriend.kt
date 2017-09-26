@@ -16,6 +16,6 @@ class ViewHolderFriend(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
     var mTextViewName: AppCompatTextView = itemView.textView_name
     var mTextViewInvitationState: AppCompatTextView = itemView.textView_invitation_state
-    var mTextViewDebt: TextView = itemView.textView_debt
+    var mTextViewDebt: TextView = itemView.editText_debt
 
 }

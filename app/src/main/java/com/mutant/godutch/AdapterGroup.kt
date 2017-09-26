@@ -20,7 +20,7 @@ import com.mutant.godutch.utils.Utility
  * Created by evanfang102 on 2017/3/30.
  */
 
-class AdapterGroup(private val activity: Activity, private val groups: MutableList<Group>) : RecyclerView.Adapter<ViewHolderGroup>() {
+class AdapterGroup(private val activity: Activity, private val groups: ArrayList<Group>) : RecyclerView.Adapter<ViewHolderGroup>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderGroup {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_group, parent, false)
@@ -55,7 +55,7 @@ class AdapterGroup(private val activity: Activity, private val groups: MutableLi
             })
         }
 
-        holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, group.key, group.title)) }
+        holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, group)) }
     }
 
     private fun fetchUserInfo(uid: String, listener: ValueEventListener) {

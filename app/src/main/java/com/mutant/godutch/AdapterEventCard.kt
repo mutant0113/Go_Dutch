@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.database.DatabaseReference
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
+import com.mutant.godutch.model.Group
 import com.mutant.godutch.utils.Utility
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
 import java.util.*
@@ -21,13 +22,12 @@ import java.util.*
  * Created by evanfang102 on 2017/7/24.
  */
 
-class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var groupId: String,
-                       var groupName: String, var databaseEvents: DatabaseReference?) : RecyclerView.Adapter<ViewHolderEventCard>() {
+class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var group: Group,
+                       var databaseEvents: DatabaseReference?) : RecyclerView.Adapter<ViewHolderEventCard>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderEventCard {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_event, parent, false)
-        val holder = ViewHolderEventCard(view)
-        return holder
+        return ViewHolderEventCard(view)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -43,7 +43,7 @@ class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var
         holder.mRecycleViewFriendsShared.layoutManager = GridLayoutManager(activity, 2)
         // TODO fetch from database
         holder.itemView.setOnClickListener {
-            activity.startActivity(NewEventActivity.getIntent(activity, groupId, groupName))
+            activity.startActivity(NewEventActivity.getIntent(activity, group))
         }
         holder.itemView.setOnLongClickListener {
             removeEvent(event)

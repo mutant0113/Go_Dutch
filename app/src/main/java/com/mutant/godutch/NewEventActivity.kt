@@ -10,13 +10,13 @@ import android.view.inputmethod.InputMethodManager
 import com.mutant.godutch.fragment.NewEventStep1Fragment
 import com.mutant.godutch.fragment.NewEventStep2Fragment
 import com.mutant.godutch.fragment.NewEventStep3Fragment
+import com.mutant.godutch.model.Group
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
 
 
 class NewEventActivity : BaseActivity() {
 
-    internal var mGroupId: String = ""
-    internal var mGroupName: String = ""
+    internal lateinit var mGroup: Group
     internal var mType: TYPE = TYPE.FOOD
     var isTakePhoto: Boolean = false
 
@@ -26,15 +26,13 @@ class NewEventActivity : BaseActivity() {
 
     companion object {
 
-        val BUNDLE_KEY_GROUP_ID = "BUNDLE_KEY_GROUP_ID"
-        val BUNDLE_KEY_GROUP_NAME = "BUNDLE_KEY_GROUP_NAME"
+        val BUNDLE_KEY_GROUP = "BUNDLE_KEY_GROUP"
         val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
         val REQUEST_CODE_EXCHANGE_RATE = 1
 
-        fun getIntent(activity: Activity, groupId: String, groupName: String): Intent {
+        fun getIntent(activity: Activity, group: Group): Intent {
             val intent = Intent(activity, NewEventActivity::class.java)
-            intent.putExtra(BUNDLE_KEY_GROUP_ID, groupId)
-            intent.putExtra(BUNDLE_KEY_GROUP_NAME, groupName)
+            intent.putExtra(BUNDLE_KEY_GROUP, group)
             return intent
         }
     }
@@ -71,8 +69,7 @@ class NewEventActivity : BaseActivity() {
     }
 
     private fun setupBundle() {
-        mGroupId = intent.getStringExtra(BUNDLE_KEY_GROUP_ID)
-        mGroupName = intent.getStringExtra(EventsActivity.BUNDLE_KEY_GROUP_NAME)
+        mGroup = intent.getParcelableExtra(BUNDLE_KEY_GROUP)
     }
 
     private fun setupFragments() {

@@ -27,8 +27,8 @@ class NewEventStep1Fragment : Fragment() {
     lateinit var mActivity: NewEventActivity
     lateinit var rootView: View
     var mExchangeRate: ExchangeRate
-    var mTax: Int = -1
-    var mTotal: Int = 0
+    var mTax: Double = 0.0
+    var mTotal: Double = 0.0
 
     init {
         // TODO depend on country
@@ -55,7 +55,7 @@ class NewEventStep1Fragment : Fragment() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mActivity.mToolbar?.title = "[${mActivity.mGroupName}]輸入帳目"
+        mActivity.mToolbar?.title = "[${mActivity.mGroup.title}]輸入帳目"
 
         showKeyboard()
         updateUiBySubTotal()
@@ -78,7 +78,7 @@ class NewEventStep1Fragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (mTax == -1) run {
+                if (mTax == 0.0) run {
                     button_tax_0.isSelected = true
                 }
                 updateTotal()
@@ -93,17 +93,17 @@ class NewEventStep1Fragment : Fragment() {
     }
 
     fun onTaxButtonClicked(view: View) {
-        val tax = view.tag.toString().toInt()
+        val tax = view.tag.toString().toDouble()
         button_tax_0.isSelected = false
         button_tax_10.isSelected = false
         when (tax) {
-            0 -> {
+            0.0 -> {
                 button_tax_0.isSelected = true
-                mTax = 0
+                mTax = 0.0
             }
-            10 -> {
+            10.0 -> {
                 button_tax_10.isSelected = true
-                mTax = 10
+                mTax = 10.0
             }
         }
         updateTotal()
@@ -114,7 +114,7 @@ class NewEventStep1Fragment : Fragment() {
         if (subtotal.isEmpty()) {
             textView_total.text = "$0"
         } else {
-            mTotal = Math.round(subtotal.toDouble() * ((100 + mTax.toDouble()) / 100)).toInt()
+            mTotal = Math.round(subtotal.toDouble() * ((100 + mTax) / 100)).toDouble()
             val decimalFormat = DecimalFormat("${mExchangeRate.jsonKey} #,###")
             textView_total.text = decimalFormat.format(mTotal.toDouble())
         }

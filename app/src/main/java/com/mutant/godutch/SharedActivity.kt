@@ -19,19 +19,23 @@ class SharedActivity : BaseActivity() {
 
     var mTotal : Int = 0
     lateinit var mExchangeRate: ExchangeRate
-    lateinit var mFriends: ArrayList<Friend>
+    private lateinit var mFriends: ArrayList<Friend>
+    private lateinit var mFriendsShared: ArrayList<Friend>
 
     companion object {
 
         private val BUNDLE_KEY_TOTAL = "BUNDLE_KEY_TOTAL"
         private val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
         private val BUNDLE_KEY_FRIENDS = "BUNDLE_KEY_FRIENDS"
+        private val BUNDLE_KEY_FRIENDS_SHARED = "BUNDLE_KEY_FRIENDS_SHARED"
 
-        fun getIntent(activity: Activity, total: Int, exchangeRate: ExchangeRate, friendsShared: ArrayList<Friend>): Intent {
+        fun getIntent(activity: Activity, total: Double, exchangeRate: ExchangeRate, friends: ArrayList<Friend>,
+                      friendsShared: ArrayList<Friend>): Intent {
             val intent = Intent(activity, PaidFirstActivity::class.java)
             intent.putExtra(BUNDLE_KEY_TOTAL, total)
             intent.putExtra(BUNDLE_KEY_EXCHANGE_RATE, exchangeRate)
-            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS, friendsShared)
+            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS, friends)
+            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_SHARED, friendsShared)
             return intent
         }
     }
@@ -52,7 +56,7 @@ class SharedActivity : BaseActivity() {
 
     private fun done() {
         var data = Intent()
-        data.putExtra(SharedActivity.BUNDLE_KEY_FRIENDS, mFriends)
+        data.putExtra(SharedActivity.BUNDLE_KEY_FRIENDS_SHARED, mFriendsShared)
         setResult(Activity.RESULT_OK)
         finish()
     }
@@ -69,11 +73,12 @@ class SharedActivity : BaseActivity() {
         mTotal = intent.getIntExtra(BUNDLE_KEY_TOTAL, 0)
         mExchangeRate = intent.getParcelableExtra(BUNDLE_KEY_EXCHANGE_RATE)
         mFriends = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS)
+        mFriendsShared = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_SHARED)
     }
 
     private fun setupShared() {
         recyclerView_shared.layoutManager = LinearLayoutManager(this@SharedActivity)
-        recyclerView_shared.adapter = AdapterPaidCheck(this@SharedActivity, mFriends, mExchangeRate, null)
+        recyclerView_shared.adapter = AdapterPaidCheck(this@SharedActivity, mFriends, mFriendsShared, mExchangeRate, null)
     }
 
 }

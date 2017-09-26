@@ -38,7 +38,8 @@ class NewEventStep2Fragment : Fragment() {
     lateinit var mActivity: NewEventActivity
     private var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
-    var mTotal: Int = 0
+    var mFriends = ArrayList<Friend>()
+    var mTotal: Double = 0.0
     lateinit var mExchangeRate: ExchangeRate
 
     companion object {
@@ -62,20 +63,19 @@ class NewEventStep2Fragment : Fragment() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mActivity.mToolbar?.title = "[${mActivity.mGroupName}]分攤花費"
+        mActivity.mToolbar?.title = "[${mActivity.mGroup.title}]分攤花費"
 
         setupFireBase()
         val me = mActivity.me
         me.debt = mTotal
-        setupPaidFirst(arrayListOf(me))
         setupShared()
     }
 
     // 先假設都是自己付錢
     private fun setupPaidFirst(friends: ArrayList<Friend>) {
-        linearLayout_paid.setOnClickListener { startActivityForResult(PaidFirstActivity.getIntent(activity, mTotal, mExchangeRate, friends), REQUEST_PAID_FIRST) }
+        linearLayout_paid.setOnClickListener { startActivityForResult(PaidFirstActivity.getIntent(activity, mTotal, mExchangeRate, mFriends, friends), REQUEST_PAID_FIRST) }
         recycler_view_paid.layoutManager = LinearLayoutManager(mActivity)
-        recycler_view_paid.adapter = AdapterPaidCheck(mActivity, friends, mExchangeRate, null)
+        recycler_view_paid.adapter = AdapterPaidCheck(mActivity, mFriends, friends, mExchangeRate, null)
     }
 
     private fun setupShared() {
@@ -83,31 +83,35 @@ class NewEventStep2Fragment : Fragment() {
     }
 
     private fun setupFireBase() {
-        if (mFirebaseUser != null) {
-            mDatabaseFriends.orderByChild("name").addValueEventListener(object : ValueEventListener {
+        if (mFirebaseUser == null) return
 
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val friends = ArrayList<Friend>()
-                    val iterator = dataSnapshot.children.iterator()
-                    while (iterator.hasNext()) {
-                        friends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
-                    }
-                    friends.add(0, mActivity.me)
+        mDatabaseFriends.orderByChild("name").addValueEventListener(object : ValueEventListener {
 
-                    val debtAverage = mTotal / friends.size
-                    for (friend in friends) {
-                        friend.debt = debtAverage
-                    }
-
-                    // TODO not good design, should consider no network situation
-                    linearLayout_friends_who_shared.setOnClickListener { startActivityForResult(SharedActivity.getIntent(activity, mTotal, mExchangeRate, friends), REQUEST_SHARED) }
-                    val adapterFriendsShared = AdapterPaidCheck(mActivity, friends, mExchangeRate, null)
-                    recycler_view_shared.adapter = adapterFriendsShared
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val iterator = dataSnapshot.children.iterator()
+                while (iterator.hasNext()) {
+                    mFriends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
                 }
+                mFriends.add(0, mActivity.me)
 
-                override fun onCancelled(databaseError: DatabaseError) {}
-            })
-        }
+                val friendsShared = ArrayList<Friend>(mFriends.size)
+                mFriends.forEach { friendsShared.add(it) }
+
+                val debtAverage = mTotal / friendsShared.size
+                friendsShared.forEach { it.debt = debtAverage }
+
+                // TODO not good design, should consider no network situation
+                linearLayout_friends_who_shared.setOnClickListener {
+                    startActivityForResult(SharedActivity.getIntent(activity, mTotal, mExchangeRate, mFriends, friendsShared), REQUEST_SHARED)
+                }
+                val adapterFriendsShared = AdapterPaidCheck(mActivity, mFriends, friendsShared, mExchangeRate, null)
+                recycler_view_shared.adapter = adapterFriendsShared
+
+                setupPaidFirst(arrayListOf(mActivity.me))
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
     }
 
     fun createNewEvent() {
@@ -129,15 +133,15 @@ class NewEventStep2Fragment : Fragment() {
 
     private fun createNewEvent(imageDownloadUrl: Uri?) {
         val title = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_title) as EditText).text.toString()
-        val subtotal = Integer.parseInt((mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_subtotal) as EditText).text.toString())
+        val subtotal = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_subtotal) as EditText).text.toString().toDouble()
         val tax = mActivity.mNewEventStep1Fragment.mTax
         val friendsShared = (recycler_view_shared.adapter as AdapterPaidCheck).getFriends()
         val friendPaid = (recycler_view_paid.adapter as AdapterPaidCheck).getFriends()
         val event = Event(imageDownloadUrl?.toString() ?: "", mActivity.mType, title, subtotal, tax,
                 mTotal, mExchangeRate, friendsShared, friendPaid)
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroupId).push()
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroup.title).push()
         databaseReference.setValue(event).addOnSuccessListener {
-            val notifyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroupName)
+            val notifyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroup.title)
             val notifyContent = getString(R.string.notify_new_event_content, title)
             sendNewEventNotificationToFriends(friendsShared[1].uid, notifyTitle, notifyContent)
             mActivity.finish()
