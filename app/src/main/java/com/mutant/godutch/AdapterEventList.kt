@@ -28,8 +28,7 @@ class AdapterEventList(var activity: Activity, private var group: Group) : Recyc
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderEventList {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_event, parent, false)
-        val holder = ViewHolderEventList(view)
-        return holder
+        return ViewHolderEventList(view)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -39,7 +38,7 @@ class AdapterEventList(var activity: Activity, private var group: Group) : Recyc
         setupFriendsSharedProPic(holder, event)
         holder.mTextViewTitle.text = event.title
         // TODO 轉換幣別
-        holder.mTextViewTotal.text = event.exchangeRate?.jsonKey + " $" + event.subtotal
+        holder.mTextViewTotal.text = "${event.exchangeRate?.jsonKey} $${event.subtotal}"
         // TODO fetch from database
         holder.itemView.setOnClickListener {
             // TODO makeSceneTransitionAnimation bug

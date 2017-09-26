@@ -14,6 +14,7 @@ import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import com.facebook.internal.Utility.arrayList
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -72,10 +73,16 @@ class NewEventStep2Fragment : Fragment() {
     }
 
     // 先假設都是自己付錢
-    private fun setupPaidFirst(friends: ArrayList<Friend>) {
-        linearLayout_paid.setOnClickListener { startActivityForResult(PaidFirstActivity.getIntent(activity, mTotal, mExchangeRate, mFriends, friends), REQUEST_PAID_FIRST) }
+    private fun setupPaidFirst() {
+        var me = mActivity.me
+        me.debt = mTotal
+        val friendsPaid = arrayList<Friend>(me)
+        linearLayout_paid.setOnClickListener {
+            val intent = PaidFirstActivity.getIntent(activity, mTotal, mExchangeRate, mFriends)
+            startActivityForResult(intent, REQUEST_PAID_FIRST)
+        }
         recycler_view_paid.layoutManager = LinearLayoutManager(mActivity)
-        recycler_view_paid.adapter = AdapterPaidCheck(mActivity, mFriends, friends, mExchangeRate, null)
+        recycler_view_paid.adapter = AdapterPaidCheck(mActivity, mFriends, friendsPaid, mExchangeRate, null)
     }
 
     private fun setupShared() {
@@ -107,7 +114,7 @@ class NewEventStep2Fragment : Fragment() {
                 val adapterFriendsShared = AdapterPaidCheck(mActivity, mFriends, friendsShared, mExchangeRate, null)
                 recycler_view_shared.adapter = adapterFriendsShared
 
-                setupPaidFirst(arrayListOf(mActivity.me))
+                setupPaidFirst()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {}

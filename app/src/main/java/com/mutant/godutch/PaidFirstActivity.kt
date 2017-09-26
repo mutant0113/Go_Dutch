@@ -24,22 +24,18 @@ class PaidFirstActivity : BaseActivity() {
     private var mTotal: Double = 0.0
     private lateinit var mExchangeRate: ExchangeRate
     private lateinit var mFriends: ArrayList<Friend>
-    private lateinit var mFriendsPaid: ArrayList<Friend>
 
     companion object {
 
         private val BUNDLE_KEY_TOTAL = "BUNDLE_KEY_TOTAL"
         private val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
         private val BUNDLE_KEY_FRIENDS = "BUNDLE_KEY_FRIENDS"
-        private val BUNDLE_KEY_FRIENDS_PAID = "BUNDLE_KEY_FRIENDS_PAID"
 
-        fun getIntent(activity: Activity, total: Double, exchangeRate: ExchangeRate, friends: ArrayList<Friend>,
-                      friendsPaid: ArrayList<Friend>): Intent {
+        fun getIntent(activity: Activity, total: Double, exchangeRate: ExchangeRate, friends: ArrayList<Friend>): Intent {
             val intent = Intent(activity, PaidFirstActivity::class.java)
             intent.putExtra(BUNDLE_KEY_TOTAL, total)
             intent.putExtra(BUNDLE_KEY_EXCHANGE_RATE, exchangeRate)
             intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS, friends)
-            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_PAID, friendsPaid)
             return intent
         }
     }
@@ -60,7 +56,8 @@ class PaidFirstActivity : BaseActivity() {
 
     private fun done() {
         var data = Intent()
-        data.putExtra(BUNDLE_KEY_FRIENDS_PAID, mFriendsPaid)
+        // TODO filter friends who have dept
+//        data.putExtra(BUNDLE_KEY_FRIENDS_PAID, mFriendsPaid)
         setResult(Activity.RESULT_OK)
         finish()
     }
@@ -77,7 +74,6 @@ class PaidFirstActivity : BaseActivity() {
         mTotal = intent.getDoubleExtra(BUNDLE_KEY_TOTAL, 0.0)
         mExchangeRate = intent.getParcelableExtra(BUNDLE_KEY_EXCHANGE_RATE)
         mFriends = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS)
-        mFriendsPaid = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_PAID)
     }
 
     private fun setupPaidFirst() {
@@ -85,12 +81,16 @@ class PaidFirstActivity : BaseActivity() {
         recyclerView_paid.adapter = AdapterFriendsTick()
     }
 
-    inner class AdapterFriendsTick() : RecyclerView.Adapter<ViewHolder>() {
+    inner class AdapterFriendsTick : RecyclerView.Adapter<ViewHolder>() {
+
+        private var checkedPos = BooleanArray(mFriends.size, { false })
 
         init {
+            mFriends.filter { it.debt != 0.0 }.map { checkedPos[mFriends.indexOf(it)] = true }
+
             // TODO 自己要拉到第一個
             Collections.sort(mFriends) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
-            if(mFriends.remove(me)) {
+            if (mFriends.remove(me)) {
                 mFriends.add(0, me)
             }
         }
@@ -107,28 +107,31 @@ class PaidFirstActivity : BaseActivity() {
             holder.mTextViewName.text = friend.name
             holder.mEditTextDept.visibility = View.VISIBLE
             holder.mEditTextDept.setText(if (friend.debt != 0.0) friend.debt.toString() else "")
-            holder.mCheckBox.isChecked = mFriendsPaid.contains(friend)
+            holder.mCheckBox.isChecked = checkedPos[position]
 
             holder.itemView.setOnClickListener({
                 holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
             })
 
             holder.mCheckBox.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
-                if (isChecked) {
-                    mFriendsPaid.add(friend)
-                } else {
-                    mFriendsPaid.remove(friend)
-                }
+                checkedPos[position] = isChecked
                 evenlyShared()
                 notifyDataSetChanged()
             }
         }
 
         private fun evenlyShared() {
-            val moneyShared = if (mFriendsPaid.size != 0) mTotal / mFriendsPaid.size else 0.0
+            val numberOfPeoplePaid = getNumberOfPeoplePaid()
+            val moneyShared = if (numberOfPeoplePaid != 0) mTotal / numberOfPeoplePaid else 0.0
             mFriends.forEach {
-                it.debt = if (mFriendsPaid.contains(it)) moneyShared else 0.0
+                it.debt = if (checkedPos[mFriends.indexOf(it)]) moneyShared else 0.0
             }
+        }
+
+        private fun getNumberOfPeoplePaid(): Int {
+            var number = 0
+            checkedPos.filter { it }.map { number++ }
+            return number
         }
     }
 
