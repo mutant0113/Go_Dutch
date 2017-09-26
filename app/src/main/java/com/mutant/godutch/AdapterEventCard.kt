@@ -10,7 +10,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.model.Group
@@ -22,8 +22,10 @@ import java.util.*
  * Created by evanfang102 on 2017/7/24.
  */
 
-class AdapterEventCard(var activity: Activity, var events: ArrayList<Event>, var group: Group,
-                       var databaseEvents: DatabaseReference?) : RecyclerView.Adapter<ViewHolderEventCard>() {
+class AdapterEventCard(var activity: Activity, private var group: Group) : RecyclerView.Adapter<ViewHolderEventCard>() {
+
+    private var events = arrayListOf<Event>()
+    private val databaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(group.key)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderEventCard {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_event, parent, false)

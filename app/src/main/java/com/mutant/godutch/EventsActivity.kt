@@ -8,7 +8,10 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import com.google.firebase.database.*
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.Group
 import kotlinx.android.synthetic.main.activity_events.*
@@ -16,10 +19,6 @@ import kotlinx.android.synthetic.main.activity_events.*
 class EventsActivity : BaseActivity() {
 
     private lateinit var mGroup: Group
-
-    internal var mAdapterEventCardView: AdapterEventCard? = null
-    internal var mAdapterEventList: AdapterEventList? = null
-    private var mDatabaseEvents: DatabaseReference? = null
 
     companion object {
 
@@ -62,7 +61,9 @@ class EventsActivity : BaseActivity() {
         get() = R.layout.activity_events
 
     private fun check() {
-        startActivity(CheckActivity.getIntent(this, mAdapterEventCardView?.getEvents))
+        val events = (recycler_view_event_card.adapter as AdapterEventCard).getEvents
+        val intent = CheckActivity.getIntent(this, events)
+        startActivity(intent)
     }
 
     override fun setup() {
@@ -75,50 +76,46 @@ class EventsActivity : BaseActivity() {
     }
 
     private fun setupFireBase() {
-        mDatabaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(mGroup.key)
-        if (mDatabaseEvents != null) {
-            mDatabaseEvents?.orderByKey()?.addChildEventListener(object : ChildEventListener {
-                override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                    var event = dataSnapshot.getValue(Event::class.java)
-                    event.key = dataSnapshot.key
-                    mAdapterEventCardView?.addItem(event)
-                    mAdapterEventList?.addItem(event)
-                    recycler_view_event_card.scrollToPosition(0)
-                }
+        val databaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(mGroup.key)
+        databaseEvents?.orderByKey()?.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                var event = dataSnapshot.getValue(Event::class.java)
+                event.key = dataSnapshot.key
+                (recycler_view_event_card.adapter as AdapterEventCard).addItem(event)
+                (recycler_view_event_list.adapter as AdapterEventList).addItem(event)
+                recycler_view_event_card.scrollToPosition(0)
+            }
 
-                override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-                    // TODO
-                }
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
+                // TODO
+            }
 
-                override fun onChildRemoved(dataSnapshot: com.google.firebase.database.DataSnapshot) {
-                    // TODO
-                }
+            override fun onChildRemoved(dataSnapshot: com.google.firebase.database.DataSnapshot) {
+                // TODO
+            }
 
-                override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
-                    // TODO
-                }
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
+                // TODO
+            }
 
-                override fun onCancelled(databaseError: DatabaseError) {
+            override fun onCancelled(databaseError: DatabaseError) {
 
-                }
-            })
-        }
+            }
+        })
     }
 
     private fun setupEventsCard() {
-        mAdapterEventCardView = AdapterEventCard(this@EventsActivity, ArrayList<Event>(), mGroup, mDatabaseEvents)
         val myLayoutManager = LinearLayoutManager(this)
         myLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        recycler_view_event_card.adapter = mAdapterEventCardView
+        recycler_view_event_card.adapter = AdapterEventCard(this@EventsActivity, mGroup)
         recycler_view_event_card.layoutManager = myLayoutManager
     }
 
     private fun setupEventsList() {
-        mAdapterEventList = AdapterEventList(this@EventsActivity, ArrayList<Event>(), mGroup, mDatabaseEvents)
         val myLayoutManager = LinearLayoutManager(this)
         myLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recycler_view_event_list.layoutManager = myLayoutManager
-        recycler_view_event_list.adapter = mAdapterEventList
+        recycler_view_event_list.adapter = AdapterEventList(this@EventsActivity, mGroup)
         val dividerItemDecoration = DividerItemDecoration(this@EventsActivity, myLayoutManager.orientation)
         recycler_view_event_list.addItemDecoration(dividerItemDecoration)
     }
