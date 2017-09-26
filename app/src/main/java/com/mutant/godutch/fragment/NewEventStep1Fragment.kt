@@ -2,6 +2,7 @@ package com.mutant.godutch.fragment
 
 import android.annotation.TargetApi
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -86,8 +87,9 @@ class NewEventStep1Fragment : Fragment() {
     }
 
     private fun showKeyboard() {
-        val imm = mActivity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(editText_subtotal, InputMethodManager.SHOW_IMPLICIT)
+        val imm = mActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        editText_title.requestFocus()
+        imm.showSoftInput(editText_subtotal, InputMethodManager.SHOW_FORCED)
     }
 
     fun onTaxButtonClicked(view: View) {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/activity_horizontal_margin">
@@ -11,6 +10,15 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/space_between_content_areas"
+            android:layout_marginLeft="@dimen/space_between_content_areas"
+            android:src="@drawable/tick" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/imageView_photo_url"
@@ -32,18 +40,11 @@
         android:id="@+id/textView_debt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_toLeftOf="@+id/checkBox"
-        android:text="xxx"
-        android:visibility="invisible"/>
-
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/tick" />
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:text="xxx"
+        android:visibility="invisible" />
 
 </RelativeLayout>

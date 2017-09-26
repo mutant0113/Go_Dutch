@@ -13,7 +13,6 @@ import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DatabaseReference
 import com.mutant.godutch.model.Event
-import com.mutant.godutch.utils.Utility
 import com.mutant.godutch.widget.EventTypeWidget.TYPE
 import java.util.*
 
@@ -34,10 +33,8 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
     override fun onBindViewHolder(holder: ViewHolderEventList, position: Int) {
         val event = events[position]
         setupPhoto(holder, event)
-        setupFabType(holder, event)
         setupFriendsSharedProPic(holder, event)
         holder.mTextViewTitle.text = event.title
-        holder.mTextViewDate.text = Utility.getRelativeTimeSpanDate(event.timestampCreated)
         // TODO 轉換幣別
         holder.mTextViewTotal.text = event.exchangeRate?.jsonKey + " $" + event.subtotal
         // TODO fetch from database
@@ -51,24 +48,6 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
         holder.itemView.setOnLongClickListener {
             removeEvent(event)
             false
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setupFabType(holder: ViewHolderEventList, event: Event) {
-        when (event.type) {
-            TYPE.FOOD -> {
-                holder.mTextViewType.text = activity.getString(R.string.event_type_food)
-            }
-            TYPE.SHOPPING -> {
-                holder.mTextViewType.text = activity.getString(R.string.event_type_shopping)
-            }
-            TYPE.HOTEL -> {
-                holder.mTextViewType.text = activity.getString(R.string.event_type_hotel)
-            }
-            TYPE.TICKET -> {
-                holder.mTextViewType.text = activity.getString(R.string.event_type_ticket)
-            }
         }
     }
 
@@ -86,7 +65,7 @@ class AdapterEventList(var activity: Activity, var events: ArrayList<Event>, var
     }
 
     private fun setupFriendsSharedProPic(holder: ViewHolderEventList, event: Event) {
-        holder.mLinearLayoutFriendsShared.removeAllViews();
+        holder.mLinearLayoutFriendsShared.removeAllViews()
         for (friend in event.friendsShared) {
             val imageViewFriendPhoto = ImageView(activity)
             val proPicSize = activity.resources.getDimension(R.dimen.pro_pic_size).toInt()

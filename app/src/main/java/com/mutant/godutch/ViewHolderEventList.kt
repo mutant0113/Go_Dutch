@@ -14,9 +14,7 @@ import kotlinx.android.synthetic.main.list_item_event.view.*
 class ViewHolderEventList(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var mImageViewPhoto: AppCompatImageView = itemView.imageView_photo
-    var mTextViewType: AppCompatTextView = itemView.textView_type
     var mTextViewTitle: AppCompatTextView = itemView.textView_title
-    var mTextViewDate: AppCompatTextView = itemView.textView_date
     var mTextViewTotal: AppCompatTextView = itemView.textView_total
     var mLinearLayoutFriendsShared: LinearLayoutCompat = itemView.linearLayout_friends_shared
 }
