@@ -4,8 +4,10 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.*
 import android.view.*
+import android.widget.CheckBox
 import android.widget.CompoundButton
 import com.bumptech.glide.Glide
 import com.mutant.godutch.model.ExchangeRate
@@ -66,15 +68,23 @@ class PaidFirstActivity : BaseActivity() {
         get() = R.layout.activity_paid_first
 
     fun onClickShareLeft(v: View) {
-        val sharedLeft = getMoneyLeft() / (recyclerView_paid.adapter as AdapterFriendsTick).getCheckedCount()
-        (0 until recyclerView_paid.childCount).forEach {
-            val editText = recyclerView_paid.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
-            val originDept = if (!editText.text.isNullOrBlank()) editText.text.toString().toDouble() else 0.0
+        val numberOfPeoplePaid = (recyclerView_paid.adapter as AdapterFriendsTick).getNumberOfPeoplePaid()
+        if (numberOfPeoplePaid == 0) {
+            Snackbar.make(constraint_parent, "請勾選至少一個人", Snackbar.LENGTH_SHORT).show()
+        } else {
+            val sharedLeft = getMoneyLeft() / numberOfPeoplePaid
+            (0 until recyclerView_paid.childCount).forEach {
+                val editText = recyclerView_paid.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
+                val originDept = if (!editText.text.isNullOrBlank()) editText.text.toString().toDouble() else 0.0
+                val sum = sharedLeft + originDept
 
-            val sum = sharedLeft + originDept
-            editText.setText("$sum")
+                val checkBox = recyclerView_paid.getChildAt(it).findViewById(R.id.checkBox) as CheckBox
+                if (checkBox.isChecked) {
+                    editText.setText("$sum")
+                }
+            }
+            textView_left.text = "$0"
         }
-        textView_left.text = "$0"
     }
 
     private fun getMoneyLeft(): Double {
@@ -171,15 +181,12 @@ class PaidFirstActivity : BaseActivity() {
             }
         }
 
-        private fun getNumberOfPeoplePaid(): Int {
+        fun getNumberOfPeoplePaid(): Int {
             var number = 0
             checkedPos.filter { it }.map { number++ }
             return number
         }
 
-        fun getCheckedCount() : Int {
-            return checkedPos.count()
-        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
