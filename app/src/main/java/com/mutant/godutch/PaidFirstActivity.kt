@@ -65,6 +65,22 @@ class PaidFirstActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_paid_first
 
+    fun onClickShareLeft(v: View) {
+        val sharedLeft = getMoneyLeft() / (recyclerView_paid.adapter as AdapterFriendsTick).getCheckedCount()
+        (0 until recyclerView_paid.childCount).forEach {
+            val editText = recyclerView_paid.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
+            val originDept = if (!editText.text.isNullOrBlank()) editText.text.toString().toDouble() else 0.0
+
+            val sum = sharedLeft + originDept
+            editText.setText("$sum")
+        }
+        textView_left.text = "$0"
+    }
+
+    private fun getMoneyLeft(): Double {
+        return textView_left.text.removePrefix("$").toString().toDouble()
+    }
+
     override fun setup() {
         setupBundle()
         setupPaidFirst()
@@ -84,6 +100,7 @@ class PaidFirstActivity : BaseActivity() {
     inner class AdapterFriendsTick : RecyclerView.Adapter<ViewHolder>() {
 
         private var checkedPos = BooleanArray(mFriends.size, { false })
+        private var mLastEditMoney = 0.0
 
         init {
             mFriends.filter { it.debt != 0.0 }.map { checkedPos[mFriends.indexOf(it)] = true }
@@ -107,6 +124,8 @@ class PaidFirstActivity : BaseActivity() {
             holder.mTextViewName.text = friend.name
             holder.mEditTextDept.visibility = View.VISIBLE
             holder.mEditTextDept.setText(if (friend.debt != 0.0) friend.debt.toString() else "")
+
+            holder.mCheckBox.setOnCheckedChangeListener(null)
             holder.mCheckBox.isChecked = checkedPos[position]
 
             holder.itemView.setOnClickListener({
@@ -118,6 +137,30 @@ class PaidFirstActivity : BaseActivity() {
                 evenlyShared()
                 notifyDataSetChanged()
             }
+
+            holder.mEditTextDept.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    val editText = v as AppCompatEditText
+                    editText.setText("")
+                    calculateLeft()
+                }
+            }
+        }
+
+        private fun calculateLeft() {
+            var inputTotal = 0.0
+            (0 until recyclerView_paid.childCount).forEach {
+                val editText = recyclerView_paid.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
+                if (!editText.text.isNullOrBlank()) {
+                    inputTotal += editText.text.toString().toDouble()
+                }
+            }
+
+            setTextLeft(mTotal - inputTotal)
+        }
+
+        private fun setTextLeft(left: Double) {
+            textView_left.text = "$$left"
         }
 
         private fun evenlyShared() {
@@ -132,6 +175,10 @@ class PaidFirstActivity : BaseActivity() {
             var number = 0
             checkedPos.filter { it }.map { number++ }
             return number
+        }
+
+        fun getCheckedCount() : Int {
+            return checkedPos.count()
         }
     }
 

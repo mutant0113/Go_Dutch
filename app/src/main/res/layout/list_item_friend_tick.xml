@@ -36,16 +36,23 @@
 
     </android.support.v7.widget.LinearLayoutCompat>
 
-    <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/editText_debt"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:hint="0.0"
-        android:visibility="invisible" />
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editText_debt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:hint="0.0"
+            android:inputType="numberDecimal"
+            android:visibility="invisible" />
+    </FrameLayout>
 
 </RelativeLayout>

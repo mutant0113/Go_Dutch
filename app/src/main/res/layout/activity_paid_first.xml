@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:background="@color/gray_50"
         android:orientation="horizontal"
+        android:onClick="onClickShareLeft"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
