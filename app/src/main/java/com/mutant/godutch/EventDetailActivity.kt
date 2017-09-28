@@ -115,7 +115,7 @@ class EventDetailActivity : BaseActivity() {
 
         private fun setupFriendsWhoPaidFirst(rootView: View) {
             // TODO
-            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, arrayListOf(), mEvent.friendPaid, mEvent.exchangeRate, null)
+            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, mEvent.friendPaid, mEvent.exchangeRate, null)
             rootView.recycler_view_paid.layoutManager = LinearLayoutManager(activity)
         }
 
@@ -124,7 +124,7 @@ class EventDetailActivity : BaseActivity() {
             var friendsFilter: ArrayList<Friend> = arrayListOf()
             mEvent.friendsShared.filterTo(friendsFilter) { it.debt > 0 }
             // TODO
-            rootView.recycler_view_shared.adapter = AdapterPaidCheck(activity, friendsFilter, arrayListOf(), mEvent.exchangeRate, mDatabaseEvents)
+            rootView.recycler_view_shared.adapter = AdapterPaidCheck(activity, arrayListOf(), mEvent.exchangeRate, mDatabaseEvents)
             rootView.recycler_view_shared.layoutManager = LinearLayoutManager(activity)
         }
 

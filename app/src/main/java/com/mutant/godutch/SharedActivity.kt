@@ -78,7 +78,7 @@ class SharedActivity : BaseActivity() {
 
     private fun setupShared() {
         recyclerView_shared.layoutManager = LinearLayoutManager(this@SharedActivity)
-        recyclerView_shared.adapter = AdapterPaidCheck(this@SharedActivity, mFriends, mFriendsShared, mExchangeRate, null)
+        recyclerView_shared.adapter = AdapterPaidCheck(this@SharedActivity, mFriendsShared, mExchangeRate, null)
     }
 
 }

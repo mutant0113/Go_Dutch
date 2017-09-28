@@ -14,7 +14,6 @@ import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import com.facebook.internal.Utility.arrayList
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -28,7 +27,6 @@ import com.mutant.godutch.model.Friend
 import com.mutant.godutch.utils.NotificationHelper
 import com.mutant.godutch.utils.Utility
 import kotlinx.android.synthetic.main.fragment_new_event_step_2.*
-import java.util.*
 
 /**
  * Created by evanfang102 on 2017/7/27.
@@ -40,6 +38,7 @@ class NewEventStep2Fragment : Fragment() {
     private var mFirebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var mDatabaseFriends: DatabaseReference = FirebaseDatabase.getInstance().reference.child("friends").child(mFirebaseUser?.uid)
     var mFriends = ArrayList<Friend>()
+    var mAllUsers = ArrayList<Friend>()
     var mTotal: Double = 0.0
     lateinit var mExchangeRate: ExchangeRate
 
@@ -67,26 +66,38 @@ class NewEventStep2Fragment : Fragment() {
         mActivity.mToolbar?.title = "[${mActivity.mGroup.title}]分攤花費"
 
         setupFireBase()
-        val me = mActivity.me
-        me.debt = mTotal
-        setupShared()
     }
 
     // 先假設都是自己付錢
     private fun setupPaidFirst() {
-        var me = mActivity.me
+        val friendsPaid = arrayListOf<Friend>()
+        val me = Friend(mActivity.me)
         me.debt = mTotal
-        val friendsPaid = arrayList<Friend>(me)
+        friendsPaid.add(me)
+
+        recycler_view_paid.layoutManager = LinearLayoutManager(mActivity)
+        recycler_view_paid.adapter = AdapterPaidCheck(mActivity, friendsPaid, mExchangeRate, null)
+
         linearLayout_paid.setOnClickListener {
-            val intent = PaidFirstActivity.getIntent(activity, mTotal, mExchangeRate, mFriends)
+            val intent = PaidFirstActivity.getIntent(activity, mTotal, mExchangeRate, friendsPaid)
             startActivityForResult(intent, REQUEST_PAID_FIRST)
         }
-        recycler_view_paid.layoutManager = LinearLayoutManager(mActivity)
-        recycler_view_paid.adapter = AdapterPaidCheck(mActivity, mFriends, friendsPaid, mExchangeRate, null)
     }
 
     private fun setupShared() {
+        val friendsShared = ArrayList<Friend>()
+        mAllUsers.forEach { friendsShared.add(Friend(it)) }
+
+        val debtAverage = mTotal / friendsShared.size
+        friendsShared.forEach { it.debt = debtAverage }
+
         recycler_view_shared.layoutManager = LinearLayoutManager(mActivity)
+        recycler_view_shared.adapter = AdapterPaidCheck(mActivity, friendsShared, mExchangeRate, null)
+
+        // TODO not good design, should consider no network situation
+        linearLayout_friends_who_shared.setOnClickListener {
+            startActivityForResult(SharedActivity.getIntent(activity, mTotal, mExchangeRate, mFriends, friendsShared), REQUEST_SHARED)
+        }
     }
 
     private fun setupFireBase() {
@@ -99,22 +110,12 @@ class NewEventStep2Fragment : Fragment() {
                 while (iterator.hasNext()) {
                     mFriends.add((iterator.next() as DataSnapshot).getValue(Friend::class.java))
                 }
-                mFriends.add(0, mActivity.me)
 
-                val friendsShared = ArrayList<Friend>(mFriends.size)
-                mFriends.forEach { friendsShared.add(it) }
-
-                val debtAverage = mTotal / friendsShared.size
-                friendsShared.forEach { it.debt = debtAverage }
-
-                // TODO not good design, should consider no network situation
-                linearLayout_friends_who_shared.setOnClickListener {
-                    startActivityForResult(SharedActivity.getIntent(activity, mTotal, mExchangeRate, mFriends, friendsShared), REQUEST_SHARED)
-                }
-                val adapterFriendsShared = AdapterPaidCheck(mActivity, mFriends, friendsShared, mExchangeRate, null)
-                recycler_view_shared.adapter = adapterFriendsShared
+                mFriends.forEach { mAllUsers.add(Friend(it)) }
+                mAllUsers.add(Friend(mActivity.me))
 
                 setupPaidFirst()
+                setupShared()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {}

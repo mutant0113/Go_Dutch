@@ -18,7 +18,7 @@ import com.mutant.godutch.model.Friend
  * Created by evanfang102 on 2017/7/26.
  */
 
-class AdapterPaidCheck(var activity: Activity, private var friends: List<Friend>, private var friendsShared: List<Friend>,
+class AdapterPaidCheck(var activity: Activity, private var friendsShared: List<Friend>,
                        private val exchangeRate: ExchangeRate?, var database: DatabaseReference?) :
         RecyclerView.Adapter<ViewHolderPaidCheck>() {
 
@@ -34,7 +34,7 @@ class AdapterPaidCheck(var activity: Activity, private var friends: List<Friend>
         holder.mTextViewName.text = friend.name
         holder.mTextViewPaidCheck.text = Math.abs(friend.debt).toString()
 
-        if(database == null) {
+        if (database == null) {
             holder.mButtonRemind.visibility = View.GONE
             holder.mButtonSettleUp.visibility = View.GONE
         }
@@ -61,7 +61,7 @@ class AdapterPaidCheck(var activity: Activity, private var friends: List<Friend>
         return friendsShared.size
     }
 
-    fun getFriends() : List<Friend> {
+    fun getFriends(): List<Friend> {
         return friendsShared
     }
 

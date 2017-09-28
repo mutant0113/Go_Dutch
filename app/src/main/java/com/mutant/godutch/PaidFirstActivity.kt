@@ -25,19 +25,19 @@ class PaidFirstActivity : BaseActivity() {
 
     private var mTotal: Double = 0.0
     private lateinit var mExchangeRate: ExchangeRate
-    private lateinit var mFriends: ArrayList<Friend>
+    private lateinit var mFriendsPaid: ArrayList<Friend>
 
     companion object {
 
         private val BUNDLE_KEY_TOTAL = "BUNDLE_KEY_TOTAL"
         private val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
-        private val BUNDLE_KEY_FRIENDS = "BUNDLE_KEY_FRIENDS"
+        private val BUNDLE_KEY_FRIENDS_PAID = "BUNDLE_KEY_FRIENDS_PAID"
 
-        fun getIntent(activity: Activity, total: Double, exchangeRate: ExchangeRate, friends: ArrayList<Friend>): Intent {
+        fun getIntent(activity: Activity, total: Double, exchangeRate: ExchangeRate, friendsPaid: ArrayList<Friend>): Intent {
             val intent = Intent(activity, PaidFirstActivity::class.java)
             intent.putExtra(BUNDLE_KEY_TOTAL, total)
             intent.putExtra(BUNDLE_KEY_EXCHANGE_RATE, exchangeRate)
-            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS, friends)
+            intent.putParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_PAID, friendsPaid)
             return intent
         }
     }
@@ -99,7 +99,7 @@ class PaidFirstActivity : BaseActivity() {
     private fun setupBundle() {
         mTotal = intent.getDoubleExtra(BUNDLE_KEY_TOTAL, 0.0)
         mExchangeRate = intent.getParcelableExtra(BUNDLE_KEY_EXCHANGE_RATE)
-        mFriends = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS)
+        mFriendsPaid = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_PAID)
     }
 
     private fun setupPaidFirst() {
@@ -109,27 +109,27 @@ class PaidFirstActivity : BaseActivity() {
 
     inner class AdapterFriendsTick : RecyclerView.Adapter<ViewHolder>() {
 
-        private var checkedPos = BooleanArray(mFriends.size, { false })
-        private var mLastEditMoney = 0.0
+        private var checkedPos = BooleanArray(mFriendsPaid.size, { false })
 
         init {
-            mFriends.filter { it.debt != 0.0 }.map { checkedPos[mFriends.indexOf(it)] = true }
+            mFriendsPaid.filter { it.debt != 0.0 }.map { checkedPos[mFriendsPaid.indexOf(it)] = true }
 
             // TODO 自己要拉到第一個
-            Collections.sort(mFriends) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
-            if (mFriends.remove(me)) {
-                mFriends.add(0, me)
+            Collections.sort(mFriendsPaid) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
+            mFriendsPaid.filter { it.uid == me.uid }.map {
+                mFriendsPaid.remove(it)
+                mFriendsPaid.add(0, it)
             }
         }
 
-        override fun getItemCount(): Int = mFriends.size
+        override fun getItemCount(): Int = mFriendsPaid.size
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val friend = mFriends[position]
+            val friend = mFriendsPaid[position]
             Glide.with(this@PaidFirstActivity).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
             holder.mTextViewName.text = friend.name
             holder.mEditTextDept.visibility = View.VISIBLE
@@ -176,8 +176,8 @@ class PaidFirstActivity : BaseActivity() {
         private fun evenlyShared() {
             val numberOfPeoplePaid = getNumberOfPeoplePaid()
             val moneyShared = if (numberOfPeoplePaid != 0) mTotal / numberOfPeoplePaid else 0.0
-            mFriends.forEach {
-                it.debt = if (checkedPos[mFriends.indexOf(it)]) moneyShared else 0.0
+            mFriendsPaid.forEach {
+                it.debt = if (checkedPos[mFriendsPaid.indexOf(it)]) moneyShared else 0.0
             }
         }
 

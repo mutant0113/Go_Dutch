@@ -82,10 +82,10 @@ class CheckActivity : BaseActivity() {
         }
 
         // TODO
-        recycler_view_paid.adapter = AdapterPaidCheck(this, friendsShared, arrayListOf(), mEvents[0].exchangeRate, null)
+        recycler_view_paid.adapter = AdapterPaidCheck(this, friendsShared, mEvents[0].exchangeRate, null)
         recycler_view_paid.layoutManager = LinearLayoutManager(this)
         // TODO
-        recycler_view_shared.adapter = AdapterPaidCheck(this, friendsShared, arrayListOf(), mEvents[0].exchangeRate, null)
+        recycler_view_shared.adapter = AdapterPaidCheck(this, friendsShared, mEvents[0].exchangeRate, null)
         recycler_view_shared.layoutManager = LinearLayoutManager(this)
     }
 

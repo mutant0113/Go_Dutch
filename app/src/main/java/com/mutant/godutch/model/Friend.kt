@@ -33,6 +33,8 @@ class Friend : Parcelable {
         this.state = state
     }
 
+    constructor(friend: Friend) : this(friend.uid, friend.name, friend.photoUrl, friend.debt, friend.state)
+
     @IntDef(STATE_ACCEPTED.toLong(), STATE_NOT_BE_ACCEPTED.toLong(), STATE_BE_INVITED.toLong())
     annotation class State
 
@@ -41,7 +43,8 @@ class Friend : Parcelable {
         const val STATE_NOT_BE_ACCEPTED = 1
         const val STATE_BE_INVITED = 2
 
-        @JvmField val CREATOR: Parcelable.Creator<Friend> = object : Parcelable.Creator<Friend> {
+        @JvmField
+        val CREATOR: Parcelable.Creator<Friend> = object : Parcelable.Creator<Friend> {
             override fun createFromParcel(source: Parcel): Friend = Friend(source)
             override fun newArray(size: Int): Array<Friend?> = arrayOfNulls(size)
         }
