@@ -18,9 +18,15 @@ import com.mutant.godutch.model.Friend
  * Created by evanfang102 on 2017/7/26.
  */
 
-class AdapterPaidCheck(var activity: Activity, private var friendsShared: List<Friend>,
+class AdapterPaidCheck(var activity: Activity, private var friends: ArrayList<Friend>,
                        private val exchangeRate: ExchangeRate?, var database: DatabaseReference?) :
         RecyclerView.Adapter<ViewHolderPaidCheck>() {
+
+    private var mFriendsPaid = ArrayList<Friend>()
+
+    init {
+        friends.filter { it.debt != 0.0 }.map { mFriendsPaid.add(it)}
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPaidCheck {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_paid_check, parent, false)
@@ -29,7 +35,7 @@ class AdapterPaidCheck(var activity: Activity, private var friendsShared: List<F
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: ViewHolderPaidCheck, position: Int) {
-        val friend = friendsShared[position]
+        val friend = mFriendsPaid[position]
         setupProPic(holder, friend.photoUrl)
         holder.mTextViewName.text = friend.name
         holder.mTextViewPaidCheck.text = Math.abs(friend.debt).toString()
@@ -47,7 +53,7 @@ class AdapterPaidCheck(var activity: Activity, private var friendsShared: List<F
             // TODO send notification
             // TODO friend paid check add
             // TODO send settle up firebase
-            database?.setValue(friendsShared)
+            database?.setValue(friends)
         }
     }
 
@@ -58,11 +64,11 @@ class AdapterPaidCheck(var activity: Activity, private var friendsShared: List<F
     }
 
     override fun getItemCount(): Int {
-        return friendsShared.size
+        return mFriendsPaid.size
     }
 
-    fun getFriends(): List<Friend> {
-        return friendsShared
+    fun getFriendsPaid(): List<Friend> {
+        return mFriendsPaid
     }
 
 }

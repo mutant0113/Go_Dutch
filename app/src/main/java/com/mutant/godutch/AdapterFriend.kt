@@ -18,9 +18,8 @@ import com.mutant.godutch.model.Friend
 class AdapterFriend(private val activity: Activity, private val friends: MutableList<Friend>) : RecyclerView.Adapter<ViewHolderFriend>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderFriend {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view_item_friend, parent, false)
-        val holder = ViewHolderFriend(view)
-        return holder
+        val view = LayoutInflater.from(activity).inflate(R.layout.card_view_item_friend, parent, false)
+        return ViewHolderFriend(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolderFriend, position: Int) {}

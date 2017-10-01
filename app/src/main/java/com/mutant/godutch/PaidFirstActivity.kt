@@ -112,14 +112,14 @@ class PaidFirstActivity : BaseActivity() {
         private var checkedPos = BooleanArray(mFriendsPaid.size, { false })
 
         init {
-            mFriendsPaid.filter { it.debt != 0.0 }.map { checkedPos[mFriendsPaid.indexOf(it)] = true }
-
             // TODO 自己要拉到第一個
             Collections.sort(mFriendsPaid) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
             mFriendsPaid.filter { it.uid == me.uid }.map {
                 mFriendsPaid.remove(it)
                 mFriendsPaid.add(0, it)
             }
+
+            mFriendsPaid.filter { it.debt != 0.0 }.map { checkedPos[mFriendsPaid.indexOf(it)] = true }
         }
 
         override fun getItemCount(): Int = mFriendsPaid.size
@@ -140,6 +140,7 @@ class PaidFirstActivity : BaseActivity() {
 
             holder.itemView.setOnClickListener({
                 holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
+                holder.mEditTextDept.clearFocus()
             })
 
             holder.mCheckBox.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->

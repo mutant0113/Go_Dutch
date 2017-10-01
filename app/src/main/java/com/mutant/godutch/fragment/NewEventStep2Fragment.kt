@@ -71,10 +71,9 @@ class NewEventStep2Fragment : Fragment() {
     // 先假設都是自己付錢
     private fun setupPaidFirst() {
         val friendsPaid = arrayListOf<Friend>()
-        val me = Friend(mActivity.me)
-        me.debt = mTotal
-        friendsPaid.add(me)
+        mAllUsers.forEach { friendsPaid.add(Friend(it)) }
 
+        friendsPaid.filter { it.uid == mActivity.me.uid }.map { it.debt = mTotal }
         recycler_view_paid.layoutManager = LinearLayoutManager(mActivity)
         recycler_view_paid.adapter = AdapterPaidCheck(mActivity, friendsPaid, mExchangeRate, null)
 
@@ -143,8 +142,8 @@ class NewEventStep2Fragment : Fragment() {
         val title = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_title) as EditText).text.toString()
         val subtotal = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_subtotal) as EditText).text.toString().toDouble()
         val tax = mActivity.mNewEventStep1Fragment.mTax
-        val friendsShared = (recycler_view_shared.adapter as AdapterPaidCheck).getFriends()
-        val friendPaid = (recycler_view_paid.adapter as AdapterPaidCheck).getFriends()
+        val friendsShared = (recycler_view_shared.adapter as AdapterPaidCheck).getFriendsPaid()
+        val friendPaid = (recycler_view_paid.adapter as AdapterPaidCheck).getFriendsPaid()
         val event = Event(imageDownloadUrl?.toString() ?: "", mActivity.mType, title, subtotal, tax,
                 mTotal, mExchangeRate, friendsShared, friendPaid)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroup.title).push()

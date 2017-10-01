@@ -115,7 +115,7 @@ class EventDetailActivity : BaseActivity() {
 
         private fun setupFriendsWhoPaidFirst(rootView: View) {
             // TODO
-            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, mEvent.friendPaid, mEvent.exchangeRate, null)
+            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, mEvent.friendPaid as ArrayList<Friend>, mEvent.exchangeRate, null)
             rootView.recycler_view_paid.layoutManager = LinearLayoutManager(activity)
         }
 
