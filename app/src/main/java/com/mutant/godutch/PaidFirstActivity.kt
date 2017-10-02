@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.mutant.godutch.model.ExchangeRate
 import com.mutant.godutch.model.Friend
 import kotlinx.android.synthetic.main.activity_paid_first.*
-import kotlinx.android.synthetic.main.list_item_friend_tick.view.*
 import java.util.*
 
 
@@ -26,12 +25,15 @@ class PaidFirstActivity : BaseActivity() {
     private var mTotal: Double = 0.0
     private lateinit var mExchangeRate: ExchangeRate
     private lateinit var mFriendsPaid: ArrayList<Friend>
+    private var mMode = MODE_SHARED_EVENLY
 
     companion object {
+        const val MODE_SHARED_EVENLY = 0
+        const val MODE_SHARED_MANUALLY = 1
 
-        private val BUNDLE_KEY_TOTAL = "BUNDLE_KEY_TOTAL"
-        private val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
-        private val BUNDLE_KEY_FRIENDS_PAID = "BUNDLE_KEY_FRIENDS_PAID"
+        const val BUNDLE_KEY_TOTAL = "BUNDLE_KEY_TOTAL"
+        const val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
+        const val BUNDLE_KEY_FRIENDS_PAID = "BUNDLE_KEY_FRIENDS_PAID"
 
         fun getIntent(activity: Activity, total: Double, exchangeRate: ExchangeRate, friendsPaid: ArrayList<Friend>): Intent {
             val intent = Intent(activity, PaidFirstActivity::class.java)
@@ -68,17 +70,17 @@ class PaidFirstActivity : BaseActivity() {
         get() = R.layout.activity_paid_first
 
     fun onClickShareLeft(v: View) {
-        val numberOfPeoplePaid = (recyclerView_paid.adapter as AdapterFriendsTick).getNumberOfPeoplePaid()
+        val numberOfPeoplePaid = (recyclerView_paid_evenly.adapter as AdapterSharedEvenly).getNumberOfPeoplePaid()
         if (numberOfPeoplePaid == 0) {
             Snackbar.make(constraint_parent, "請勾選至少一個人", Snackbar.LENGTH_SHORT).show()
         } else {
             val sharedLeft = getMoneyLeft() / numberOfPeoplePaid
-            (0 until recyclerView_paid.childCount).forEach {
-                val editText = recyclerView_paid.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
+            (0 until recyclerView_paid_evenly.childCount).forEach {
+                val editText = recyclerView_paid_evenly.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
                 val originDept = if (!editText.text.isNullOrBlank()) editText.text.toString().toDouble() else 0.0
                 val sum = sharedLeft + originDept
 
-                val checkBox = recyclerView_paid.getChildAt(it).findViewById(R.id.checkBox) as CheckBox
+                val checkBox = recyclerView_paid_evenly.getChildAt(it).findViewById(R.id.checkBox) as CheckBox
                 if (checkBox.isChecked) {
                     editText.setText("$sum")
                 }
@@ -94,6 +96,7 @@ class PaidFirstActivity : BaseActivity() {
     override fun setup() {
         setupBundle()
         setupPaidFirst()
+        onClickSharedMode(button_evenly)
     }
 
     private fun setupBundle() {
@@ -103,11 +106,30 @@ class PaidFirstActivity : BaseActivity() {
     }
 
     private fun setupPaidFirst() {
-        recyclerView_paid.layoutManager = LinearLayoutManager(this@PaidFirstActivity)
-        recyclerView_paid.adapter = AdapterFriendsTick()
+        recyclerView_paid_evenly.layoutManager = LinearLayoutManager(this@PaidFirstActivity)
+        recyclerView_paid_evenly.adapter = AdapterSharedEvenly()
+
+        recyclerView_paid_manually.layoutManager = LinearLayoutManager(this@PaidFirstActivity)
+        recyclerView_paid_manually.adapter = AdapterSharedManually()
     }
 
-    inner class AdapterFriendsTick : RecyclerView.Adapter<ViewHolder>() {
+    fun onClickSharedMode(v: View) {
+        setMode(MODE_SHARED_EVENLY)
+    }
+
+    fun onClickCustomMode(v: View) {
+        setMode(MODE_SHARED_MANUALLY)
+    }
+
+    fun setMode(mode: Int) {
+        mMode = mode
+        viewFlipper.displayedChild = mMode
+
+        button_evenly.isSelected = mode == MODE_SHARED_EVENLY
+        button_manually.isSelected = mode == MODE_SHARED_MANUALLY
+    }
+
+    inner class AdapterSharedEvenly : RecyclerView.Adapter<ViewHolderSharedEvenly>() {
 
         private var checkedPos = BooleanArray(mFriendsPaid.size, { false })
 
@@ -124,11 +146,76 @@ class PaidFirstActivity : BaseActivity() {
 
         override fun getItemCount(): Int = mFriendsPaid.size
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderSharedEvenly {
+            return ViewHolderSharedEvenly(LayoutInflater.from(parent.context).inflate(R.layout.list_item_shared_evenly, parent, false))
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: ViewHolderSharedEvenly, position: Int) {
+            val friend = mFriendsPaid[position]
+            Glide.with(this@PaidFirstActivity).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
+            holder.mTextViewName.text = friend.name
+            holder.mTextViewDept.text = if (friend.debt != 0.0) friend.debt.toString() else ""
+
+            holder.mCheckBox.setOnCheckedChangeListener(null)
+            holder.mCheckBox.isChecked = checkedPos[position]
+
+            holder.itemView.setOnClickListener({
+                holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
+            })
+
+            holder.mCheckBox.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
+                checkedPos[position] = isChecked
+                evenlyShared()
+                notifyDataSetChanged()
+            }
+
+        }
+
+        private fun evenlyShared() {
+            val numberOfPeoplePaid = getNumberOfPeoplePaid()
+            val moneyShared = if (numberOfPeoplePaid != 0) mTotal / numberOfPeoplePaid else 0.0
+            mFriendsPaid.forEach {
+                it.debt = if (checkedPos[mFriendsPaid.indexOf(it)]) moneyShared else 0.0
+            }
+        }
+
+        fun getNumberOfPeoplePaid(): Int {
+            var number = 0
+            checkedPos.filter { it }.map { number++ }
+            return number
+        }
+
+    }
+
+    inner class ViewHolderSharedEvenly(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val mImageViewPhotoUrl: AppCompatImageView = itemView.findViewById(R.id.imageView_photo_url) as AppCompatImageView
+        val mTextViewName: AppCompatTextView = itemView.findViewById(R.id.textView_name) as AppCompatTextView
+        val mCheckBox: AppCompatCheckBox = itemView.findViewById(R.id.checkBox) as AppCompatCheckBox
+        val mTextViewDept: AppCompatTextView = itemView.findViewById(R.id.textView_debt) as AppCompatTextView
+    }
+
+    inner class AdapterSharedManually : RecyclerView.Adapter<ViewHolderSharedManully>() {
+
+        private var checkedPos = BooleanArray(mFriendsPaid.size, { false })
+
+        init {
+            // TODO 自己要拉到第一個
+            Collections.sort(mFriendsPaid) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
+            mFriendsPaid.filter { it.uid == me.uid }.map {
+                mFriendsPaid.remove(it)
+                mFriendsPaid.add(0, it)
+            }
+
+            mFriendsPaid.filter { it.debt != 0.0 }.map { checkedPos[mFriendsPaid.indexOf(it)] = true }
+        }
+
+        override fun getItemCount(): Int = mFriendsPaid.size
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderSharedManully {
+            return ViewHolderSharedManully(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
+        }
+
+        override fun onBindViewHolder(holder: ViewHolderSharedManully, position: Int) {
             val friend = mFriendsPaid[position]
             Glide.with(this@PaidFirstActivity).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
             holder.mTextViewName.text = friend.name
@@ -160,8 +247,8 @@ class PaidFirstActivity : BaseActivity() {
 
         private fun calculateLeft() {
             var inputTotal = 0.0
-            (0 until recyclerView_paid.childCount).forEach {
-                val editText = recyclerView_paid.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
+            (0 until recyclerView_paid_evenly.childCount).forEach {
+                val editText = recyclerView_paid_evenly.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
                 if (!editText.text.isNullOrBlank()) {
                     inputTotal += editText.text.toString().toDouble()
                 }
@@ -190,11 +277,10 @@ class PaidFirstActivity : BaseActivity() {
 
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val mImageViewPhotoUrl: AppCompatImageView = itemView.imageView_photo_url
-        val mTextViewName: AppCompatTextView = itemView.textView_name
-        val mCheckBox: AppCompatCheckBox = itemView.checkBox
-        val mEditTextDept: AppCompatEditText = itemView.editText_debt
+    inner class ViewHolderSharedManully(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val mImageViewPhotoUrl: AppCompatImageView = itemView.findViewById(R.id.imageView_photo_url) as AppCompatImageView
+        val mTextViewName: AppCompatTextView = itemView.findViewById(R.id.textView_name) as AppCompatTextView
+        val mCheckBox: AppCompatCheckBox = itemView.findViewById(R.id.checkBox) as AppCompatCheckBox
+        val mEditTextDept: AppCompatEditText = itemView.findViewById(R.id.editText_debt) as AppCompatEditText
     }
-
 }
