@@ -99,6 +99,15 @@ class AdapterEventCard(var activity: Activity, private var group: Group) : Recyc
         notifyItemInserted(0)
     }
 
+    fun removeItem(event: Event) {
+        events.filter { it.key == event.key }.map {
+            val pos = events.indexOf(it)
+            events.remove(it)
+            notifyItemRemoved(pos)
+            notifyItemRangeChanged(pos, itemCount)
+        }
+    }
+
     val getEvents: ArrayList<Event>
         get() = events
 

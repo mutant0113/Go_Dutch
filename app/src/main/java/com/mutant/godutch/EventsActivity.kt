@@ -81,8 +81,10 @@ class EventsActivity : BaseActivity() {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 var event = dataSnapshot.getValue(Event::class.java)
                 event.key = dataSnapshot.key
-                (recycler_view_event_card.adapter as AdapterEventCard).addItem(event)
                 (recycler_view_event_list.adapter as AdapterEventList).addItem(event)
+                recycler_view_event_list.scrollToPosition(0)
+
+                (recycler_view_event_card.adapter as AdapterEventCard).addItem(event)
                 recycler_view_event_card.scrollToPosition(0)
             }
 
@@ -91,7 +93,10 @@ class EventsActivity : BaseActivity() {
             }
 
             override fun onChildRemoved(dataSnapshot: com.google.firebase.database.DataSnapshot) {
-                // TODO
+                var event = dataSnapshot.getValue(Event::class.java)
+                event.key = dataSnapshot.key
+                (recycler_view_event_list.adapter as AdapterEventList).removeItem(event)
+                (recycler_view_event_card.adapter as AdapterEventCard).removeItem(event)
             }
 
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
