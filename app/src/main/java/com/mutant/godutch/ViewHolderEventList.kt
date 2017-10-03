@@ -2,7 +2,6 @@ package com.mutant.godutch
 
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
-import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.list_item_event.view.*
@@ -16,5 +15,5 @@ class ViewHolderEventList(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var mImageViewPhoto: AppCompatImageView = itemView.imageView_photo
     var mTextViewTitle: AppCompatTextView = itemView.textView_title
     var mTextViewTotal: AppCompatTextView = itemView.textView_total
-    var mLinearLayoutFriendsShared: LinearLayoutCompat = itemView.linearLayout_friends_shared
+    var mTextViewMyDept: AppCompatTextView = itemView.textView_my_debt
 }

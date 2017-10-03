@@ -39,6 +39,8 @@
     <string name="event_type_shopping">大買特買</string>
     <string name="event_type_hotel">住宿</string>
     <string name="event_type_ticket">票券</string>
+    <string name="event_paid_first">%s 先付錢</string>
+
     <string name="action_settings">Settings</string>
     <string name="action_take_a_photo">拍張照</string>
 
@@ -49,5 +51,4 @@
     <string name="remind">提醒</string>
 
     <string name="invite">邀請新好友</string>
-
 </resources>

@@ -1,40 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:layout_margin="@dimen/list_screen_edge_left_and_right_margins">
+    android:layout_margin="8dp">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/imageView_photo"
-        android:layout_width="@dimen/pro_pic_size_big"
-        android:layout_height="@dimen/pro_pic_size_big"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_width="@dimen/pro_pic_size"
+        android:layout_height="@dimen/pro_pic_size"
         android:scaleType="centerCrop"
         android:src="@drawable/food_default_640"
-        android:transitionName="@string/events_image_photo" />
+        android:transitionName="@string/events_image_photo"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/textView_total"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView_photo"
-        android:layout_alignLeft="@+id/imageView_photo"
-        android:layout_alignRight="@+id/imageView_photo"
-        android:background="@color/gray_50"
-        android:gravity="center"
-        android:padding="@dimen/space_between_content_areas"
-        android:text="TWD $550"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/font_size_subheading" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/list_screen_edge_left_and_right_margins"
-        android:layout_toRightOf="@+id/imageView_photo"
-        android:orientation="vertical">
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView_photo"
+        app:layout_constraintTop_toBottomOf="parent">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/textView_title"
@@ -45,31 +37,46 @@
             android:textSize="@dimen/font_size_subheading" />
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/textView_paid"
-            android:layout_below="@+id/textView_title"
+            android:id="@+id/textView_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DottoTsai、翌辰先付"
+            android:background="@color/gray_50"
+            android:text="總共花費TWD $0.0"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/font_size_subheading" />
+            android:textSize="@dimen/font_size_subheading"
+            app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
-        <android.support.v7.widget.ContentFrameLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/linearLayoutCompat_description"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayoutCompat_title"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView_total">
 
-        </android.support.v7.widget.ContentFrameLayout>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_my_debt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="我花費"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="0dp" />
 
-        <android.support.v7.widget.LinearLayoutCompat
-            android:id="@+id/linearLayout_friends_shared"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/pro_pic_size"
-            android:layout_below="@+id/linearLayoutCompat_description"
-            android:layout_marginTop="@dimen/space_between_content_areas">
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_my_debt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="$0.0"
+                android:textSize="@dimen/font_size_display_1"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_my_debt_title" />
 
-        </android.support.v7.widget.LinearLayoutCompat>
-    </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
-</RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
