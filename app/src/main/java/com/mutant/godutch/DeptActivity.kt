@@ -80,12 +80,12 @@ class DeptActivity : BaseActivity() {
             Snackbar.make(constraint_parent, "請勾選至少一個人", Snackbar.LENGTH_SHORT).show()
         } else {
             val sharedLeft = getMoneyLeft() / numberOfPeoplePaid
-            (0 until recyclerView_evenly.childCount).forEach {
-                val editText = recyclerView_evenly.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
+            (0 until recyclerView_manually.childCount).forEach {
+                val editText = recyclerView_manually.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
                 val originDept = if (!editText.text.isNullOrBlank()) editText.text.toString().toDouble() else 0.0
                 val sum = sharedLeft + originDept
 
-                val checkBox = recyclerView_evenly.getChildAt(it).findViewById(R.id.checkBox) as CheckBox
+                val checkBox = recyclerView_manually.getChildAt(it).findViewById(R.id.checkBox) as CheckBox
                 if (checkBox.isChecked) {
                     editText.setText("$sum")
                 }
@@ -201,7 +201,7 @@ class DeptActivity : BaseActivity() {
         val mTextViewDept: AppCompatTextView = itemView.findViewById(R.id.textView_debt) as AppCompatTextView
     }
 
-    inner class AdapterManually(var allUserDept: ArrayList<Friend>) : RecyclerView.Adapter<ViewHolderPaidManually>() {
+    inner class AdapterManually(private var allUserDept: ArrayList<Friend>) : RecyclerView.Adapter<ViewHolderPaidManually>() {
 
         override fun getItemCount(): Int = allUserDept.size
 
@@ -235,6 +235,8 @@ class DeptActivity : BaseActivity() {
                     val dept = editText.text.toString().toDouble()
                     allUserDept[it].debt = dept
                     inputTotal += dept
+                } else {
+                    allUserDept[it].debt = 0.0
                 }
             }
 
