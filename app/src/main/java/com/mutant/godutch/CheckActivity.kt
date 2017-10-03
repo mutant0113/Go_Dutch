@@ -8,8 +8,6 @@ import com.mutant.godutch.model.Friend
 import kotlinx.android.synthetic.main.activity_checkout.*
 
 
-
-
 /**
  * Created by Mutant on 2017/6/11.
  */
@@ -42,7 +40,7 @@ class CheckActivity : BaseActivity() {
         mEvents.forEach {
             val exchangeRate = it.exchangeRate
             val v = totalMap[exchangeRate!!.jsonKey]
-            if(v == null) {
+            if (v == null) {
                 totalMap.put(exchangeRate.jsonKey, it.total)
             } else {
                 totalMap.put(exchangeRate.jsonKey, v + it.total)
@@ -55,38 +53,28 @@ class CheckActivity : BaseActivity() {
     }
 
     private fun setupCheckout() {
+        val friendsPaid = ArrayList<Friend>()
         val friendsShared = ArrayList<Friend>()
-        for (event in mEvents) {
-            for (friendInEvent in event.friendsShared) {
-                var isExists = false
-                for (friendInShared in friendsShared) {
-                    if (friendInShared.uid == friendInEvent.uid) {
-                        friendInShared.debt = friendInShared.debt + friendInEvent.debt
-                        isExists = true
-                        break
-                    }
-                }
-
-                if (!isExists) {
-                    friendsShared.add(friendInEvent)
-                }
-            }
+        mEvents.forEach {
+            it.friendPaid.forEach { addDeptToFriend(friendsPaid, it) }
+            it.friendsShared.forEach { addDeptToFriend(friendsShared, it) }
         }
 
-        var mListResult: ArrayList<Int> = arrayListOf()
-        var mHashMap: HashMap<Int, List<Int>> = hashMapOf()
-        mHashMap.forEach{(_, v) ->
-            if(mListResult.size < v.size) {
-                mListResult = ArrayList(v)
-            }
-        }
-
-        // TODO
-        recycler_view_paid.adapter = AdapterPaidCheck(this, friendsShared, mEvents[0].exchangeRate, null)
+        recycler_view_paid.adapter = AdapterPaidCheck(this, friendsPaid, mEvents[0].exchangeRate, null)
         recycler_view_paid.layoutManager = LinearLayoutManager(this)
-        // TODO
+
         recycler_view_shared.adapter = AdapterPaidCheck(this, friendsShared, mEvents[0].exchangeRate, null)
         recycler_view_shared.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun addDeptToFriend(friends: ArrayList<Friend>, friend: Friend) {
+        var exists = false
+        friends.filter { it.uid == friend.uid }.map {
+            it.debt += friend.debt
+            exists = true
+        }
+
+        if (!exists) friends.add(friend)
     }
 
 }
