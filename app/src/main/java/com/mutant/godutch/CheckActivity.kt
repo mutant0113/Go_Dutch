@@ -38,14 +38,14 @@ class CheckActivity : BaseActivity() {
     }
 
     private fun setupTotal() {
-        var totalMap: HashMap<String, Double> = hashMapOf()
+        val totalMap: HashMap<String, Double> = hashMapOf()
         mEvents.forEach {
             val exchangeRate = it.exchangeRate
             val v = totalMap[exchangeRate!!.jsonKey]
             if(v == null) {
-                totalMap.put(exchangeRate!!.jsonKey, it.total)
+                totalMap.put(exchangeRate.jsonKey, it.total)
             } else {
-                totalMap.put(exchangeRate!!.jsonKey, v + it.total)
+                totalMap.put(exchangeRate.jsonKey, v + it.total)
             }
         }
 
@@ -73,9 +73,9 @@ class CheckActivity : BaseActivity() {
             }
         }
 
-        var mListResult: ArrayList<Integer> = arrayListOf()
-        var mHashMap: HashMap<Integer, List<Integer>> = hashMapOf()
-        mHashMap.forEach{(k, v) ->
+        var mListResult: ArrayList<Int> = arrayListOf()
+        var mHashMap: HashMap<Int, List<Int>> = hashMapOf()
+        mHashMap.forEach{(_, v) ->
             if(mListResult.size < v.size) {
                 mListResult = ArrayList(v)
             }

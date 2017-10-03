@@ -68,7 +68,8 @@ class EventDetailActivity : BaseActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_edit) {
+            // TODO
             return true
         }
 
@@ -102,29 +103,29 @@ class EventDetailActivity : BaseActivity() {
             rootView.textView_date.text = Utility.getRelativeTimeSpanDate(mEvent.timestampCreated)
             val exchangeRate = mEvent.exchangeRate
             // TODO use setting country
-            if(exchangeRate?.jsonKey.equals("TWD")) {
+            if (exchangeRate?.jsonKey.equals("TWD")) {
                 rootView.textView_total.text = "總共花費\n" + exchangeRate?.jsonKey + " $" + mEvent.total
             } else {
                 rootView.textView_total.text = "總共花費\n" + exchangeRate?.jsonKey + " $" + mEvent.total + " -> \n" +
                         "TWD $" + Math.round(mEvent.total!! * exchangeRate?.rate!!)
             }
-            setupFriendsWhoPaidFirst(rootView)
-            setupFriendsShared(rootView)
+            setupPaid(rootView)
+            setupShared(rootView)
             return rootView
         }
 
-        private fun setupFriendsWhoPaidFirst(rootView: View) {
+        private fun setupPaid(rootView: View) {
             // TODO
-            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, mEvent.friendPaid as ArrayList<Friend>, mEvent.exchangeRate, null)
+            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, mEvent.friendPaid, mEvent.exchangeRate, null)
             rootView.recycler_view_paid.layoutManager = LinearLayoutManager(activity)
         }
 
-        private fun setupFriendsShared(rootView: View) {
+        private fun setupShared(rootView: View) {
             val mDatabaseEvents = FirebaseDatabase.getInstance().reference.child("events").child(mGroupId).child(mEvent.key).child("friendsShared")
             var friendsFilter: ArrayList<Friend> = arrayListOf()
             mEvent.friendsShared.filterTo(friendsFilter) { it.debt > 0 }
             // TODO
-            rootView.recycler_view_shared.adapter = AdapterPaidCheck(activity, arrayListOf(), mEvent.exchangeRate, mDatabaseEvents)
+            rootView.recycler_view_shared.adapter = AdapterPaidCheck(activity, mEvent.friendsShared, mEvent.exchangeRate, mDatabaseEvents)
             rootView.recycler_view_shared.layoutManager = LinearLayoutManager(activity)
         }
 

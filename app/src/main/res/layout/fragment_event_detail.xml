@@ -74,96 +74,77 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView_photo"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/activity_horizontal_margin">
 
-            <RelativeLayout
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_between_content_areas"
+                android:text="總共\n新台幣 TWD $0.0"
+                android:textSize="@dimen/font_size_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textView_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="@dimen/screen_edge_left_and_right_padding"
+                android:layout_marginRight="@dimen/screen_edge_left_and_right_padding"
+                android:text="date"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="parent" />
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/linearLayout_paid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView_photo"
+                android:layout_marginTop="@dimen/space_between_content_areas"
                 android:orientation="vertical"
-                android:paddingTop="@dimen/activity_horizontal_margin">
-
-                <android.support.v7.widget.ContentFrameLayout
-                    android:id="@+id/linearLayoutCompat_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="@dimen/screen_edge_left_and_right_padding"
-                    android:layout_marginRight="@dimen/screen_edge_left_and_right_padding"
-                    android:orientation="horizontal">
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/textView_description"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="description"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/textView_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical"
-                        android:text="date" />
-
-                </android.support.v7.widget.ContentFrameLayout>
+                app:layout_constraintTop_toBottomOf="@+id/textView_total">
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/textView_total"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/linearLayoutCompat_title"
-                    android:layout_marginLeft="@dimen/space_between_content_areas"
-                    android:layout_marginRight="@dimen/screen_edge_left_and_right_padding"
-                    android:layout_marginTop="@dimen/space_between_content_areas"
-                    android:text="總共花費\n新台幣 TWD $550" />
+                    android:background="@color/gray_50"
+                    android:padding="@dimen/space_between_content_areas"
+                    android:text="@string/friend_paid" />
 
-                <android.support.v7.widget.LinearLayoutCompat
-                    android:id="@+id/linearLayout_paid"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_paid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/linearLayout_friends_who_shared"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout_paid">
+
+                <android.support.v7.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView_total"
-                    android:layout_marginTop="@dimen/space_between_content_areas"
-                    android:orientation="vertical">
+                    android:background="@color/gray_50"
+                    android:padding="@dimen/space_between_content_areas"
+                    android:text="@string/friends_shared" />
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/gray_50"
-                        android:padding="@dimen/space_between_content_areas"
-                        android:text="@string/friend_paid" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycler_view_paid"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </android.support.v7.widget.LinearLayoutCompat>
-
-                <android.support.v7.widget.LinearLayoutCompat
-                    android:id="@+id/linearLayout_friends_who_shared"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/linearLayout_paid"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/gray_50"
-                        android:padding="@dimen/space_between_content_areas"
-                        android:text="@string/friends_shared" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycler_view_shared"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </android.support.v7.widget.LinearLayoutCompat>
-            </RelativeLayout>
-        </LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_shared"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

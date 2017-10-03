@@ -67,7 +67,7 @@ class AdapterPaidCheck(var activity: Activity, private var friends: ArrayList<Fr
         return mFriendsPaid.size
     }
 
-    fun getFriendsPaid(): List<Friend> {
+    fun getFriendsPaid(): ArrayList<Friend> {
         return mFriendsPaid
     }
 
