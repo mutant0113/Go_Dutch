@@ -22,7 +22,7 @@ import java.util.*
 class GroupsFragment : Fragment() {
 
     var mAdapterGroup: AdapterGroup? = null
-    var firebaseUser = FirebaseAuth.getInstance().currentUser
+    var mFirebaseUser = FirebaseAuth.getInstance().currentUser
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_groups, container, false)
@@ -49,7 +49,7 @@ class GroupsFragment : Fragment() {
 
     private fun setupFirebase() {
         val databaseGroupsMapping: DatabaseReference? = FirebaseDatabase.getInstance().reference.
-                child("groups_mapping").child(firebaseUser?.uid)
+                child("groups_mapping").child(mFirebaseUser?.uid)
         databaseGroupsMapping?.addChildEventListener(object : ChildEventListener {
             override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
             }
@@ -63,6 +63,7 @@ class GroupsFragment : Fragment() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot?) {
+                // TODO revmoe group data
             }
 
             override fun onCancelled(dataSnapshot: DatabaseError?) {

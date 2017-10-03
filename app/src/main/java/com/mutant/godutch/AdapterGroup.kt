@@ -2,16 +2,15 @@ package com.mutant.godutch
 
 import android.app.Activity
 import android.os.Build
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.mutant.godutch.model.Friend
 import com.mutant.godutch.model.Group
 import com.mutant.godutch.utils.Utility
@@ -56,6 +55,23 @@ class AdapterGroup(private val activity: Activity, private val groups: ArrayList
         }
 
         holder.itemView.setOnClickListener { activity.startActivity(EventsActivity.getIntent(activity, group)) }
+        holder.itemView.setOnLongClickListener {
+            removeGroup(group)
+            false
+        }
+    }
+
+    private fun removeGroup(group: Group) {
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        val databaseGroupsMapping: DatabaseReference? = FirebaseDatabase.getInstance().reference.
+                child("groups_mapping").child(firebaseUser?.uid)
+        val databaseGroups: DatabaseReference? = FirebaseDatabase.getInstance().reference.child("groups")
+
+        AlertDialog.Builder(activity).setTitle("系統提示").setMessage("確定要刪除此筆？")
+                .setPositiveButton("確定") { _, _ ->
+                    databaseGroupsMapping?.child(group.key)?.removeValue()
+                    databaseGroups?.child(group.key)?.removeValue()
+                }.setNeutralButton("取消", null).show()
     }
 
     private fun fetchUserInfo(uid: String, listener: ValueEventListener) {
