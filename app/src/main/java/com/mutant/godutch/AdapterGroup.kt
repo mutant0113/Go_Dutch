@@ -62,6 +62,7 @@ class AdapterGroup(private val activity: Activity, private val groups: ArrayList
     }
 
     private fun removeGroup(group: Group) {
+        // TODO all events should be removed
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         val databaseGroupsMapping: DatabaseReference? = FirebaseDatabase.getInstance().reference.
                 child("groups_mapping").child(firebaseUser?.uid)

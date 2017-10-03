@@ -63,7 +63,7 @@ class GroupsFragment : Fragment() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot?) {
-                // TODO revmoe group data
+                // TODO remove group data
             }
 
             override fun onCancelled(dataSnapshot: DatabaseError?) {
