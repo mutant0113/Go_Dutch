@@ -40,7 +40,7 @@
     <string name="event_type_hotel">住宿</string>
     <string name="event_type_ticket">票券</string>
     <string name="event_paid_first">%s 先付錢</string>
-    <string name="event_total_paid">總共花費 %s</string>
+    <string name="event_total_paid">總共%s</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_take_a_photo">拍張照</string>

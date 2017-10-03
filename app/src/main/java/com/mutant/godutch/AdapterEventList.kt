@@ -36,7 +36,7 @@ class AdapterEventList(var activity: Activity, private var group: Group) : Recyc
         setupPhoto(holder, event)
         event.friendsShared.filter { it.uid == (activity as EventsActivity).me.uid }.map { holder.mTextViewMyDept.text = "$${it.debt}" }
         // TODO 轉換幣別
-        holder.mTextViewTotal.text = activity.getString(R.string.event_total_paid, "${event.exchangeRate?.jsonKey} $${event.subtotal}")
+        holder.mTextViewTotal.text = activity.getString(R.string.event_total_paid, "$${event.subtotal}")
         // TODO fetch from database
         holder.itemView.setOnClickListener {
             // TODO makeSceneTransitionAnimation bug

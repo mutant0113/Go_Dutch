@@ -145,10 +145,10 @@ class NewEventStep2Fragment : Fragment() {
         val title = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_title) as EditText).text.toString()
         val subtotal = (mActivity.mNewEventStep1Fragment.rootView.findViewById(R.id.editText_subtotal) as EditText).text.toString().toDouble()
         val tax = mActivity.mNewEventStep1Fragment.mTax
-        val friendsShared = (recycler_view_shared.adapter as AdapterPaidCheck).getFriendsPaid()
         val friendPaid = (recycler_view_paid.adapter as AdapterPaidCheck).getFriendsPaid()
+        val friendsShared = (recycler_view_shared.adapter as AdapterPaidCheck).getFriendsPaid()
         val event = Event(imageDownloadUrl?.toString() ?: "", mActivity.mType, title, subtotal, tax,
-                mTotal, mExchangeRate, friendsShared, friendPaid)
+                mTotal, mExchangeRate, friendPaid, friendsShared)
         val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroup.key).push()
         databaseReference.setValue(event).addOnSuccessListener {
             val notifyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroup.key)

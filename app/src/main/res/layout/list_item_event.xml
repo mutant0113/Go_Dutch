@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView_photo"
@@ -34,15 +33,13 @@
             android:layout_height="wrap_content"
             android:text="title"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/font_size_subheading" />
+            android:textSize="@dimen/font_size_title" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/textView_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/gray_50"
-            android:text="總共花費TWD $0.0"
-            android:textColor="@android:color/black"
+            android:text="@string/event_total_paid"
             android:textSize="@dimen/font_size_subheading"
             app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
