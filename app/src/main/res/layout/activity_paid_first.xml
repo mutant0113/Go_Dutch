@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:padding="@dimen/font_size_title"
-            android:text="$0"
+            android:text="$0.0"
             android:textSize="@dimen/font_size_display_1"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="8dp" />

@@ -1,5 +1,6 @@
 package com.mutant.godutch
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
@@ -25,11 +26,11 @@ class PaidFirstActivity : BaseActivity() {
     private var mTotal: Double = 0.0
     private lateinit var mExchangeRate: ExchangeRate
     private lateinit var mAllUserPaid: ArrayList<Friend>
-    private var mMode = MODE_SHARED_EVENLY
+    private var mMode = MODE_PAID_EVENLY
 
     companion object {
-        const val MODE_SHARED_EVENLY = 0
-        const val MODE_SHARED_MANUALLY = 1
+        const val MODE_PAID_EVENLY = 0
+        const val MODE_PAID_MANUALLY = 1
 
         const val BUNDLE_KEY_TOTAL = "BUNDLE_KEY_TOTAL"
         const val BUNDLE_KEY_EXCHANGE_RATE = "BUNDLE_KEY_EXCHANGE_RATE"
@@ -60,9 +61,13 @@ class PaidFirstActivity : BaseActivity() {
 
     private fun done() {
         var data = Intent()
-        // TODO filter friends who have dept
-//        data.putExtra(BUNDLE_KEY_FRIENDS_PAID, mAllUserPaid)
-        setResult(Activity.RESULT_OK)
+        if (mMode == MODE_PAID_EVENLY) {
+            data.putExtra(BUNDLE_KEY_FRIENDS_PAID, (recyclerView_paid_evenly.adapter as AdapterPaidEvenly).getFriendsPaid())
+        } else if (mMode == MODE_PAID_MANUALLY) {
+            data.putExtra(BUNDLE_KEY_FRIENDS_PAID, (recyclerView_paid_manually.adapter as AdapterPaidManually).getFriendsPaid())
+        }
+
+        setResult(Activity.RESULT_OK, data)
         finish()
     }
 
@@ -70,7 +75,7 @@ class PaidFirstActivity : BaseActivity() {
         get() = R.layout.activity_paid_first
 
     fun onClickShareLeft(v: View) {
-        val numberOfPeoplePaid = (recyclerView_paid_evenly.adapter as AdapterSharedEvenly).getNumberOfPeoplePaid()
+        val numberOfPeoplePaid = (recyclerView_paid_evenly.adapter as AdapterPaidEvenly).getNumberOfPeoplePaid()
         if (numberOfPeoplePaid == 0) {
             Snackbar.make(constraint_parent, "請勾選至少一個人", Snackbar.LENGTH_SHORT).show()
         } else {
@@ -103,58 +108,58 @@ class PaidFirstActivity : BaseActivity() {
         mTotal = intent.getDoubleExtra(BUNDLE_KEY_TOTAL, 0.0)
         mExchangeRate = intent.getParcelableExtra(BUNDLE_KEY_EXCHANGE_RATE)
         mAllUserPaid = intent.getParcelableArrayListExtra(BUNDLE_KEY_FRIENDS_PAID)
+
+        Collections.sort(mAllUserPaid) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
+        mAllUserPaid.filter { it.uid == me.uid }.map {
+            mAllUserPaid.remove(it)
+            mAllUserPaid.add(0, it)
+        }
+
     }
 
     private fun setupPaidFirst() {
         var allUsersPaidEvenly = arrayListOf<Friend>()
-        mAllUserPaid.forEach{ allUsersPaidEvenly.add(Friend(it))}
+        mAllUserPaid.forEach { allUsersPaidEvenly.add(Friend(it)) }
         recyclerView_paid_evenly.layoutManager = LinearLayoutManager(this@PaidFirstActivity)
-        recyclerView_paid_evenly.adapter = AdapterSharedEvenly(allUsersPaidEvenly)
+        recyclerView_paid_evenly.adapter = AdapterPaidEvenly(allUsersPaidEvenly)
 
         var allUsersPaidManually = arrayListOf<Friend>()
-        mAllUserPaid.forEach{ allUsersPaidManually.add(Friend(it))}
+        mAllUserPaid.forEach { allUsersPaidManually.add(Friend(it)) }
         recyclerView_paid_manually.layoutManager = LinearLayoutManager(this@PaidFirstActivity)
-        recyclerView_paid_manually.adapter = AdapterSharedManually(allUsersPaidManually)
+        recyclerView_paid_manually.adapter = AdapterPaidManually(allUsersPaidManually)
     }
 
     fun onClickSharedMode(v: View) {
-        setMode(MODE_SHARED_EVENLY)
+        setMode(MODE_PAID_EVENLY)
     }
 
     fun onClickCustomMode(v: View) {
-        setMode(MODE_SHARED_MANUALLY)
+        setMode(MODE_PAID_MANUALLY)
     }
 
     fun setMode(mode: Int) {
         mMode = mode
         viewFlipper.displayedChild = mMode
 
-        button_evenly.isSelected = mode == MODE_SHARED_EVENLY
-        button_manually.isSelected = mode == MODE_SHARED_MANUALLY
+        button_evenly.isSelected = mode == MODE_PAID_EVENLY
+        button_manually.isSelected = mode == MODE_PAID_MANUALLY
     }
 
-    inner class AdapterSharedEvenly(var allUserPaid: ArrayList<Friend>) : RecyclerView.Adapter<ViewHolderSharedEvenly>() {
+    inner class AdapterPaidEvenly(var allUserPaid: ArrayList<Friend>) : RecyclerView.Adapter<ViewHolderPaidEvenly>() {
 
         private var checkedPos = BooleanArray(allUserPaid.size, { false })
 
         init {
-            // TODO 自己要拉到第一個
-            Collections.sort(allUserPaid) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
-            allUserPaid.filter { it.uid == me.uid }.map {
-                allUserPaid.remove(it)
-                allUserPaid.add(0, it)
-            }
-
             allUserPaid.filter { it.debt != 0.0 }.map { checkedPos[allUserPaid.indexOf(it)] = true }
         }
 
         override fun getItemCount(): Int = allUserPaid.size
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderSharedEvenly {
-            return ViewHolderSharedEvenly(LayoutInflater.from(parent.context).inflate(R.layout.list_item_shared_evenly, parent, false))
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPaidEvenly {
+            return ViewHolderPaidEvenly(LayoutInflater.from(parent.context).inflate(R.layout.list_item_paid_evenly, parent, false))
         }
 
-        override fun onBindViewHolder(holder: ViewHolderSharedEvenly, position: Int) {
+        override fun onBindViewHolder(holder: ViewHolderPaidEvenly, position: Int) {
             val friend = allUserPaid[position]
             Glide.with(this@PaidFirstActivity).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
             holder.mTextViewName.text = friend.name
@@ -189,56 +194,36 @@ class PaidFirstActivity : BaseActivity() {
             return number
         }
 
+        fun getFriendsPaid(): ArrayList<Friend> {
+            allUserPaid.filter { it.debt == 0.0 }.map { allUserPaid.remove(it) }
+            return allUserPaid
+        }
+
     }
 
-    inner class ViewHolderSharedEvenly(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolderPaidEvenly(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mImageViewPhotoUrl: AppCompatImageView = itemView.findViewById(R.id.imageView_photo_url) as AppCompatImageView
         val mTextViewName: AppCompatTextView = itemView.findViewById(R.id.textView_name) as AppCompatTextView
         val mCheckBox: AppCompatCheckBox = itemView.findViewById(R.id.checkBox) as AppCompatCheckBox
         val mTextViewDept: AppCompatTextView = itemView.findViewById(R.id.textView_debt) as AppCompatTextView
     }
 
-    inner class AdapterSharedManually(var allUserPaid: ArrayList<Friend>) : RecyclerView.Adapter<ViewHolderSharedManully>() {
-
-        private var checkedPos = BooleanArray(allUserPaid.size, { false })
-
-        init {
-            // TODO 自己要拉到第一個
-            Collections.sort(allUserPaid) { o1, o2 -> o1?.uid!!.compareTo(o2?.uid!!) }
-            allUserPaid.filter { it.uid == me.uid }.map {
-                allUserPaid.remove(it)
-                allUserPaid.add(0, it)
-            }
-
-            allUserPaid.filter { it.debt != 0.0 }.map { checkedPos[allUserPaid.indexOf(it)] = true }
-        }
+    inner class AdapterPaidManually(var allUserPaid: ArrayList<Friend>) : RecyclerView.Adapter<ViewHolderPaidManually>() {
 
         override fun getItemCount(): Int = allUserPaid.size
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderSharedManully {
-            return ViewHolderSharedManully(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPaidManually {
+            return ViewHolderPaidManually(LayoutInflater.from(parent.context).inflate(R.layout.list_item_friend_tick, parent, false))
         }
 
-        override fun onBindViewHolder(holder: ViewHolderSharedManully, position: Int) {
+        override fun onBindViewHolder(holder: ViewHolderPaidManually, position: Int) {
             val friend = allUserPaid[position]
             Glide.with(this@PaidFirstActivity).load(friend.photoUrl).error(R.drawable.profile_pic).into(holder.mImageViewPhotoUrl)
             holder.mTextViewName.text = friend.name
             holder.mEditTextDept.visibility = View.VISIBLE
             holder.mEditTextDept.setText(if (friend.debt != 0.0) friend.debt.toString() else "")
 
-            holder.mCheckBox.setOnCheckedChangeListener(null)
-            holder.mCheckBox.isChecked = checkedPos[position]
-
-            holder.itemView.setOnClickListener({
-                holder.mCheckBox.isChecked = !holder.mCheckBox.isChecked
-                holder.mEditTextDept.clearFocus()
-            })
-
-            holder.mCheckBox.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
-                checkedPos[position] = isChecked
-                evenlyShared()
-                notifyDataSetChanged()
-            }
+            holder.mCheckBox.visibility = View.INVISIBLE
 
             holder.mEditTextDept.setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
@@ -254,34 +239,29 @@ class PaidFirstActivity : BaseActivity() {
             (0 until recyclerView_paid_evenly.childCount).forEach {
                 val editText = recyclerView_paid_manually.getChildAt(it).findViewById(R.id.editText_debt) as AppCompatEditText
                 if (!editText.text.isNullOrBlank()) {
-                    inputTotal += editText.text.toString().toDouble()
+                    val dept = editText.text.toString().toDouble()
+                    allUserPaid[it].debt = dept
+                    inputTotal += dept
                 }
             }
 
             setTextLeft(mTotal - inputTotal)
         }
 
+        @SuppressLint("SetTextI18n")
         private fun setTextLeft(left: Double) {
             textView_left.text = "$$left"
         }
 
-        private fun evenlyShared() {
-            val numberOfPeoplePaid = getNumberOfPeoplePaid()
-            val moneyShared = if (numberOfPeoplePaid != 0) mTotal / numberOfPeoplePaid else 0.0
-            allUserPaid.forEach {
-                it.debt = if (checkedPos[allUserPaid.indexOf(it)]) moneyShared else 0.0
-            }
-        }
-
-        fun getNumberOfPeoplePaid(): Int {
-            var number = 0
-            checkedPos.filter { it }.map { number++ }
-            return number
+        fun getFriendsPaid(): ArrayList<Friend> {
+            calculateLeft()
+            allUserPaid.filter { it.debt == 0.0 }.map { allUserPaid.remove(it) }
+            return allUserPaid
         }
 
     }
 
-    inner class ViewHolderSharedManully(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolderPaidManually(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mImageViewPhotoUrl: AppCompatImageView = itemView.findViewById(R.id.imageView_photo_url) as AppCompatImageView
         val mTextViewName: AppCompatTextView = itemView.findViewById(R.id.textView_name) as AppCompatTextView
         val mCheckBox: AppCompatCheckBox = itemView.findViewById(R.id.checkBox) as AppCompatCheckBox

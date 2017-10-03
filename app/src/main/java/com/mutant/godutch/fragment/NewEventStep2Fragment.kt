@@ -178,7 +178,8 @@ class NewEventStep2Fragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_PAID_FIRST) {
-                // TODO
+                val friendsPaid: ArrayList<Friend> = data!!.getParcelableArrayListExtra(PaidFirstActivity.BUNDLE_KEY_FRIENDS_PAID)
+                (recycler_view_paid.adapter as AdapterPaidCheck).update(friendsPaid)
             } else if (requestCode == REQUEST_SHARED) {
                 // TODO
             }

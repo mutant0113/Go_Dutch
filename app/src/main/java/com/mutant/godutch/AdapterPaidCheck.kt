@@ -71,4 +71,9 @@ class AdapterPaidCheck(var activity: Activity, private var friends: ArrayList<Fr
         return mFriendsPaid
     }
 
+    fun update(friendsPaid: ArrayList<Friend>) {
+        mFriendsPaid = friendsPaid
+        notifyDataSetChanged()
+    }
+
 }
