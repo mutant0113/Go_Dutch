@@ -42,3 +42,5 @@ obj/
 /build
 /captures
 /app/fabric.properties
+
+/executorproject
