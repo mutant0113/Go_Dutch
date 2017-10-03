@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mutant.godutch.PaidFirstActivity">
+    tools:context="com.mutant.godutch.DeptActivity">
 
     <include
         android:id="@+id/tool_bar"

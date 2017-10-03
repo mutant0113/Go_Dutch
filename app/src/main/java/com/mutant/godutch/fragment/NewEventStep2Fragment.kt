@@ -19,7 +19,9 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.mutant.godutch.*
+import com.mutant.godutch.AdapterPaidCheck
+import com.mutant.godutch.DeptActivity
+import com.mutant.godutch.NewEventActivity
 import com.mutant.godutch.R
 import com.mutant.godutch.model.Event
 import com.mutant.godutch.model.ExchangeRate
@@ -78,7 +80,7 @@ class NewEventStep2Fragment : Fragment() {
         recycler_view_paid.adapter = AdapterPaidCheck(mActivity, friendsPaid, mExchangeRate, null)
 
         linearLayout_paid.setOnClickListener {
-            val intent = PaidFirstActivity.getIntent(activity, mTotal, mExchangeRate, friendsPaid)
+            val intent = DeptActivity.getIntent(activity, mTotal, mExchangeRate, friendsPaid)
             startActivityForResult(intent, REQUEST_PAID_FIRST)
         }
     }
@@ -95,7 +97,8 @@ class NewEventStep2Fragment : Fragment() {
 
         // TODO not good design, should consider no network situation
         linearLayout_friends_who_shared.setOnClickListener {
-            startActivityForResult(SharedActivity.getIntent(activity, mTotal, mExchangeRate, mFriends, friendsShared), REQUEST_SHARED)
+            val intent = DeptActivity.getIntent(activity, mTotal, mExchangeRate, friendsShared)
+            startActivityForResult(intent, REQUEST_SHARED)
         }
     }
 
@@ -111,7 +114,7 @@ class NewEventStep2Fragment : Fragment() {
                 }
 
                 mFriends.forEach { mAllUsers.add(Friend(it)) }
-                mAllUsers.add(Friend(mActivity.me))
+                mAllUsers.add(0, Friend(mActivity.me))
 
                 setupPaidFirst()
                 setupShared()
@@ -146,9 +149,9 @@ class NewEventStep2Fragment : Fragment() {
         val friendPaid = (recycler_view_paid.adapter as AdapterPaidCheck).getFriendsPaid()
         val event = Event(imageDownloadUrl?.toString() ?: "", mActivity.mType, title, subtotal, tax,
                 mTotal, mExchangeRate, friendsShared, friendPaid)
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroup.title).push()
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("events").child(mActivity.mGroup.key).push()
         databaseReference.setValue(event).addOnSuccessListener {
-            val notifyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroup.title)
+            val notifyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroup.key)
             val notifyContent = getString(R.string.notify_new_event_content, title)
             sendNewEventNotificationToFriends(friendsShared[1].uid, notifyTitle, notifyContent)
             mActivity.finish()
@@ -177,11 +180,11 @@ class NewEventStep2Fragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
+            val friendsDept: ArrayList<Friend> = data!!.getParcelableArrayListExtra(DeptActivity.BUNDLE_KEY_FRIENDS_DEPT)
             if (requestCode == REQUEST_PAID_FIRST) {
-                val friendsPaid: ArrayList<Friend> = data!!.getParcelableArrayListExtra(PaidFirstActivity.BUNDLE_KEY_FRIENDS_PAID)
-                (recycler_view_paid.adapter as AdapterPaidCheck).update(friendsPaid)
+                (recycler_view_paid.adapter as AdapterPaidCheck).update(friendsDept)
             } else if (requestCode == REQUEST_SHARED) {
-                // TODO
+                (recycler_view_shared.adapter as AdapterPaidCheck).update(friendsDept)
             }
         }
     }

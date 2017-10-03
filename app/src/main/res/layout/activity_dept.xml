@@ -5,7 +5,7 @@
     android:id="@+id/constraint_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mutant.godutch.PaidFirstActivity">
+    tools:context="com.mutant.godutch.DeptActivity">
 
     <include
         android:id="@+id/tool_bar"
@@ -83,12 +83,12 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat2">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_paid_evenly"
+            android:id="@+id/recyclerView_evenly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_paid_manually"
+            android:id="@+id/recyclerView_manually"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

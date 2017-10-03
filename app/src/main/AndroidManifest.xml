@@ -92,7 +92,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".PaidFirstActivity"
+            android:name=".DeptActivity"
             android:label="@string/label_activity_paid_first" />
         <activity
             android:name=".SharedActivity"
