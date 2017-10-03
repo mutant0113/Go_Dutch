@@ -8,8 +8,8 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/imageView_photo"
-        android:layout_width="@dimen/pro_pic_size"
-        android:layout_height="@dimen/pro_pic_size"
+        android:layout_width="@dimen/pro_pic_size_big"
+        android:layout_height="@dimen/pro_pic_size_big"
         android:scaleType="centerCrop"
         android:src="@drawable/food_default_640"
         android:transitionName="@string/events_image_photo"
@@ -58,7 +58,6 @@
                 android:id="@+id/textView_my_debt_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="我花費"
                 app:layout_constraintRight_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
