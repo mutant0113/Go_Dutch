@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GoDutch.iml" filepath="$PROJECT_DIR$/GoDutch.iml" />
+      <module fileurl="file://C:\Users\evanfang102.KINGWAY\AndroidStudio_A5i\Go_Dutch\GoDutch.iml" filepath="C:\Users\evanfang102.KINGWAY\AndroidStudio_A5i\Go_Dutch\GoDutch.iml" />
       <module fileurl="file://$PROJECT_DIR$/Go_Dutch.iml" filepath="$PROJECT_DIR$/Go_Dutch.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
