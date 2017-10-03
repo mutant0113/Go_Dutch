@@ -38,6 +38,7 @@ obj/
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+/.idea/libraries/.
 /build
 /captures
 /app/fabric.properties
