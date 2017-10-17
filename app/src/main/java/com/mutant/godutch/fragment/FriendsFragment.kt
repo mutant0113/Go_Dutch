@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.mutant.godutch.AdapterFriend
 import com.mutant.godutch.LoginActivity
+import com.mutant.godutch.NewFriendActivity
 import com.mutant.godutch.R
 import com.mutant.godutch.model.Friend
 import kotlinx.android.synthetic.main.fragment_friends.*
@@ -53,7 +54,7 @@ class FriendsFragment : Fragment() {
 
     private fun setupButtonCurrency() {
         button_currency.setOnClickListener {
-            // TODO
+            startActivity(Intent(NewFriendActivity.getIntent(activity)))
         }
     }
 
