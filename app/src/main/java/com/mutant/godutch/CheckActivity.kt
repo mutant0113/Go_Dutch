@@ -56,7 +56,7 @@ class CheckActivity : BaseActivity() {
         val friendsPaid = ArrayList<Friend>()
         val friendsShared = ArrayList<Friend>()
         mEvents.forEach {
-            it.friendPaid.forEach { addDeptToFriend(friendsPaid, it) }
+            it.friendsPaid.forEach { addDeptToFriend(friendsPaid, it) }
             it.friendsShared.forEach { addDeptToFriend(friendsShared, it) }
         }
 

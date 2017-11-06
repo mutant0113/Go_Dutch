@@ -116,7 +116,7 @@ class EventDetailActivity : BaseActivity() {
 
         private fun setupPaid(rootView: View) {
             // TODO
-            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, mEvent.friendPaid, mEvent.exchangeRate, null)
+            rootView.recycler_view_paid.adapter = AdapterPaidCheck(activity, mEvent.friendsPaid, mEvent.exchangeRate, null)
             rootView.recycler_view_paid.layoutManager = LinearLayoutManager(activity)
         }
 
