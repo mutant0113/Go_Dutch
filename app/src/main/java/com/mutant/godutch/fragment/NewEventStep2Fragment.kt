@@ -153,7 +153,8 @@ class NewEventStep2Fragment : Fragment() {
         databaseReference.setValue(event).addOnSuccessListener {
             val notifyTitle = getString(R.string.notify_new_event_title, mFirebaseUser?.displayName, mActivity.mGroup.key)
             val notifyContent = getString(R.string.notify_new_event_content, title)
-            sendNewEventNotificationToFriends(friendsShared[1].uid, notifyTitle, notifyContent)
+            // TODO notify all friends
+            sendNewEventNotificationToFriends(friendsShared[0].uid, notifyTitle, notifyContent)
             mActivity.finish()
         }
     }
